@@ -9,16 +9,16 @@ class FarmerPattiModel {
     if (json['result'] != null) {
       farmerPattiDetails = <FarmerPattiDetails>[];
       json['result'].forEach((v) {
-        farmerPattiDetails!.add(new FarmerPattiDetails.fromJson(v));
+        farmerPattiDetails!.add(FarmerPattiDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.farmerPattiDetails != null) {
-      data['result'] = this.farmerPattiDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (farmerPattiDetails != null) {
+      data['result'] = farmerPattiDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -98,29 +98,29 @@ class FarmerPattiDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pattiNo'] = this.pattiNo;
-    data['pattiDate'] = this.pattiDate;
-    data['accountName'] = this.accountName;
-    data['city'] = this.city;
-    data['mEng_name'] = this.mEngName;
-    data['qty'] = this.qty;
-    data['weight'] = this.weight;
-    data['rate'] = this.rate;
-    data['amount'] = this.amount;
-    data['hamali'] = this.hamali;
-    data['mapai'] = this.mapai;
-    data['bharai'] = this.bharai;
-    data['leavy'] = this.leavy;
-    data['mcess'] = this.mcess;
-    data['mFee'] = this.mFee;
-    data['varai'] = this.varai;
-    data['comm'] = this.comm;
-    data['other'] = this.other;
-    data['actPatti'] = this.actPatti;
-    data['amttoword'] = this.amttoword;
-    data['motorRent'] = this.motorRent;
-    data['engFirmName'] = this.engFirmName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['pattiNo'] = pattiNo;
+    data['pattiDate'] = pattiDate;
+    data['accountName'] = accountName;
+    data['city'] = city;
+    data['mEng_name'] = mEngName;
+    data['qty'] = qty;
+    data['weight'] = weight;
+    data['rate'] = rate;
+    data['amount'] = amount;
+    data['hamali'] = hamali;
+    data['mapai'] = mapai;
+    data['bharai'] = bharai;
+    data['leavy'] = leavy;
+    data['mcess'] = mcess;
+    data['mFee'] = mFee;
+    data['varai'] = varai;
+    data['comm'] = comm;
+    data['other'] = other;
+    data['actPatti'] = actPatti;
+    data['amttoword'] = amttoword;
+    data['motorRent'] = motorRent;
+    data['engFirmName'] = engFirmName;
     return data;
   }
 }

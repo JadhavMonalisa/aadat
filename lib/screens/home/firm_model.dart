@@ -9,16 +9,16 @@ class FirmModel {
     if (json['result'] != null) {
       firmDetails = <FirmDetails>[];
       json['result'].forEach((v) {
-        firmDetails!.add(new FirmDetails.fromJson(v));
+        firmDetails!.add(FirmDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.firmDetails != null) {
-      data['result'] = this.firmDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (firmDetails != null) {
+      data['result'] = firmDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,10 +38,10 @@ class FirmDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['firmId'] = this.firmId;
-    data['engFirmName'] = this.engFirmName;
-    data['address'] = this.address;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['firmId'] = firmId;
+    data['engFirmName'] = engFirmName;
+    data['address'] = address;
     return data;
   }
 }

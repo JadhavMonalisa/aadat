@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return GetBuilder<LoginController>(builder: (cont)
     {
       return WillPopScope(
-        onWillPop: () async { return await exit(0);},
+        onWillPop: () async { return exit(0);},
         child: SafeArea(
           child: Scaffold(
               backgroundColor: primaryColor,

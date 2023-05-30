@@ -1,6 +1,5 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/screens/home/home_controller.dart';
-import 'package:adat/screens/supplier/supplier_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';

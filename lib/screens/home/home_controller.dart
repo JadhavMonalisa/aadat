@@ -24,7 +24,6 @@ class HomeController extends GetxController {
   String selectedFirm = "";
   List<String> langList = ["English","Marathi"];
   List<String> noDataList = ["No Data Found"];
-  //List<String> firmList = ["Firm 1", "Firm 2"];
   List<String> customerTypeList = ["WEIGHT LIST ( ROUGH BILL )\n(वजन चिट्ठी)", "MARK WISE WEIGHT LIST REPORT\n(मार्कनुसार वजन चिट्ठी)", "BILL",
     "LEDGER SHORT REPORT", "LEDGER SUMMARY REPORT", "LEDGER REPORT", "LEDGER - IN DETAILS"];
   List<String> supplierTypeList = ["LEDGER REPORT", "LEDGER SUMMARY RECEIPT"];
@@ -36,14 +35,50 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     token = GetStorage().read("clientToken")??"";
-    print("home token");
-    print(token);
     repository.getData();
     callFirmList();
   }
 
+  ///common
   changeLanguage(String value){
     selectedLang = value; update();
+  }
+
+  closeAppDialog(BuildContext context){
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: buildTextBoldWidget('Close App', blackColor, context, 15.0),
+          content: buildTextRegularWidget('Are you sure you want to close an App?', blackColor, context, 15.0),
+          actions: [
+            TextButton(
+              child: buildTextBoldWidget('No', blackColor, context, 15.0),
+              onPressed: () {
+                Navigator.of(context).pop();
+                update();
+              },
+            ),
+            TextButton(
+              child: buildTextBoldWidget('Yes', blackColor, context, 15.0),
+              onPressed: () {
+                exit(0);
+              },
+            ),
+          ],
+        );
+      },);
+  }
+
+  callLogout(BuildContext context){
+    selectedFirm = "";
+    selectedFirmId = 0;
+    GetStorage().erase();
+    GetStorage().remove("selectedFirm");
+    GetStorage().remove("selectedFirmId");
+    Navigator.of(context).pop();
+    Get.toNamed(AppRoutes.login);
+    update();
   }
 
   int? selectedFirmId;
@@ -156,122 +191,11 @@ class HomeController extends GetxController {
     Get.toNamed(AppRoutes.home);
   }
 
-  closeAppDialog(BuildContext context){
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: buildTextBoldWidget('Close App', blackColor, context, 15.0),
-          content: buildTextRegularWidget('Are you sure you want to close an App?', blackColor, context, 15.0),
-          actions: [
-            TextButton(
-              child: buildTextBoldWidget('No', blackColor, context, 15.0),
-              onPressed: () {
-                Navigator.of(context).pop();
-                update();
-              },
-            ),
-            TextButton(
-              child: buildTextBoldWidget('Yes', blackColor, context, 15.0),
-              onPressed: () {
-                exit(0);
-              },
-            ),
-          ],
-        );
-      },);
-  }
-
-  callLogout(BuildContext context){
-    selectedFirm = "";
-    selectedFirmId = 0;
-    GetStorage().erase();
-    GetStorage().remove("selectedFirm");
-    GetStorage().remove("selectedFirmId");
-    Navigator.of(context).pop();
-    Get.toNamed(AppRoutes.login);
-    update();
-  }
-
-  ///weight list
+  ///-------------Customer------------------///
+  ///customer common
   List<CustomerListDetails> customerList = [];
-
-  callCustomerList() async{
-    customerList.clear();
-    print("selectedFirmId");
-    print(selectedFirmId);
-    try {
-      Utils.dismissKeyboard();
-      CustomerListModel? response = (await repository.getCustomerList(selectedFirmId!));
-      if (response.statusCode==200) {
-        customerList.addAll(response.customerListDetails!);
-        isLoading = false;
-        update();
-      }
-      else {
-        isLoading = false;
-        update();
-      }
-      update();
-    } on CustomException catch (e) {
-      isLoading = false;
-      update();
-    } catch (error) {
-      isLoading = false;
-      update();
-    }
-  }
-  updateSelectedCustomer(String value){
-    selectedCustomer = value; update();
-  }
-
-  List<WeightListDetails> weightList = [];
-  getWeightList(){
-    isLoading = true;
-    if(selectedCustomer == ""){
-      showToast("Please select customer!");
-      isLoading = false; update();
-    }
-    else{
-      isViewSelected = true;
-      callWeightList();
-    }
-    update();
-  }
-  callWeightList() async{
-    weightList.clear();
-    try {
-      Utils.dismissKeyboard();
-      WeightListModel? response = (await repository.getWeightList(selectedCustomer,selectedFirmId!));
-      if (response.statusCode==200) {
-        weightList.addAll(response.weightListDetails!);
-        isLoading = false;
-        update();
-      }
-      else {
-        isLoading = false;
-        update();
-      }
-      update();
-    } on CustomException catch (e) {
-      isLoading = false;
-      update();
-    } catch (error) {
-      isLoading = false;
-      update();
-    }
-    update();
-  }
-
-  ///customer ledger short report
   String selectedFromDateToShow = "";
   String selectedToDateToShow = "";
-  navigateFromShortReportToHome(){
-    selectedFromDateToShow = ""; selectedToDateToShow = ""; isViewSelected = false;
-    update();
-    Get.toNamed(AppRoutes.home);
-  }
-
   DateTime selectedDate = DateTime.now();
   String selectedReceiptBillDateToShow = "";
   String selectedShortReportFromDateToShow = "";
@@ -280,13 +204,14 @@ class HomeController extends GetxController {
   String selectedSummaryReportToDateToShow = "";
   bool showSelectionCustomerList = false;
   bool showCustomerList = false;
+  TextEditingController customerName = TextEditingController();
 
   Future<void> selectCustomerDate(BuildContext context,String selection) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
         firstDate: selection == "shortReportToDate" || selection == "summaryReportToDate"
-        || selection == "toDate" || selection == "summaryReportToDate"
+            || selection == "toDate" || selection == "summaryReportToDate"
             ? selectedDate : DateTime(1700, 1),
         lastDate: DateTime(2100, 1));
 
@@ -332,7 +257,80 @@ class HomeController extends GetxController {
       showCustomerList = true; update();
     }
   }
+  callCustomerList() async{
+    customerList.clear();
+    try {
+      Utils.dismissKeyboard();
+      CustomerListModel? response = (await repository.getCustomerList(selectedFirmId!));
+      if (response.statusCode==200) {
+        customerList.addAll(response.customerListDetails!);
+        isLoading = false;
+        update();
+      }
+      else {
+        isLoading = false;
+        update();
+      }
+      update();
+    } on CustomException catch (e) {
+      isLoading = false;
+      update();
+    } catch (error) {
+      isLoading = false;
+      update();
+    }
+  }
+  updateSelectedCustomer(String value){
+    selectedCustomer = value; update();
+  }
 
+  ///weight list
+  List<WeightListDetails> weightList = [];
+  getWeightList(){
+    isLoading = true;
+    if(selectedCustomer == ""){
+      showToast("Please select customer!");
+      isLoading = false; update();
+    }
+    else{
+      isViewSelected = true;
+      callWeightList();
+    }
+    update();
+  }
+  callWeightList() async{
+    weightList.clear();
+    try {
+      Utils.dismissKeyboard();
+      WeightListModel? response = (await repository.getWeightList(selectedCustomer,selectedFirmId!));
+      if (response.statusCode==200) {
+        weightList.addAll(response.weightListDetails!);
+        isLoading = false;
+        update();
+      }
+      else {
+        isLoading = false;
+        update();
+      }
+      update();
+    } on CustomException catch (e) {
+      isLoading = false;
+      update();
+    } catch (error) {
+      isLoading = false;
+      update();
+    }
+    update();
+  }
+
+  ///customer ledger short report
+  List<LedgerShortReportDetails> ledgerShortReportList = [];
+
+  navigateFromShortReportToHome(){
+    selectedFromDateToShow = ""; selectedToDateToShow = ""; isViewSelected = false;
+    update();
+    Get.toNamed(AppRoutes.home);
+  }
   getLedgerShortReport(){
     isLoading = true; update();
     if(selectedShortReportToDateToShow==""){
@@ -348,19 +346,14 @@ class HomeController extends GetxController {
     }
     update();
   }
-
   backPressNavigation(String screen){
     clearForm();
     Get.toNamed(screen);
   }
-  TextEditingController customerName = TextEditingController();
   clearForm(){
     customerName.clear(); selectedFromDateToShow = ""; selectedToDateToShow = "";
     update();
   }
-
-  List<LedgerShortReportDetails> ledgerShortReportList = [];
-
   callLedgerShortReportList() async{
     ledgerShortReportList.clear();
     try {
@@ -370,8 +363,6 @@ class HomeController extends GetxController {
       if (response.statusCode==200) {
         ledgerShortReportList.addAll(response.ledgerShortReportDetails!);
         isLoading = false;
-        print("ledgerShortReportList.length");
-        print(ledgerShortReportList.length);
         Get.toNamed(AppRoutes.customerLedgerShortReportResult);
         update();
       }
@@ -390,13 +381,14 @@ class HomeController extends GetxController {
     update();
   }
 
-  ///customer summary
+  ///customer summary report
+  List<LedgerSummaryReportDetails> ledgerSummaryReportList = [];
+
   navigateFromSummaryToHome(){
     isViewSelected = false; selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = "";
     Get.toNamed(AppRoutes.home);
     update();
   }
-
   getLedgerSummaryReport(){
     if(selectedSummaryReportToDateToShow==""){
       showToast("Please select to date!");
@@ -410,9 +402,6 @@ class HomeController extends GetxController {
     }
     update();
   }
-
-  List<LedgerSummaryReportDetails> ledgerSummaryReportList = [];
-
   callLedgerSummaryReportList() async{
     ledgerSummaryReportList.clear();
     try {
@@ -439,12 +428,14 @@ class HomeController extends GetxController {
     update();
   }
 
+  ///customer ledger report
+  List<CustomerLedgerReportDetails> ledgerReportList = [];
+
   navigateFromReportToHome(){
     selectedCustomer = ""; selectedFromDateToShow = ""; selectedToDateToShow = "";
     update();
     Get.toNamed(AppRoutes.home);
   }
-
   showCustomerLedgerReport(){
     isLoading = true; update();
     if(selectedCustomer == ""){
@@ -463,9 +454,6 @@ class HomeController extends GetxController {
       callLedgerReportList();
     }
   }
-
-  List<CustomerLedgerReportDetails> ledgerReportList = [];
-
   callLedgerReportList() async{
     ledgerReportList.clear();
     try {
@@ -475,8 +463,6 @@ class HomeController extends GetxController {
       if (response.statusCode==200) {
         ledgerReportList.addAll(response.customerLedgerReportDetails!);
         isLoading = false;
-        print("ledgerReportList");
-        print(ledgerReportList.length);
         Get.toNamed(AppRoutes.customerLedgerReportResultScreen,
             arguments: [AppRoutes.customerLedgerReport]);
         update();
@@ -496,15 +482,40 @@ class HomeController extends GetxController {
     update();
   }
 
-  String selectedSupplier = "";
+  ///customer mark wise report
+  TextEditingController receiptBillNo = TextEditingController();
+  TextEditingController receiptSearchParameter = TextEditingController();
 
-  navigateFromReportToHomeScreen(){
-    selectedSupplier = "";
-    selectedFromDateToShow = ""; selectedToDateToShow = "";
+  navigateFromMarkWiseToHome(){
+    isViewSelected = false; selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = "";
+    addedCustomerIndex.clear(); showCustomerList = false; isViewSelected = false;
     Get.toNamed(AppRoutes.home);
     update();
   }
+  navigateFromReceiptToHome(){
+    receiptBillNo.clear(); receiptSearchParameter.clear(); isViewSelected = false;
+    update();
+    Get.toNamed(AppRoutes.home);
+  }
+  showReceiptReport(){
+    if(receiptBillNo.text == ""){
+      showToast("Please enter bill no!");
+    }
+    else if(receiptSearchParameter.text == ""){
+      showToast("Please enter search parameter!");
+    }
+    else{
+      isViewSelected = true; update();
+    }
+  }
 
+  ///-------------Supplier------------------///
+  String selectedSupplier = "";
+  List<SupplierListDetails> supplierList = [];
+  List<int> addedCustomerIndex = [];
+  bool cbCustomer = false;
+
+  ///supplier common
   Future<void> selectSupplierDate(BuildContext context,String selection) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -533,9 +544,6 @@ class HomeController extends GetxController {
       update();
     }
   }
-
-  List<SupplierListDetails> supplierList = [];
-
   callSupplierList() async{
     supplierList.clear();
     try {
@@ -550,8 +558,6 @@ class HomeController extends GetxController {
         isLoading = false;
         update();
       }
-
-      print(supplierList.length);
       update();
     } on CustomException catch (e) {
       isLoading = false;
@@ -561,11 +567,32 @@ class HomeController extends GetxController {
       update();
     }
   }
+  updateCustomerCheckBox(bool selectCustomer,int customerIndex){
+    cbCustomer = selectCustomer;
 
+    if(addedCustomerIndex.contains(customerIndex)){
+      addedCustomerIndex.clear();
+      addedCustomerIndex.remove(customerIndex);
+    }
+    else{
+      addedCustomerIndex.clear();
+      addedCustomerIndex.add(customerIndex);
+    }
+    update();
+  }
+
+  ///supplier ledger report
+  List<SupplierLedgerReportDetails> supplierLedgerReportList = [];
+
+  navigateFromReportToHomeScreen(){
+    selectedSupplier = "";
+    selectedFromDateToShow = ""; selectedToDateToShow = "";
+    Get.toNamed(AppRoutes.home);
+    update();
+  }
   updateSelectedSupplier(String value){
     selectedSupplier = value; update();
   }
-
   showSupplierLedgerReport(){
     isLoading = true; update();
     if(selectedSupplier == ""){
@@ -586,9 +613,6 @@ class HomeController extends GetxController {
     }
     update();
   }
-
-  List<SupplierLedgerReportDetails> supplierLedgerReportList = [];
-
   callSupplierLedgerReportList() async{
     supplierLedgerReportList.clear();
     try {
@@ -617,19 +641,19 @@ class HomeController extends GetxController {
     update();
   }
 
+  ///supplier ledger summary report
+  List<SupplierLedgerSummaryReportDetails> supplierLedgerSummaryReportList = [];
+
   backPressNavigationFromResult(String screen){
     clearForm();
     Get.toNamed(screen);
   }
-
   navigateFromSummaryToHomeScreen(){
     selectedFromDateToShow = ""; selectedToDateToShow = "";
     isViewSelected = false;
     Get.toNamed(AppRoutes.home);
     update();
   }
-
-
   showSupplierLedgerSummaryReport(){
     isLoading = true; update();
     if(selectedFromDateToShow == ""){
@@ -647,8 +671,6 @@ class HomeController extends GetxController {
     }
     update();
   }
-
-  List<SupplierLedgerSummaryReportDetails> supplierLedgerSummaryReportList = [];
   callSupplierLedgerSummaryReportList() async{
     supplierLedgerSummaryReportList.clear();
     try {
@@ -676,33 +698,82 @@ class HomeController extends GetxController {
     update();
   }
 
-  List<int> addedCustomerIndex = [];
-  bool cbCustomer = false;
+///-------------Farmer------------------///
+///farmer common
+  List<String> farmerTypeList = ["Regular","Paid","Reprint"];
+  String selectedFarmerType = "";
 
-  updateCustomerCheckBox(bool selectCustomer,int customerIndex){
+  Future<void> selectFarmerDate(BuildContext context,String selection) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1700, 1),
+        lastDate: DateTime(2100, 1));
+    if (picked != null && picked != selectedDate) {
+      selectedDate = picked;
+    }
+
+    if(selection == "fromDate"){
+      selectedFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      update();
+    }
+    else if(selection == "toDate"){
+      selectedToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      update();
+    }
+
+    if(selectedFromDateToShow == "" || pattiNo.text == ""){
+
+    }
+    else{
+      showCustomerList = true; update();
+    }
+  }
+
+
+  ///farmer receipt
+  TextEditingController pattiNo = TextEditingController();
+
+  updateSelectedFarmerType(String value){
+    selectedFarmerType = value;
+    update();
+  }
+  updatePattiNo(){
+    if(selectedFromDateToShow == "" ){
+      Utils.showErrorSnackBar("Please select date!"); update();
+    }
+    if(pattiNo.text == ""){
+      Utils.showErrorSnackBar("Please enter patti no!"); update();
+    }
+    else{
+      showCustomerList = true; update();
+    }
+  }
+  updateCustomerCheckBoxFromFarmer(bool selectCustomer,int customerIndex){
     cbCustomer = selectCustomer;
 
     if(addedCustomerIndex.contains(customerIndex)){
-      addedCustomerIndex.clear();
       addedCustomerIndex.remove(customerIndex);
     }
     else{
-      addedCustomerIndex.clear();
       addedCustomerIndex.add(customerIndex);
     }
-
-    print("addedCustomerIndex");
-    print(addedCustomerIndex);
     update();
   }
 
-  navigateFromMarkWiseToHome(){
-    // selectedFirm = ""; selectedFirmId = 0;
-    // GetStorage().remove("selectedFirm");
-    // GetStorage().remove("selectedFirmId");
-    isViewSelected = false; selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = "";
-    addedCustomerIndex.clear(); showCustomerList = false; isViewSelected = false;
-    Get.toNamed(AppRoutes.home);
-    update();
+  showFarmerReceiptResult(){
+    if(selectedFarmerType == ""){
+      showToast("Please select farmer type!");
+    }
+    else if(selectedFromDateToShow == ""){
+      showToast("Please select date!");
+    }
+    else if(selectedCustomer == ""){
+      showToast("Please select customer!");
+    }
+    else{
+      isViewSelected = true; update();
+    }
   }
+
 }

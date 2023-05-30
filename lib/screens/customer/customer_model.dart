@@ -9,16 +9,16 @@ class CustomerListModel {
     if (json['result'] != null) {
       customerListDetails = <CustomerListDetails>[];
       json['result'].forEach((v) {
-        customerListDetails!.add(new CustomerListDetails.fromJson(v));
+        customerListDetails!.add(CustomerListDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.customerListDetails != null) {
-      data['result'] = this.customerListDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (customerListDetails != null) {
+      data['result'] = customerListDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,10 +38,10 @@ class CustomerListDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['custAccountNo'] = this.custAccountNo;
-    data['custAccountName'] = this.custAccountName;
-    data['city'] = this.city;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['custAccountNo'] = custAccountNo;
+    data['custAccountName'] = custAccountName;
+    data['city'] = city;
     return data;
   }
 }
@@ -57,16 +57,16 @@ class WeightListModel {
     if (json['result'] != null) {
       weightListDetails = <WeightListDetails>[];
       json['result'].forEach((v) {
-        weightListDetails!.add(new WeightListDetails.fromJson(v));
+        weightListDetails!.add(WeightListDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.weightListDetails != null) {
-      data['result'] = this.weightListDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (weightListDetails != null) {
+      data['result'] = weightListDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -101,14 +101,14 @@ class WeightListDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['billDate'] = this.billDate;
-    data['custAccountName'] = this.custAccountName;
-    data['remark'] = this.remark;
-    data['qty'] = this.qty;
-    data['weight'] = this.weight;
-    data['rate'] = this.rate;
-    data['suppAccountName'] = this.suppAccountName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['billDate'] = billDate;
+    data['custAccountName'] = custAccountName;
+    data['remark'] = remark;
+    data['qty'] = qty;
+    data['weight'] = weight;
+    data['rate'] = rate;
+    data['suppAccountName'] = suppAccountName;
     return data;
   }
 }
@@ -124,16 +124,16 @@ class MarkWiseWeightListModel {
     if (json['result'] != null) {
       markWiseWeightListDetails = <MarkWiseWeightListDetails>[];
       json['result'].forEach((v) {
-        markWiseWeightListDetails!.add(new MarkWiseWeightListDetails.fromJson(v));
+        markWiseWeightListDetails!.add(MarkWiseWeightListDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.markWiseWeightListDetails != null) {
-      data['result'] = this.markWiseWeightListDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (markWiseWeightListDetails != null) {
+      data['result'] = markWiseWeightListDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -165,13 +165,13 @@ class MarkWiseWeightListDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['mark'] = this.mark;
-    data['qty'] = this.qty;
-    data['weight'] = this.weight;
-    data['amount'] = this.amount;
-    data['billDate'] = this.billDate;
-    data['custAccountName'] = this.custAccountName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['mark'] = mark;
+    data['qty'] = qty;
+    data['weight'] = weight;
+    data['amount'] = amount;
+    data['billDate'] = billDate;
+    data['custAccountName'] = custAccountName;
     return data;
   }
 }
@@ -187,16 +187,16 @@ class LedgerShortReportModel {
     if (json['result'] != null) {
       ledgerShortReportDetails = <LedgerShortReportDetails>[];
       json['result'].forEach((v) {
-        ledgerShortReportDetails!.add(new LedgerShortReportDetails.fromJson(v));
+        ledgerShortReportDetails!.add(LedgerShortReportDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.ledgerShortReportDetails != null) {
-      data['result'] = this.ledgerShortReportDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (ledgerShortReportDetails != null) {
+      data['result'] = ledgerShortReportDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -218,11 +218,11 @@ class LedgerShortReportDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['amount'] = this.amount;
-    data['billDate'] = this.billDate;
-    data['accountName'] = this.accountName;
-    data['acctNo'] = this.acctNo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['amount'] = amount;
+    data['billDate'] = billDate;
+    data['accountName'] = accountName;
+    data['acctNo'] = acctNo;
     return data;
   }
 }
@@ -238,16 +238,16 @@ class LedgerSummaryReport {
     if (json['result'] != null) {
       ledgerSummaryReportDetails = <LedgerSummaryReportDetails>[];
       json['result'].forEach((v) {
-        ledgerSummaryReportDetails!.add(new LedgerSummaryReportDetails.fromJson(v));
+        ledgerSummaryReportDetails!.add(LedgerSummaryReportDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.ledgerSummaryReportDetails != null) {
-      data['result'] = this.ledgerSummaryReportDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (ledgerSummaryReportDetails != null) {
+      data['result'] = ledgerSummaryReportDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -276,12 +276,12 @@ class LedgerSummaryReportDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['acctNO'] = this.acctNO;
-    data['custAccountName'] = this.custAccountName;
-    data['debitAmount'] = this.debitAmount;
-    data['creditAmount'] = this.creditAmount;
-    data['mobile'] = this.mobile;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['acctNO'] = acctNO;
+    data['custAccountName'] = custAccountName;
+    data['debitAmount'] = debitAmount;
+    data['creditAmount'] = creditAmount;
+    data['mobile'] = mobile;
     return data;
   }
 }
@@ -297,16 +297,16 @@ class CustomerLedgerReportModel {
     if (json['result'] != null) {
       customerLedgerReportDetails = <CustomerLedgerReportDetails>[];
       json['result'].forEach((v) {
-        customerLedgerReportDetails!.add(new CustomerLedgerReportDetails.fromJson(v));
+        customerLedgerReportDetails!.add(CustomerLedgerReportDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.customerLedgerReportDetails != null) {
-      data['result'] = this.customerLedgerReportDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (customerLedgerReportDetails != null) {
+      data['result'] = customerLedgerReportDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -341,14 +341,14 @@ class CustomerLedgerReportDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['srNo'] = this.srNo;
-    data['recieptDate'] = this.recieptDate;
-    data['recieptNarration'] = this.recieptNarration;
-    data['recieptAmount'] = this.recieptAmount;
-    data['paymentDate'] = this.paymentDate;
-    data['paymentNarration'] = this.paymentNarration;
-    data['paymentAmonut'] = this.paymentAmonut;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['srNo'] = srNo;
+    data['recieptDate'] = recieptDate;
+    data['recieptNarration'] = recieptNarration;
+    data['recieptAmount'] = recieptAmount;
+    data['paymentDate'] = paymentDate;
+    data['paymentNarration'] = paymentNarration;
+    data['paymentAmonut'] = paymentAmonut;
     return data;
   }
 }

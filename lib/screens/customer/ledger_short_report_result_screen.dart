@@ -1,6 +1,5 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
-import 'package:adat/screens/customer/customer_controller.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';

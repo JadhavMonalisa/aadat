@@ -1,6 +1,6 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
-import 'package:adat/screens/farmer/farmer_controller.dart';
+import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class FarmerReceipt extends StatefulWidget {
 class _FarmerReceiptState extends State<FarmerReceipt> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<FarmerController>(builder: (cont)
+    return GetBuilder<HomeController>(builder: (cont)
     {
       return WillPopScope(
         onWillPop: () async{
@@ -98,7 +98,7 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                             Flexible(
                               child: GestureDetector(
                                 onTap: (){
-                                  cont.selectDate(context,"fromDate");
+                                  cont.selectFarmerDate(context,"fromDate");
                                 },
                                 child: Container(
                                   height: 40.0,
@@ -162,19 +162,19 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                             padding: const EdgeInsets.all(10.0),
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: cont.customerNameList.length,
+                                itemCount: cont.customerList.length,
                                 itemBuilder: (context,index){
                                   return Row(
                                     children: [
                                       Checkbox(value:
-                                      cont.addedCustomer.contains(cont.customerNameList[index])
+                                      cont.addedCustomerIndex.contains(index)
                                           ? true : false ,
                                           activeColor: Colors.green,
                                           onChanged:(newValue){
-                                            cont.updateCustomerCheckBox(newValue!,cont.customerNameList[index]);
+                                            cont.updateCustomerCheckBoxFromFarmer(newValue!,index);
                                           }),
                                       const SizedBox(width: 5.0,),
-                                      buildTextRegularWidget(cont.customerNameList[index], blackColor, context, 14.0)
+                                      buildTextRegularWidget(cont.customerList[index].custAccountName!, blackColor, context, 14.0)
                                     ],
                                   );
                                 })

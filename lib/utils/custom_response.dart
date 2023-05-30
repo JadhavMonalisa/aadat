@@ -65,16 +65,16 @@ class LoginResponse {
     if (json['result'] != null) {
       loginResponseResult = <LoginResponseResult>[];
       json['result'].forEach((v) {
-        loginResponseResult!.add(new LoginResponseResult.fromJson(v));
+        loginResponseResult!.add(LoginResponseResult.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.loginResponseResult != null) {
-      data['result'] = this.loginResponseResult!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (loginResponseResult != null) {
+      data['result'] = loginResponseResult!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -94,10 +94,10 @@ class LoginResponseResult {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['clientID'] = this.clientID;
-    data['token'] = this.token;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['clientID'] = clientID;
+    data['token'] = token;
+    data['message'] = message;
     return data;
   }
 }

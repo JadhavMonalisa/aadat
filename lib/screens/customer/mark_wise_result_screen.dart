@@ -1,5 +1,5 @@
 import 'package:adat/common_widget/widget.dart';
-import 'package:adat/screens/customer/customer_controller.dart';
+import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class _MarkWiseResultScreenState extends State<MarkWiseResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<CustomerController>(builder: (cont)
+    return GetBuilder<HomeController>(builder: (cont)
     {
       return WillPopScope(
         onWillPop: () async{

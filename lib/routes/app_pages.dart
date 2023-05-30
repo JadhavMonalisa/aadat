@@ -1,6 +1,5 @@
 
 import 'package:adat/screens/common/splash_screen.dart';
-import 'package:adat/screens/customer/customer_binding.dart';
 import 'package:adat/screens/customer/customer_ledger_short_report.dart';
 import 'package:adat/screens/customer/customer_ledger_summary_report.dart';
 import 'package:adat/screens/customer/customer_ledger_report.dart';
@@ -10,14 +9,12 @@ import 'package:adat/screens/customer/mark_wise_weight_list_report.dart';
 import 'package:adat/screens/customer/receipt.dart';
 import 'package:adat/screens/customer/result_screen.dart';
 import 'package:adat/screens/customer/weight_list.dart';
-import 'package:adat/screens/farmer/farmer_binding.dart';
 import 'package:adat/screens/farmer/farmer_receipt.dart';
 import 'package:adat/screens/home/home_binding.dart';
 import 'package:adat/screens/home/home_screen.dart';
 import 'package:adat/screens/login/forgot_password.dart';
 import 'package:adat/screens/login/login_binding.dart';
 import 'package:adat/screens/login/login_screen.dart';
-import 'package:adat/screens/supplier/supplier_binding.dart';
 import 'package:adat/screens/supplier/supplier_ledger_report.dart';
 import 'package:adat/screens/supplier/supplier_ledger_summary_report.dart';
 import 'package:adat/screens/supplier/supplier_result_screen.dart';
@@ -118,7 +115,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.farmerReceipt,
       page: () => const FarmerReceipt(),
-      binding: FarmerBinding(),
+      binding: HomeBinding(),
     ),
   ];
 }

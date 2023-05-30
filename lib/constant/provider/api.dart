@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as g;
 import 'custom_exception.dart';
 import 'dio_client.dart';
-import 'package:http/http.dart' as http;
 
 class ApiClient {
   final Dio httpClient = DioClient().dio;

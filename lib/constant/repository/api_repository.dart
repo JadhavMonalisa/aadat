@@ -9,10 +9,8 @@ import 'package:adat/screens/farmer/farmer_model.dart';
 import 'package:adat/screens/home/firm_model.dart';
 import 'package:adat/screens/supplier/supplier_model.dart';
 import 'package:adat/utils/custom_response.dart';
-import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 
 class ApiRepository {
   final ApiClient apiClient;
@@ -27,8 +25,6 @@ class ApiRepository {
   getData(){
     clientId = GetStorage().read("clientId");
     token = GetStorage().read("clientToken")??"";
-    print("in repo");
-    print(clientId);
   }
 
   ///login api
@@ -69,14 +65,9 @@ class ApiRepository {
     var params = {"clientID": clientId,"firmID":firmId};
     request.body = jsonEncode(params);
 
-    print("params");
-    print(params);
-    print(token);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
-    print("responsebody");
-    print(responsebody);
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return CustomerListModel.fromJson(jsonBody);
   }
@@ -196,8 +187,6 @@ class ApiRepository {
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
-    print("responsebody");
-    print(responsebody);
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return SupplierLedgerReportModel.fromJson(jsonBody);
   }

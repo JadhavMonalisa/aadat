@@ -9,16 +9,16 @@ class SupplierListModel {
     if (json['result'] != null) {
       supplierListDetails = <SupplierListDetails>[];
       json['result'].forEach((v) {
-        supplierListDetails!.add(new SupplierListDetails.fromJson(v));
+        supplierListDetails!.add(SupplierListDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.supplierListDetails != null) {
-      data['result'] = this.supplierListDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (supplierListDetails != null) {
+      data['result'] = supplierListDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,10 +38,10 @@ class SupplierListDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['suppAccountNo'] = this.suppAccountNo;
-    data['suppAccountName'] = this.suppAccountName;
-    data['city'] = this.city;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['suppAccountNo'] = suppAccountNo;
+    data['suppAccountName'] = suppAccountName;
+    data['city'] = city;
     return data;
   }
 }
@@ -57,16 +57,16 @@ class SupplierLedgerReportModel {
     if (json['result'] != null) {
       supplierLedgerReportDetails = <SupplierLedgerReportDetails>[];
       json['result'].forEach((v) {
-        supplierLedgerReportDetails!.add(new SupplierLedgerReportDetails.fromJson(v));
+        supplierLedgerReportDetails!.add(SupplierLedgerReportDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.supplierLedgerReportDetails != null) {
-      data['result'] = this.supplierLedgerReportDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (supplierLedgerReportDetails != null) {
+      data['result'] = supplierLedgerReportDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -95,12 +95,12 @@ class SupplierLedgerReportDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pattiDate'] = this.pattiDate;
-    data['totQty'] = this.totQty;
-    data['debitBalance'] = this.debitBalance;
-    data['creditBalance'] = this.creditBalance;
-    data['accountName'] = this.accountName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['pattiDate'] = pattiDate;
+    data['totQty'] = totQty;
+    data['debitBalance'] = debitBalance;
+    data['creditBalance'] = creditBalance;
+    data['accountName'] = accountName;
     return data;
   }
 }
@@ -116,16 +116,16 @@ class SupplierLedgerSummaryReportModel {
     if (json['result'] != null) {
       supplierLedgerSummaryReportDetails = <SupplierLedgerSummaryReportDetails>[];
       json['result'].forEach((v) {
-        supplierLedgerSummaryReportDetails!.add(new SupplierLedgerSummaryReportDetails.fromJson(v));
+        supplierLedgerSummaryReportDetails!.add(SupplierLedgerSummaryReportDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.supplierLedgerSummaryReportDetails != null) {
-      data['result'] = this.supplierLedgerSummaryReportDetails!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (supplierLedgerSummaryReportDetails != null) {
+      data['result'] = supplierLedgerSummaryReportDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -154,12 +154,12 @@ class SupplierLedgerSummaryReportDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['acctNO'] = this.acctNO;
-    data['suppAccountName'] = this.suppAccountName;
-    data['debitAmount'] = this.debitAmount;
-    data['creditAmount'] = this.creditAmount;
-    data['mobile'] = this.mobile;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['acctNO'] = acctNO;
+    data['suppAccountName'] = suppAccountName;
+    data['debitAmount'] = debitAmount;
+    data['creditAmount'] = creditAmount;
+    data['mobile'] = mobile;
     return data;
   }
 }
