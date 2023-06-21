@@ -38,12 +38,15 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
               ),
               body:
               cont.isLoading ? buildCircularIndicator() :
+                  cont.supplierLedgerReportList.isEmpty ? buildNoDataFound(context):
+
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top: 30.0),
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
@@ -56,37 +59,55 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                           padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
                           child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
                         ),
-
-                        Scrollbar(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                              child: Table(
-                                border: TableBorder.all(color: whiteColor,width: 2.0),
-                                defaultColumnWidth: const IntrinsicColumnWidth(),
-                                children: [
+                        cont.supplierLedgerReportList.isEmpty?const Text(""):
+                        Center(child:buildTextBoldWidget(cont.supplierLedgerReportList[0].accountName!,
+                            blackColor, context, 15.0)),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10.0,right: 10.0,top: 10.0),
+                            child: Table(
+                              border: TableBorder.all(color: whiteColor,width: 2.0),
+                              defaultColumnWidth: const IntrinsicColumnWidth(),
+                              children: [
+                                // TableRow(
+                                //     children: [
+                                //       buildTableTitleForReport(context,"Patti Date"),
+                                //       buildTableTitleForReport(context,"Total Qty"),
+                                //       buildTableTitleForReport(context,"Debit Balance"),
+                                //       buildTableTitleForReport(context,"Credit Balance"),
+                                //       buildTableTitleForReport(context,"Account Name"),
+                                //     ]
+                                // ),
+                                // for (var data in cont.supplierLedgerReportList)
+                                //   TableRow(
+                                //       children: [
+                                //         buildTableSubtitleForReport(context,data.pattiDate.toString()),
+                                //         buildTableSubtitleForReport(context,data.totQty.toString()),
+                                //         buildTableSubtitleForReport(context,data.debitBalance.toString()),
+                                //         buildTableSubtitleForReport(context,data.creditBalance.toString()),
+                                //         buildTableSubtitleForReport(context,data.accountName.toString()),
+                                //       ]
+                                //   ),
+                                TableRow(
+                                    children: [
+                                      buildTableTitleForReport(context,"Amount",align: TextAlign.center),
+                                      buildTableTitleForReport(context,"Date",align: TextAlign.center),
+                                    ]
+                                ),
+                                for (var data in cont.supplierLedgerReportList)
                                   TableRow(
                                       children: [
-                                        buildTableTitleForReport(context,"Patti Date"),
-                                        buildTableTitleForReport(context,"Total Qty"),
-                                        buildTableTitleForReport(context,"Debit Balance"),
-                                        buildTableTitleForReport(context,"Credit Balance"),
-                                        buildTableTitleForReport(context,"Account Name"),
+                                        buildTableSubtitleForReport(context,data.debitBalance.toString()),
+                                        buildTableSubtitleForReport(context,data.pattiDate.toString()),
                                       ]
                                   ),
-                                  for (var data in cont.supplierLedgerReportList)
-                                    TableRow(
-                                        children: [
-                                          buildTableSubtitleForReport(context,data.pattiDate.toString()),
-                                          buildTableSubtitleForReport(context,data.totQty.toString()),
-                                          buildTableSubtitleForReport(context,data.debitBalance.toString()),
-                                          buildTableSubtitleForReport(context,data.creditBalance.toString()),
-                                          buildTableSubtitleForReport(context,data.accountName.toString()),
-                                        ]
-                                    ),
-                                ],
-                              ),
+                                TableRow(
+                                    children: [
+                                      buildTableSubtitleForReport(context,cont.totalSupplierLedgerShortReportAmt.toString(),fontWeight: FontWeight.bold),
+                                      buildTableSubtitleForReport(context,""),
+                                    ]
+                                ),
+                              ],
                             ),
                           ),
                         ),

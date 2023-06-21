@@ -314,22 +314,23 @@ buildChoiceDetails(BuildContext context,String title,HomeController cont,List li
   );
 }
 
-buildTableTitleForReport(BuildContext context,String title){
+buildTableTitleForReport(BuildContext context,String title,{TextAlign align = TextAlign.left}){
   return Container(
     color: grey,
     child: Padding(
       padding: const EdgeInsets.all(5.0),
-      child: buildTextBoldWidget(title, blackColor, context, 14.0),
+      child: buildTextBoldWidget(title, blackColor, context, 14.0,align: align),
     ),
   );
 }
 
-buildTableSubtitleForReport(BuildContext context,String subtitle){
+buildTableSubtitleForReport(BuildContext context,String subtitle,
+    {FontWeight fontWeight = FontWeight.normal}){
   return Container(
     color: grey.withOpacity(0.2),
     child: Padding(
       padding: const EdgeInsets.all(5.0),
-      child: buildTextRegularWidget(subtitle, blackColor, context, 14.0,align: TextAlign.center),
+      child: buildTextRegularWidget(subtitle, blackColor, context, 14.0,align: TextAlign.center,fontWeight: fontWeight),
     ),
   );
 }

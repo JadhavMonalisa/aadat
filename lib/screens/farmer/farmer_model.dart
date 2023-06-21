@@ -1,15 +1,15 @@
-class FarmerPattiModel {
+class FarmerPattiDetailsModel {
   int? statusCode;
-  List<FarmerPattiDetails>? farmerPattiDetails;
+  List<FarmerPattiDetailsList>? farmerPattiDetailsList;
 
-  FarmerPattiModel({this.statusCode, this.farmerPattiDetails});
+  FarmerPattiDetailsModel({this.statusCode, this.farmerPattiDetailsList});
 
-  FarmerPattiModel.fromJson(Map<String, dynamic> json) {
+  FarmerPattiDetailsModel.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
     if (json['result'] != null) {
-      farmerPattiDetails = <FarmerPattiDetails>[];
+      farmerPattiDetailsList = <FarmerPattiDetailsList>[];
       json['result'].forEach((v) {
-        farmerPattiDetails!.add(FarmerPattiDetails.fromJson(v));
+        farmerPattiDetailsList!.add(FarmerPattiDetailsList.fromJson(v));
       });
     }
   }
@@ -17,38 +17,38 @@ class FarmerPattiModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['statusCode'] = statusCode;
-    if (farmerPattiDetails != null) {
-      data['result'] = farmerPattiDetails!.map((v) => v.toJson()).toList();
+    if (farmerPattiDetailsList != null) {
+      data['result'] = farmerPattiDetailsList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class FarmerPattiDetails {
-  int? pattiNo;
+class FarmerPattiDetailsList {
+  String? pattiNo;
   String? pattiDate;
   String? accountName;
   String? city;
   String? mEngName;
-  int? qty;
-  int? weight;
-  int? rate;
-  int? amount;
-  double? hamali;
-  double? mapai;
-  int? bharai;
-  int? leavy;
-  int? mcess;
-  double? mFee;
-  int? varai;
-  int? comm;
-  int? other;
-  int? actPatti;
+  String? qty;
+  String? weight;
+  String? rate;
+  String? amount;
+  String? hamali;
+  String? mapai;
+  String? bharai;
+  String? leavy;
+  String? mcess;
+  String? mFee;
+  String? varai;
+  String? comm;
+  String? other;
+  String? actPatti;
   String? amttoword;
-  int? motorRent;
+  String? motorRent;
   String? engFirmName;
 
-  FarmerPattiDetails(
+  FarmerPattiDetailsList(
       {this.pattiNo,
         this.pattiDate,
         this.accountName,
@@ -72,29 +72,29 @@ class FarmerPattiDetails {
         this.motorRent,
         this.engFirmName});
 
-  FarmerPattiDetails.fromJson(Map<String, dynamic> json) {
-    pattiNo = json['pattiNo'];
-    pattiDate = json['pattiDate'];
-    accountName = json['accountName'];
-    city = json['city'];
-    mEngName = json['mEng_name'];
-    qty = json['qty'];
-    weight = json['weight'];
-    rate = json['rate'];
-    amount = json['amount'];
-    hamali = json['hamali'];
-    mapai = json['mapai'];
-    bharai = json['bharai'];
-    leavy = json['leavy'];
-    mcess = json['mcess'];
-    mFee = json['mFee'];
-    varai = json['varai'];
-    comm = json['comm'];
-    other = json['other'];
-    actPatti = json['actPatti'];
-    amttoword = json['amttoword'];
-    motorRent = json['motorRent'];
-    engFirmName = json['engFirmName'];
+  FarmerPattiDetailsList.fromJson(Map<String, dynamic> json) {
+    pattiNo = json['pattiNo'].toString();
+    pattiDate = json['pattiDate'].toString();
+    accountName = json['accountName'].toString();
+    city = json['city'].toString();
+    mEngName = json['mEng_name'].toString();
+    qty = json['qty'].toString();
+    weight = json['weight'].toString();
+    rate = json['rate'].toString();
+    amount = json['amount'].toString();
+    hamali = json['hamali'].toString();
+    mapai = json['mapai'].toString();
+    bharai = json['bharai'].toString();
+    leavy = json['leavy'].toString();
+    mcess = json['mcess'].toString();
+    mFee = json['mFee'].toString();
+    varai = json['varai'].toString();
+    comm = json['comm'].toString();
+    other = json['other'].toString();
+    actPatti = json['actPatti'].toString();
+    amttoword = json['amttoword'].toString();
+    motorRent = json['motorRent'].toString();
+    engFirmName = json['engFirmName'].toString();
   }
 
   Map<String, dynamic> toJson() {

@@ -67,12 +67,11 @@ class ApiRepository {
 
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
-
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return CustomerListModel.fromJson(jsonBody);
   }
   ///weight list api
-  Future<WeightListModel> getWeightList(String custName,int firmId) async {
+  Future<WeightListModel> getWeightList(String custName,int firmId,String date) async {
     var request = http.Request(
       'GET', Uri.parse(ApiEndpoint.weightListUrl),
     )..headers.addAll({
@@ -80,7 +79,7 @@ class ApiRepository {
       HttpHeaders.contentTypeHeader: "application/json",
     });
 
-    var params = {"CustomerName":custName,"ClientID": clientId,"FirmID":firmId};
+    var params = {"CustomerName":custName,"ClientID": clientId,"FirmID":firmId, "BillDate":date};
     request.body = jsonEncode(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
@@ -88,8 +87,8 @@ class ApiRepository {
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return WeightListModel.fromJson(jsonBody);
   }
-  ///mark wise weight list--inprocess
-  Future<MarkWiseWeightListModel> getMarkWiseWeightList(String custNo,String billDate,int firmId) async {
+  ///mark wise weight list report
+  Future<MarkWiseWeightList> getMarkWiseWeightList(int custNo,String billDate,int firmId) async {
     var request = http.Request(
       'GET', Uri.parse(ApiEndpoint.markWiseWeightListUrl),
     )..headers.addAll({
@@ -102,8 +101,10 @@ class ApiRepository {
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
+    print("responsebody");
+    print(responsebody);
     Map<String, dynamic> jsonBody = json.decode(responsebody);
-    return MarkWiseWeightListModel.fromJson(jsonBody);
+    return MarkWiseWeightList.fromJson(jsonBody);
   }
   ///ledger short report
   Future<LedgerShortReportModel> getCustomerLedgerShortReportList(String toDate,String fromDate,int firmId) async {
@@ -114,11 +115,16 @@ class ApiRepository {
       HttpHeaders.contentTypeHeader: "application/json",
     });
 
-    var params = {"toDate":toDate,"fromDate":fromDate,"ClientID": clientId,"FirmID":firmId};
+    var params = {"Fromdate":fromDate,"Todate":toDate,"ClientID": clientId,"FirmID":firmId};
+
+    print("params");
+    print(params);
     request.body = jsonEncode(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
+    print("responsebody");
+    print(responsebody);
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return LedgerShortReportModel.fromJson(jsonBody);
   }
@@ -182,7 +188,8 @@ class ApiRepository {
       HttpHeaders.contentTypeHeader: "application/json",
     });
 
-    var params = {"SupplierName":supplierName,"Fromdate":fromDate,"Todate":toDate,"ClientID": clientId,"FirmID":firmId};
+    var params = {"SupplierName":supplierName,"Fromdate":fromDate,"Todate":toDate,"ClientID": clientId,"FirmID":firmId,
+    "farmer": ""};
     request.body = jsonEncode(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
@@ -207,8 +214,25 @@ class ApiRepository {
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return SupplierLedgerSummaryReportModel.fromJson(jsonBody);
   }
+  ///supplier search
+  Future<SupplierSearchModel> getSupplierSearchUrlList(String name,int firmId) async {
+    var request = http.Request(
+      'GET', Uri.parse(ApiEndpoint.supplierSearchUrl),
+    )..headers.addAll({
+      "Authorization": 'Bearer $token',
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    var params = {"SupplierName":name,"ClientID": clientId,"FirmID":firmId};
+    request.body = jsonEncode(params);
+    http.StreamedResponse response = await request.send();
+    final responsebody = await response.stream.bytesToString();
+
+    Map<String, dynamic> jsonBody = json.decode(responsebody);
+    return SupplierSearchModel.fromJson(jsonBody);
+  }
   ///farmer receipt
-  Future<FarmerPattiModel> getFarmerPattiList(int pattiNo,String pattiDate,int firmId) async {
+  Future<FarmerPattiDetailsModel> getFarmerPattiList(int pattiNo,String pattiDate,int firmId) async {
     var request = http.Request(
       'GET', Uri.parse(ApiEndpoint.farmerPattiUrl),
     )..headers.addAll({
@@ -222,7 +246,7 @@ class ApiRepository {
     final responsebody = await response.stream.bytesToString();
 
     Map<String, dynamic> jsonBody = json.decode(responsebody);
-    return FarmerPattiModel.fromJson(jsonBody);
+    return FarmerPattiDetailsModel.fromJson(jsonBody);
   }
 
 }

@@ -123,8 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         controller: cont.loginPasswordController,
                                         keyboardType: TextInputType.text,
                                         textAlign: TextAlign.left,
-                                        textAlignVertical: TextAlignVertical
-                                            .center,
+                                        obscureText: true,
+                                        textAlignVertical: TextAlignVertical.center,
                                         textInputAction: TextInputAction.done,
                                         onTap: () {},
                                         style: const TextStyle(fontSize: 15.0),

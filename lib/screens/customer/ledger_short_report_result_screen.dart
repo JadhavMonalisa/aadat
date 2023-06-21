@@ -41,7 +41,10 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: ListView(
+                    child:
+                    cont.ledgerShortReportList.isEmpty ? buildNoDataFound(context):
+                    ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
@@ -55,37 +58,66 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                           child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
                         ),
 
-                        Scrollbar(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                              child: Table(
-                                border: TableBorder.all(color: whiteColor,width: 2.0),
-                                defaultColumnWidth: const IntrinsicColumnWidth(),
-                                children: [
-                                  TableRow(
-                                      children: [
-                                        buildTableTitleForReport(context,"Amount"),
-                                        buildTableTitleForReport(context,"Account Name"),
-                                        buildTableTitleForReport(context,"Bill Date"),
-                                        buildTableTitleForReport(context,"Account No"),
-                                      ]
-                                  ),
-                                  for (var data in cont.ledgerShortReportList)
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: cont.ledgerShortReportList.length,
+                            itemBuilder: (context,index){
+                          return Column(
+                            children: [
+                              const SizedBox(height: 20.0,),
+                              cont.ledgerShortReportList.isEmpty?const Text(""):
+                              Center(child:buildTextBoldWidget(cont.ledgerShortReportList[index].accountName!,
+                                  blackColor, context, 15.0)),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:10.0),
+                                child: Table(
+                                  border: TableBorder.all(color: whiteColor,width: 2.0),
+                                  defaultColumnWidth: const IntrinsicColumnWidth(),
+                                  children: [
+                                    // TableRow(
+                                    //     children: [
+                                    //       buildTableTitleForReport(context,"Amount"),
+                                    //       buildTableTitleForReport(context,"Account Name"),
+                                    //       buildTableTitleForReport(context,"Bill Date"),
+                                    //       buildTableTitleForReport(context,"Account No"),
+                                    //     ]
+                                    // ),
+                                    // for (var data in cont.ledgerShortReportList)
+                                    //   TableRow(
+                                    //       children: [
+                                    //         buildTableSubtitleForReport(context,data.amount.toString()),
+                                    //         buildTableSubtitleForReport(context,data.accountName!),
+                                    //         buildTableSubtitleForReport(context,data.billDate!),
+                                    //         buildTableSubtitleForReport(context,data.acctNo.toString()),
+                                    //       ]
+                                    //   ),
                                     TableRow(
                                         children: [
-                                          buildTableSubtitleForReport(context,data.amount.toString()),
-                                          buildTableSubtitleForReport(context,data.accountName!),
-                                          buildTableSubtitleForReport(context,data.billDate!),
-                                          buildTableSubtitleForReport(context,data.acctNo.toString()),
+                                          buildTableTitleForReport(context,"Amount",align: TextAlign.center),
+                                          buildTableTitleForReport(context,"Date",align: TextAlign.center),
                                         ]
                                     ),
-                                ],
+                                    //for (var data in cont.ledgerShortReportList)
+                                      TableRow(
+                                          children: [
+                                            buildTableSubtitleForReport(context,cont.ledgerShortReportList[index].amount.toString()),
+                                            buildTableSubtitleForReport(context,cont.ledgerShortReportList[index].billDate.toString()),
+                                          ]
+                                      ),
+                                    TableRow(
+                                        children: [
+                                          buildTableSubtitleForReport(context,cont.totalCustomerLedgerShortAmtList.isEmpty?"":
+                                              cont.totalCustomerLedgerShortAmtList[index].toString(),fontWeight: FontWeight.bold),
+                                          buildTableSubtitleForReport(context,""),
+                                        ]
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
+                            ],
+                          );
+                        }),
                       ],
                     )
                 ),

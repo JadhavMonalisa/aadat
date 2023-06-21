@@ -80,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: ListView(
+                physics:const AlwaysScrollableScrollPhysics(),
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 30.0,bottom: 20.0),
@@ -198,6 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListView.builder(
                       shrinkWrap: true,
                       itemCount: cont.customerTypeList.length,
+                      physics:const NeverScrollableScrollPhysics(),
                       itemBuilder: (context,index){
                     return buildChoiceDetails(context, cont.customerTypeList[index],cont,cont.customerTypeList,index,"customer");
                   }) : const Opacity(opacity: 0.0,),
@@ -206,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListView.builder(
                       shrinkWrap: true,
                       itemCount: cont.supplierTypeList.length,
+                      physics:const NeverScrollableScrollPhysics(),
                       itemBuilder: (context,index){
                         return buildChoiceDetails(context, cont.supplierTypeList[index],cont,cont.supplierTypeList,index,"supplier");
                       })
@@ -215,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ListView.builder(
                       shrinkWrap: true,
                       itemCount: cont.farmerList.length,
+                      physics:const NeverScrollableScrollPhysics(),
                       itemBuilder: (context,index){
                         return buildChoiceDetails(context, cont.farmerList[index],cont,cont.farmerList,index,"farmer");
                       })

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +17,9 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
+  HttpOverrides.global = MyHttpOverrides();
+  ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
   runZonedGuarded(() {
     runApp(const MyApp());
   }, (error, stackTrace) {
@@ -40,7 +44,7 @@ class MyApp extends StatelessWidget {
       duration: const Duration(seconds: 3),
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "Adat",
+        title: "Aadat",
         theme: ThemeData(
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -57,5 +61,12 @@ class MyApp extends StatelessWidget {
         initialRoute: AppPages.initial,
       ),
     );
+  }
+}
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

@@ -109,6 +109,7 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                         ),
 
                         cont.isLoading ? buildCircularIndicator() :
+                        cont.supplierLedgerSummaryReportList.isEmpty ? buildNoDataFound(context) :
                         cont.isViewSelected
                             ? SizedBox(
                           height: MediaQuery.of(context).size.height,
@@ -128,7 +129,7 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                                           buildTableTitleForReport(context,"Supplier"),
                                           buildTableTitleForReport(context,"Debit Amt"),
                                           buildTableTitleForReport(context,"Credit Amt"),
-                                          buildTableTitleForReport(context,"Mobile"),
+                                          buildTableTitleForReport(context,"Mobile No"),
                                         ]
                                     ),
                                     for (var data in cont.supplierLedgerSummaryReportList)

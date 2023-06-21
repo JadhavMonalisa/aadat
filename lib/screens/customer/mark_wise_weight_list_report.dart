@@ -54,72 +54,95 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                         padding: const EdgeInsets.only(top: 30.0,bottom: 20.0),
                         child: buildTextRegularWidget("CUSTOMER MARK WISE WEIGHT LIST FOR\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      // Row(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Flexible(
+                      //       child: Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.start,
+                      //         children: [
+                      //           GestureDetector(
+                      //             onTap: (){
+                      //               cont.selectCustomerDate(context,"summaryReportFromDate");
+                      //             },
+                      //             child: Container(
+                      //               height: 40.0,
+                      //               decoration: BoxDecoration(
+                      //                 borderRadius: const BorderRadius.all(Radius.circular(5)),
+                      //                 border: Border.all(color:primaryColor),),
+                      //               child: Row(
+                      //                 children: [
+                      //                   const SizedBox(width: 10.0,),
+                      //                   buildTextRegularWidget(cont.selectedSummaryReportFromDateToShow==""?"From Date":cont.selectedSummaryReportFromDateToShow, primaryColor, context, 15.0),
+                      //                   const Spacer(),
+                      //                   const Icon(Icons.calendar_month,color: primaryColor,),
+                      //                   const SizedBox(width: 10.0,)
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //     const SizedBox(width: 10.0,),
+                      //     Flexible(child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         GestureDetector(
+                      //           onTap: (){
+                      //             cont.selectCustomerDate(context,"summaryReportToDate");
+                      //           },
+                      //           child: Container(
+                      //               height: 40.0,
+                      //               decoration: BoxDecoration(
+                      //                 borderRadius: const BorderRadius.all(Radius.circular(5)),
+                      //                 border: Border.all(color:primaryColor),),
+                      //               child: Row(
+                      //                 children: [
+                      //                   const SizedBox(width: 10.0,),
+                      //                   buildTextRegularWidget(cont.selectedSummaryReportToDateToShow==""?"To Date":cont.selectedSummaryReportToDateToShow, primaryColor, context, 15.0),
+                      //                   const Spacer(),
+                      //                   const Icon(Icons.calendar_month,color: primaryColor,),
+                      //                   const SizedBox(width: 10.0,)
+                      //                 ],
+                      //               )
+                      //           ),
+                      //         ),
+                      //       ],))
+                      //   ],
+                      // ),
+
+                      GestureDetector(
+                        onTap: (){
+                          cont.selectCustomerDate(context,"markWiseBillDate");
+                        },
+                        child: Container(
+                            height: 40.0,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(color:primaryColor),),
+                            child: Row(
                               children: [
-                                GestureDetector(
-                                  onTap: (){
-                                    cont.selectCustomerDate(context,"summaryReportFromDate");
-                                  },
-                                  child: Container(
-                                    height: 40.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      border: Border.all(color:primaryColor),),
-                                    child: Row(
-                                      children: [
-                                        const SizedBox(width: 10.0,),
-                                        buildTextRegularWidget(cont.selectedSummaryReportFromDateToShow==""?"From Date":cont.selectedSummaryReportFromDateToShow, primaryColor, context, 15.0),
-                                        const Spacer(),
-                                        const Icon(Icons.calendar_month,color: primaryColor,),
-                                        const SizedBox(width: 10.0,)
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                const SizedBox(width: 10.0,),
+                                buildTextRegularWidget(cont.selectedBillDateToShow==""?"Bill Date":cont.selectedBillDateToShow, primaryColor, context, 15.0),
+                                const Spacer(),
+                                const Icon(Icons.calendar_month,color: primaryColor,),
+                                const SizedBox(width: 10.0,)
                               ],
-                            ),
-                          ),
-                          const SizedBox(width: 10.0,),
-                          Flexible(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  cont.selectCustomerDate(context,"summaryReportToDate");
-                                },
-                                child: Container(
-                                    height: 40.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      border: Border.all(color:primaryColor),),
-                                    child: Row(
-                                      children: [
-                                        const SizedBox(width: 10.0,),
-                                        buildTextRegularWidget(cont.selectedSummaryReportToDateToShow==""?"To Date":cont.selectedSummaryReportToDateToShow, primaryColor, context, 15.0),
-                                        const Spacer(),
-                                        const Icon(Icons.calendar_month,color: primaryColor,),
-                                        const SizedBox(width: 10.0,)
-                                      ],
-                                    )
-                                ),
-                              ),
-                            ],))
-                        ],
+                            )
+                        ),
                       ),
 
                       cont.showCustomerList ?
                       Padding(
                         padding: const EdgeInsets.only(left:10.0,right: 10.0,top: 20.0),
-                        child: buildTextBoldWidget("Select customer", blackColor, context, 15.0),
+                        child: buildTextBoldWidget("Select Mark", blackColor, context, 15.0),
                       ): const Opacity(opacity: 0.0),
 
                       cont.showCustomerList
-                          ? Expanded(
+                          ? cont.customerList.isEmpty ? buildCircularIndicator() :
+
+                      Expanded(
                         child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: cont.customerList.length,
@@ -132,7 +155,7 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                                       ? true : false ,
                                       activeColor: Colors.green,
                                       onChanged:(newValue){
-                                        cont.updateCustomerCheckBox(newValue!,index);
+                                        cont.updateCustomerCheckBox(newValue!,index,cont.customerList[index].custAccountNo!);
                                       }),
                                   const SizedBox(width: 5.0,),
                                   buildTextRegularWidget(cont.customerList[index].custAccountName!, blackColor, context, 14.0)
@@ -146,7 +169,7 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                           padding: const EdgeInsets.only(left: 100.0,right: 100.0,top: 20.0),
                           child:GestureDetector(
                             onTap: (){
-                              //cont.getLedgerMarkWise();
+                              cont.getMarkWiseWeightList();
                             },
                             child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
                           )

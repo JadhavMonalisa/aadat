@@ -99,8 +99,29 @@ class _WeightListScreenState extends State<WeightListScreen> {
                           ),
                         ),
 
+                        GestureDetector(
+                          onTap: (){
+                            cont.selectCustomerDate(context,"forWeightList");
+                          },
+                          child: Container(
+                            height: 40.0,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(color:primaryColor),),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 10.0,),
+                                buildTextRegularWidget(cont.selectedDateForWeightList==""?"Select Bill Date":cont.selectedDateForWeightList, primaryColor, context, 15.0),
+                                const Spacer(),
+                                const Icon(Icons.calendar_month,color: primaryColor,),
+                                const SizedBox(width: 10.0,)
+                              ],
+                            ),
+                          ),
+                        ),
+
                         Padding(
-                            padding: const EdgeInsets.only(left: 100.0,right: 100.0,bottom: 20.0),
+                            padding: const EdgeInsets.only(left: 100.0,right: 100.0,bottom: 20.0,top:20.0),
                             child:GestureDetector(
                               onTap: (){
                                 cont.getWeightList();
@@ -125,7 +146,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                                       children: [
                                         buildTableTitleForReport(context,"Bill Date"),
                                         buildTableTitleForReport(context,"Customer"),
-                                        buildTableTitleForReport(context,"Remark"),
+                                        buildTableTitleForReport(context,"LOT No"),
                                         buildTableTitleForReport(context,"Quantity"),
                                         buildTableTitleForReport(context,"Weight"),
                                         buildTableTitleForReport(context,"Rate"),

@@ -163,3 +163,51 @@ class SupplierLedgerSummaryReportDetails {
     return data;
   }
 }
+
+class SupplierSearchModel {
+  int? statusCode;
+  List<SupplierSearchData>? supplierSearchData;
+
+  SupplierSearchModel({this.statusCode, this.supplierSearchData});
+
+  SupplierSearchModel.fromJson(Map<String, dynamic> json) {
+    statusCode = json['statusCode'];
+    if (json['result'] != null) {
+      supplierSearchData = <SupplierSearchData>[];
+      json['result'].forEach((v) {
+        supplierSearchData!.add(SupplierSearchData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (supplierSearchData != null) {
+      data['result'] = supplierSearchData!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SupplierSearchData {
+  String? suppAccountNo;
+  String? suppAccountName;
+  String? city;
+
+  SupplierSearchData({this.suppAccountNo, this.suppAccountName, this.city});
+
+  SupplierSearchData.fromJson(Map<String, dynamic> json) {
+    suppAccountNo = json['suppAccountNo']==null?"":json['suppAccountNo'].toString();
+    suppAccountName = json['suppAccountName']==null?"":json['suppAccountName'].toString();
+    city = json['city']==null ?"" :json['city'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['suppAccountNo'] = suppAccountNo;
+    data['suppAccountName'] = suppAccountName;
+    data['city'] = city;
+    return data;
+  }
+}

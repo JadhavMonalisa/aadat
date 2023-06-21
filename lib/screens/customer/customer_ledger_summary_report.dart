@@ -119,8 +119,13 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                             )
                         ),
                         const SizedBox(height: 20.0,),
+
+                        cont.isLoading ? buildCircularIndicator():
+
                         cont.isViewSelected
-                            ? SizedBox(
+                            ?
+                        cont.ledgerSummaryReportList.isEmpty ? buildNoDataFound(context):
+                        SizedBox(
                           height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
                           child: Scrollbar(

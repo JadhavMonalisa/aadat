@@ -40,6 +40,7 @@ class _ResultScreenState extends State<ResultScreen> {
               ),
               body:
               cont.isLoading ? buildCircularIndicator() :
+                  cont.ledgerReportList.isEmpty ? buildNoDataFound(context):
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top: 30.0),
                 child: SizedBox(

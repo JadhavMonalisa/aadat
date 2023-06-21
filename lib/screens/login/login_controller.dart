@@ -16,11 +16,17 @@ class LoginController extends GetxController {
   TextEditingController loginPasswordController = TextEditingController();
   TextEditingController forgotPassLoginNameController = TextEditingController();
   bool isLoading = false;
+  bool showPass = false;
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+  }
+
+  onPassChanges(){
+    showPass = !showPass;
+    update();
   }
 
   checkLoginValidation(BuildContext context){

@@ -6,6 +6,7 @@ import 'package:adat/screens/customer/customer_ledger_report.dart';
 import 'package:adat/screens/customer/ledger_short_report_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report.dart';
+import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/customer/receipt.dart';
 import 'package:adat/screens/customer/result_screen.dart';
 import 'package:adat/screens/customer/weight_list.dart';
@@ -93,6 +94,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.markWiseResultScreen,
       page: () => const MarkWiseResultScreen(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.markWiseWeightListResultReport,
+      page: () => const MarkWiseWeightListResultReport(),
       binding: HomeBinding(),
     ),
 

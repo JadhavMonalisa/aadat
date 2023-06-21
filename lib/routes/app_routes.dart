@@ -14,6 +14,7 @@ abstract class AppRoutes {
   static const customerLedgerSummaryReport = '/customerLedgerSummaryReport-page';
   static const customerMarkWiseWeightListReportScreen = '/customerMarkWiseWeightListReportScreen-page';
   static const markWiseResultScreen = '/markWiseResultScreen-page';
+  static const markWiseWeightListResultReport = '/markWiseWeightListResultReport-page';
 
   static const supplierLedgerReport = '/supplierLedgerReport-page';
   static const supplierLedgerSummaryReport = '/supplierLedgerSummaryReport-page';

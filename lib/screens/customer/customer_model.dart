@@ -76,9 +76,9 @@ class WeightListDetails {
   String? billDate;
   String? custAccountName;
   String? remark;
-  int? qty;
-  int? weight;
-  int? rate;
+  String? qty;
+  String? weight;
+  String? rate;
   String? suppAccountName;
 
   WeightListDetails(
@@ -91,13 +91,13 @@ class WeightListDetails {
         this.suppAccountName});
 
   WeightListDetails.fromJson(Map<String, dynamic> json) {
-    billDate = json['billDate'];
-    custAccountName = json['custAccountName'];
-    remark = json['remark'];
-    qty = json['qty'];
-    weight = json['weight'];
-    rate = json['rate'];
-    suppAccountName = json['suppAccountName'];
+    billDate = json['billDate'].toString();
+    custAccountName = json['custAccountName'].toString();
+    remark = json['remark'].toString();
+    qty = json['qty'].toString();
+    weight = json['weight'].toString();
+    rate = json['rate'].toString();
+    suppAccountName = json['suppAccountName'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -113,13 +113,13 @@ class WeightListDetails {
   }
 }
 
-class MarkWiseWeightListModel {
+class MarkWiseWeightList {
   int? statusCode;
   List<MarkWiseWeightListDetails>? markWiseWeightListDetails;
 
-  MarkWiseWeightListModel({this.statusCode, this.markWiseWeightListDetails});
+  MarkWiseWeightList({this.statusCode, this.markWiseWeightListDetails});
 
-  MarkWiseWeightListModel.fromJson(Map<String, dynamic> json) {
+  MarkWiseWeightList.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
     if (json['result'] != null) {
       markWiseWeightListDetails = <MarkWiseWeightListDetails>[];
@@ -141,9 +141,9 @@ class MarkWiseWeightListModel {
 
 class MarkWiseWeightListDetails {
   String? mark;
-  int? qty;
-  int? weight;
-  int? amount;
+  String? qty;
+  String? weight;
+  String? amount;
   String? billDate;
   String? custAccountName;
 
@@ -156,12 +156,12 @@ class MarkWiseWeightListDetails {
         this.custAccountName});
 
   MarkWiseWeightListDetails.fromJson(Map<String, dynamic> json) {
-    mark = json['mark'];
-    qty = json['qty'];
-    weight = json['weight'];
-    amount = json['amount'];
-    billDate = json['billDate'];
-    custAccountName = json['custAccountName'];
+    mark = json['mark'].toString();
+    qty = json['qty'].toString();
+    weight = json['weight'].toString();
+    amount = json['amount'].toString();
+    billDate = json['billDate'].toString();
+    custAccountName = json['custAccountName'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -203,18 +203,18 @@ class LedgerShortReportModel {
 }
 
 class LedgerShortReportDetails {
-  int? amount;
+  String? amount;
   String? billDate;
   String? accountName;
-  int? acctNo;
+  String? acctNo;
 
   LedgerShortReportDetails({this.amount, this.billDate, this.accountName, this.acctNo});
 
   LedgerShortReportDetails.fromJson(Map<String, dynamic> json) {
-    amount = json['amount'];
-    billDate = json['billDate'];
-    accountName = json['accountName'];
-    acctNo = json['acctNo'];
+    amount = json['amount'].toString();
+    billDate = json['billDate'].toString();
+    accountName = json['accountName'].toString();
+    acctNo = json['acctNo'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -341,7 +341,7 @@ class CustomerLedgerReportDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['srNo'] = srNo;
     data['recieptDate'] = recieptDate;
     data['recieptNarration'] = recieptNarration;
