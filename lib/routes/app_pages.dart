@@ -1,8 +1,10 @@
 
 import 'package:adat/screens/common/splash_screen.dart';
+import 'package:adat/screens/customer/customer_bill_report.dart';
 import 'package:adat/screens/customer/customer_ledger_short_report.dart';
 import 'package:adat/screens/customer/customer_ledger_summary_report.dart';
 import 'package:adat/screens/customer/customer_ledger_report.dart';
+import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/ledger_short_report_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report.dart';
@@ -64,6 +66,16 @@ class AppPages {
     GetPage(
       name: AppRoutes.customerWightListScreen,
       page: () => const WeightListScreen(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.customerWeightListExportScreen,
+      page: () => const CustomerWeightListExportScreen(),
+      binding: HomeBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.customerBillReportScreen,
+      page: () => const BillReportScreen(),
       binding: HomeBinding(),
     ),
     GetPage(

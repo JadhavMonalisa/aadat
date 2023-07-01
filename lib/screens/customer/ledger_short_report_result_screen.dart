@@ -42,7 +42,6 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child:
-                    cont.ledgerShortReportList.isEmpty ? buildNoDataFound(context):
                     ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
@@ -55,9 +54,39 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
 
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
-                          child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                          child: GestureDetector(
+                            onTap: (){
+
+                            },
+                            child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                          )
                         ),
 
+                        TextField(
+                          onChanged: (value) {
+                            cont.filterSearchResults(value);
+                          },
+                          controller: cont.editingController,
+                          decoration: InputDecoration(
+                            hintText: "Search",
+                            prefixIcon: const Icon(Icons.search),
+                            suffixIcon: GestureDetector(
+                              onTap: (){
+                                cont.isLoading = true;
+                                cont.editingController.clear();
+                                cont.callLedgerShortReportList();
+                              },
+                              child: const Icon(Icons.clear),
+                            ),
+                            border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(0.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        cont.isLoading ? buildCircularIndicator():
+                        cont.ledgerShortReportList.isEmpty ? buildNoDataFound(context):
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),

@@ -314,15 +314,16 @@ buildChoiceDetails(BuildContext context,String title,HomeController cont,List li
   );
 }
 
-buildTableTitleForReport(BuildContext context,String title,{TextAlign align = TextAlign.left}){
+buildTableTitleForReport(BuildContext context,String title,{TextAlign align = TextAlign.left,Color boxColor = grey}){
   return Container(
-    color: grey,
+    color: boxColor,
     child: Padding(
       padding: const EdgeInsets.all(5.0),
       child: buildTextBoldWidget(title, blackColor, context, 14.0,align: align),
     ),
   );
 }
+
 
 buildTableSubtitleForReport(BuildContext context,String subtitle,
     {FontWeight fontWeight = FontWeight.normal}){

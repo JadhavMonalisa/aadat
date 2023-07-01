@@ -4,6 +4,9 @@ import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class CustomerLedgerSummaryReport extends StatefulWidget {
   const CustomerLedgerSummaryReport({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class CustomerLedgerSummaryReport extends StatefulWidget {
 }
 
 class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryReport> {
+  final pdf = pw.Document();
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (cont)
@@ -161,7 +165,8 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                               ),
                             ),
                           ),
-                        ) : const Opacity(opacity: 0.0)
+                        )
+                            : const Opacity(opacity: 0.0)
                       ],
                     )
                 ),

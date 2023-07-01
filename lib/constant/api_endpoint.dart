@@ -10,6 +10,8 @@ class ApiEndpoint {
   static const String customerLedgerShortReportListUrl = "http://adatapi.demofms.com/api/Users/GetCustomerLedgerShortReport";
   static const String customerLedgerSummaryReportListUrl = "http://adatapi.demofms.com/api/Users/GetCustomerLedgerSummaryReport";
   static const String customerLedgerReportListUrl = "http://adatapi.demofms.com/api/Users/GetCustomerDetailsFormatTwo";
+  static const String customerLedgerBillListUrl = "http://adatapi.demofms.com/api/Users/GetCustomerReceipt";
+
   ///supplier
   static const String supplierListUrl = "http://adatapi.demofms.com/api/Users/GetSupplierDetails";
   static const String supplierLedgerReportUrl = "http://adatapi.demofms.com/api/Users/GetSupplierLegderReportFormateTwo";

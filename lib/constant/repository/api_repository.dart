@@ -162,6 +162,23 @@ class ApiRepository {
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return CustomerLedgerReportModel.fromJson(jsonBody);
   }
+  ///bill
+  Future<BillReportModel> getCustomerBillReportList(String billNo,String billDate,int firmId) async {
+    var request = http.Request(
+      'GET', Uri.parse(ApiEndpoint.customerLedgerBillListUrl),
+    )..headers.addAll({
+      "Authorization": 'Bearer $token',
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    var params = {"BillNo":int.parse(billNo),"BillDate":billDate,"ClientID": clientId,"FirmID":firmId};
+    request.body = jsonEncode(params);
+    http.StreamedResponse response = await request.send();
+    final responsebody = await response.stream.bytesToString();
+
+    Map<String, dynamic> jsonBody = json.decode(responsebody);
+    return BillReportModel.fromJson(jsonBody);
+  }
   ///supplier list
   Future<SupplierListModel> getSupplierList(int firmId) async {
     var request = http.Request(

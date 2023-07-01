@@ -8,6 +8,8 @@ abstract class AppRoutes {
   static const customerLedgerReport = '/customerLedgerReport-page';
   static const customerLedgerReportResultScreen = '/customerLedgerReportResult-page';
   static const customerWightListScreen = '/customerWightListScreen-page';
+  static const customerWeightListExportScreen = '/customerWeightListExportScreen-page';
+  static const customerBillReportScreen = '/customerBillReportScreen-page';
   static const customerReceipt = '/customerReceipt-page';
   static const customerLedgerShortReport = '/customerLedgerShortReport-page';
   static const customerLedgerShortReportResult = '/customerLedgerShortReportResult-page';

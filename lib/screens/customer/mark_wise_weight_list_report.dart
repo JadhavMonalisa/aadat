@@ -155,7 +155,7 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                                       ? true : false ,
                                       activeColor: Colors.green,
                                       onChanged:(newValue){
-                                        cont.updateCustomerCheckBox(newValue!,index,cont.customerList[index].custAccountNo!);
+                                        cont.updateCustomerCheckBox(newValue!,index,cont.customerList[index].custAccountNo!,cont.customerList[index].custAccountName!);
                                       }),
                                   const SizedBox(width: 5.0,),
                                   buildTextRegularWidget(cont.customerList[index].custAccountName!, blackColor, context, 14.0)

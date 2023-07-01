@@ -1,10 +1,15 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
+import 'package:adat/screens/customer/customer_model.dart';
 import 'package:adat/screens/home/home_controller.dart';
+import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_datagrid_export/export.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class MarkWiseWeightListResultReport extends StatefulWidget {
   const MarkWiseWeightListResultReport({Key? key}) : super(key: key);
@@ -14,6 +19,8 @@ class MarkWiseWeightListResultReport extends StatefulWidget {
 }
 
 class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResultReport> {
+  final GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (cont)
@@ -24,6 +31,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
         },
         child: SafeArea(
             child: Scaffold(
+              key: key,
               appBar: AppBar(
                 backgroundColor: primaryColor,
                 centerTitle: true,
@@ -54,7 +62,13 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
 
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
-                          child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                          child: GestureDetector(
+                            onTap: (){
+                              // exportThisDocument();
+                              // exportDataGridToPdf();
+                            },
+                            child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                          ),
                         ),
 
                         cont.markWiseWeightList.isEmpty ? buildNoDataFound(context):
@@ -69,8 +83,9 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                                 children: [
                                   TableRow(
                                       children: [
-                                        buildTableTitleForReport(context,"Checkbox"),
+                                        buildTableTitleForReport(context,"",boxColor:Colors.white),
                                         buildTableTitleForReport(context,"Customer Mark"),
+                                        buildTableTitleForReport(context,"Customer Name"),
                                         buildTableTitleForReport(context,"Total Quantity"),
                                         buildTableTitleForReport(context,"Total Weight"),
                                         buildTableTitleForReport(context,"Avg. Rate"),
@@ -87,6 +102,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                                                 cont.updateMarkWiseListCheckBox(newValue!,index);
                                               }),
                                           buildTableSubtitleForReport(context,cont.markWiseWeightList[index].mark.toString()),
+                                          buildTableSubtitleForReport(context,cont.selectedCustomerNameInMarkList),
                                           buildTableSubtitleForReport(context,cont.markWiseWeightList[index].qty.toString()),
                                           buildTableSubtitleForReport(context,cont.markWiseWeightList[index].weight.toString()),
                                           buildTableSubtitleForReport(context,cont.markWiseWeightList[index].amount.toString()),
@@ -105,5 +121,105 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
         ),
       );
     });
+  }
+
+  Future<void> exportDataGridToPdf() async {
+    final PdfDocument document =
+    key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true,);
+
+    final List<int> bytes = document.saveSync();
+    await saveAndLaunchFile(bytes, 'DataGrid.pdf');
+    print("pdf exp");
+    //document.dispose();
+  }
+
+  exportThisDocument(){
+    return GetBuilder<HomeController>(builder: (cont){
+      return SfDataGrid(
+        key: key,
+        source: cont.markWiseWeightListDataSource,
+        columnWidthMode: ColumnWidthMode.auto,
+        columns: <GridColumn>[
+          GridColumn(
+              columnName: 'Customer Mark',
+              label: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'Customer Mark',
+                  ))),
+          GridColumn(
+              columnName: 'Customer Name',
+              label: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text('Customer Name'))),
+          GridColumn(
+              columnName: 'Total Quantity',
+              width: 100.0,
+              label: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'Total Quantity',
+                    overflow: TextOverflow.ellipsis,
+                  ))),
+          GridColumn(
+              columnName: 'Total Weight',
+              label: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text('Total Weight'))),
+          GridColumn(
+              columnName: 'Avg. Rate',
+              label: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  alignment: Alignment.centerLeft,
+                  child: const Text('Avg. Rate'))),
+        ],
+      );
+    });
+  }
+}
+
+
+class MarkWiseWeightListDataSource extends DataGridSource {
+  MarkWiseWeightListDataSource({required List<MarkWiseWeightListDetails> weightListData}) {
+    _markWiseWeightListData = weightListData
+        .map<DataGridRow>((MarkWiseWeightListDetails e) =>
+        DataGridRow(cells: <DataGridCell>[
+          DataGridCell<String>(
+            columnName: 'Customer Mark',
+            value: e.mark,
+          ),
+          DataGridCell<String>(
+            columnName: 'Customer Name',
+            value: e.custAccountName,
+          ),
+          DataGridCell<String>(
+              columnName: 'Total Quantity', value: e.qty),
+          DataGridCell<String>(columnName: 'Total Weight', value: e.weight),
+          DataGridCell<String>(columnName: 'Avg. Rate', value: e.amount),
+        ]))
+        .toList();
+  }
+
+  List<DataGridRow> _markWiseWeightListData = <DataGridRow>[];
+
+  @override
+  List<DataGridRow> get rows => _markWiseWeightListData;
+
+  @override
+  DataGridRowAdapter buildRow(DataGridRow row) {
+    return DataGridRowAdapter(
+        cells: row.getCells().map<Widget>((DataGridCell cell) {
+          return Container(
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              cell.value.toString(),
+            ),
+          );
+        }).toList());
   }
 }

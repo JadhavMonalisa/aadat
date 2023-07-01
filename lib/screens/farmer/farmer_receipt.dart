@@ -148,7 +148,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                         ),
                         cont.isViewSelected
                        ? cont.isLoading ? buildCircularIndicator() :
-                             cont.farmerPattiList.isEmpty ? buildNoDataFound(context):
                         Scrollbar(
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
@@ -214,7 +213,9 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                               //       ),
                               //   ],
                               // ),
-                              child:Column(
+                              child:
+                              cont.farmerPattiList.isEmpty ? buildNoDataFound(context):
+                              Column(
                                 children: [
                                   Table(
                                     border: TableBorder.all(color: blackColor,width: 2.0),
@@ -222,65 +223,88 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                     children: [
                                       TableRow(
                                           children: [
-                                            buildTableTitleForReport(context,"Title 1"),
-                                            buildTableTitleForReport(context,"Title 2"),
-                                            buildTableTitleForReport(context,"Title 3"),
-                                            buildTableTitleForReport(context,"Title 4"),
-                                            buildTableTitleForReport(context,"Title 5"),
-                                            buildTableTitleForReport(context,"Title 6"),
+                                            buildTableTitleForReport(context,"Product Name"),
+                                            buildTableTitleForReport(context,"Vakkal"),
+                                            buildTableTitleForReport(context,"Daag"),
+                                            buildTableTitleForReport(context,"Weight"),
+                                            buildTableTitleForReport(context,"Rate"),
+                                            buildTableTitleForReport(context,"Total"),
                                           ]
                                       ),
                                       for (var data in cont.farmerPattiList)
                                         TableRow(
                                             children: [
-                                              buildTableSubtitleForReport(context,data.mEngName.toString()),
-                                              buildTableSubtitleForReport(context,data.mEngName!),
-                                              buildTableSubtitleForReport(context,data.mEngName!),
-                                              buildTableSubtitleForReport(context,data.mEngName!),
-                                              buildTableSubtitleForReport(context,data.mEngName.toString()),
-                                              buildTableSubtitleForReport(context,data.mEngName.toString()),
+                                              buildTableSubtitleForReport(context,data.prodName.toString()),
+                                              buildTableSubtitleForReport(context,data.vakkal.toString()),
+                                              buildTableSubtitleForReport(context,data.qty.toString()),
+                                              buildTableSubtitleForReport(context,data.weight!),
+                                              buildTableSubtitleForReport(context,data.rate.toString()),
+                                              buildTableSubtitleForReport(context,data.amount.toString()),
                                             ]
                                         ),
-                                      for (var data in cont.farmerPattiList)
-                                        TableRow(
-                                            children: [
-                                              buildTableSubtitleForReport(context,data.mEngName.toString()),
-                                              const Opacity(opacity: 0.0,),
-                                              buildTableSubtitleForReport(context,data.mEngName!),
-                                              buildTableSubtitleForReport(context,data.mEngName!),
-                                              const Opacity(opacity: 0.0,),
-                                              const Opacity(opacity: 0.0,),
-                                            ]
-                                        ),
-                                    ],
-                                  ),
-                                  Table(
-                                    border: TableBorder.all(color: blackColor,width: 2.0),
-                                    defaultColumnWidth: const IntrinsicColumnWidth(),
-                                    children: [
                                       TableRow(
                                           children: [
-                                            Row(children: [
-                                              Text("Aadat"),
-                                              Text("Hamali"),
-                                              Text("Tolai"),
-                                              Text("Total"),
-                                            ],),
+                                            buildTableSubtitleForReport(context,"Total"),
+                                            buildTableSubtitleForReport(context,""),
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].totQty!),
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].totWeight!),
+                                            buildTableSubtitleForReport(context,""),
+                                            buildTableSubtitleForReport(context,""),
                                           ]
                                       ),
-                                      for (var data in cont.farmerPattiList)
+                                      TableRow(
+                                          children: [
+                                            buildTableTitleForReport(context,"Aadat"),
+                                            buildTableTitleForReport(context,"Hamali"),
+                                            buildTableTitleForReport(context,"Tolai"),
+                                            buildTableTitleForReport(context,"Mo. Rent"),
+                                            buildTableTitleForReport(context,"Total"),
+                                            buildTableTitleForReport(context,cont.farmerPattiList[0].totAmount!),
+                                          ]
+                                      ),
+                                      //for (var data in cont.farmerPattiList)
+                                      TableRow(
+                                          children: [
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].adat!),
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].hamali!),
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].mapai!),
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].motorRent!),
+                                            buildTableSubtitleForReport(context,"Kharch (-)"),
+                                            buildTableSubtitleForReport(context,cont.farmerPattiList[0].netExp!),
+                                          ]
+                                      ),
+                                      TableRow(
+                                          children: [
+                                            buildTableTitleForReport(context,"Bharai"),
+                                            buildTableTitleForReport(context,"Varai"),
+                                            buildTableTitleForReport(context,"Other exp"),
+                                            buildTableTitleForReport(context,"Uchal"),
+                                            buildTableTitleForReport(context,"Total"),
+                                            buildTableTitleForReport(context,""),
+                                          ]
+                                      ),
+                                      //for (var data in cont.farmerPattiList)
                                         TableRow(
                                             children: [
-                                             Row(
-                                               children: [
-                                                 Text("s1"),
-                                                 Text("s2"),
-                                                 Text("s3"),
-                                                 Text("s4"),
-                                               ],
-                                             )
+                                              buildTableSubtitleForReport(context,cont.farmerPattiList[0].bharai!),
+                                              buildTableSubtitleForReport(context,cont.farmerPattiList[0].varai!),
+                                              buildTableSubtitleForReport(context,cont.farmerPattiList[0].other!),
+                                              buildTableSubtitleForReport(context,cont.farmerPattiList[0].uchal!),
+                                              buildTableSubtitleForReport(context,"Total"),
+                                              buildTableSubtitleForReport(context,cont.farmerPattiList[0].netAmount!),
                                             ]
                                         ),
+                                      // for (var data in cont.farmerPattiList)
+                                      //   TableRow(
+                                      //       children: [
+                                      //         buildTableSubtitleForReport(context,data.mEngName.toString()),
+                                      //         const Opacity(opacity: 0.0,),
+                                      //         buildTableSubtitleForReport(context,data.mEngName!),
+                                      //         buildTableSubtitleForReport(context,data.mEngName!),
+                                      //         const Opacity(opacity: 0.0,),
+                                      //         const Opacity(opacity: 0.0,),
+                                      //       ]
+                                      //   ),
                                     ],
                                   ),
                                 ],

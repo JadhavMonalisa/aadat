@@ -1,11 +1,15 @@
 import 'dart:io';
+import 'dart:io';
 
 import 'package:adat/constant/provider/custom_exception.dart';
 import 'package:adat/constant/repository/api_repository.dart';
 import 'package:adat/routes/app_pages.dart';
 import 'package:adat/screens/customer/customer_model.dart';
+import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
+import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/farmer/farmer_model.dart';
 import 'package:adat/screens/home/firm_model.dart';
+import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/screens/supplier/supplier_model.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
@@ -14,6 +18,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_datagrid_export/export.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'dart:io';
+
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart'
+as path_provider_interface;
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 class HomeController extends GetxController {
 
@@ -39,6 +52,13 @@ class HomeController extends GetxController {
     token = GetStorage().read("clientToken")??"";
     repository.getData();
     callFirmList();
+
+    weightListForExport = getWeightListData();
+    weightListDataSource = WeightListDataSource(weightListData: weightListForExport);
+
+    markWiseWeightListExport = getMarkWiseWeightListDataForPdf();
+    markWiseWeightListDataSource = MarkWiseWeightListDataSource(weightListData: markWiseWeightListExport);
+
   }
 
   ///common
@@ -121,6 +141,9 @@ class HomeController extends GetxController {
       callCustomerList();
       Get.toNamed(AppRoutes.customerWightListScreen,); update();
     }
+    else if(title == "BILL" && fromScreen == "customer"){
+      Get.toNamed(AppRoutes.customerBillReportScreen); update();
+    }
     else if(title == "LEDGER SHORT REPORT" && fromScreen == "customer"){
       callCustomerList();
       Get.toNamed(AppRoutes.customerLedgerShortReport); update();
@@ -191,7 +214,7 @@ class HomeController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   navigateFromWeightListToHome(){
-    selectedCustomer = ""; isViewSelected = false;selectedDateForWeightList = "";
+    weightListSelectedCustomerName = ""; isViewSelected = false;selectedDateForWeightList = "";
     update();
     Get.toNamed(AppRoutes.home);
   }
@@ -237,7 +260,6 @@ class HomeController extends GetxController {
       selectedToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
       update();
     }
-
     else if(selection == "receiptDate"){
       selectedReceiptBillDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
       update();
@@ -252,6 +274,10 @@ class HomeController extends GetxController {
     }
     else if(selection == "summaryReportFromDate"){
       selectedSummaryReportFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      update();
+    }
+    else if(selection == "bill date"){
+      billDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "summaryReportToDate"){
@@ -308,7 +334,7 @@ class HomeController extends GetxController {
   List<WeightListDetails> weightList = [];
   getWeightList(){
     isLoading = true;
-    if(selectedCustomer == ""){
+    if(weightListSelectedCustomerName == ""){
       showToast("Please select customer!");
       isLoading = false; update();
     }
@@ -318,13 +344,63 @@ class HomeController extends GetxController {
     }
     update();
   }
+
+  List<WeightListDetails> getWeightListData() {
+    for (var element in weightListForExport) {
+      WeightListDetails(
+        billDate: element.billDate,
+        custAccountName: element.custAccountName,
+        qty: element.qty,
+        rate: element.rate,
+        remark: element.remark,
+        suppAccountName: element.suppAccountName,
+        weight: element.weight
+      );
+    }
+    return weightListForExport;
+  }
+  List<MarkWiseWeightListDetails> getMarkWiseWeightListDataForPdf() {
+    for (var element in markWiseWeightListExport) {
+      MarkWiseWeightListDetails(
+        billDate: element.billDate,
+        custAccountName: element.custAccountName,
+        qty: element.qty,
+        weight: element.weight,
+        amount: element.amount,
+        mark: element.mark
+      );
+    }
+    return markWiseWeightListExport;
+  }
+
+  List<MarkWiseWeightListDetails> markWiseWeightList = [];
+
+  getMarkWiseWeightList(){
+    if(selectedBillDateToShow == ""){
+      showToast("Please select bill date!"); update();
+    }
+    else if(selectedCustNo == 0){
+      showToast("Please select customer!"); update();
+    }
+    else{
+      callMarkWiseWeightListReport();
+    }
+    update();
+  }
+
   callWeightList() async{
+    //Get.toNamed(AppRoutes.customerWeightListExportScreen);
     weightList.clear();
+    weightListForExport.clear();
     try {
       Utils.dismissKeyboard();
-      WeightListModel? response = (await repository.getWeightList(selectedCustomer,selectedFirmId!,selectedDateForWeightList));
+      WeightListModel? response = (await repository.getWeightList(weightListSelectedCustomerName,selectedFirmId!,selectedDateForWeightList));
       if (response.statusCode==200) {
         weightList.addAll(response.weightListDetails!);
+        weightListForExport.addAll(response.weightListDetails!);
+        weightListDataSource = WeightListDataSource(weightListData: weightListForExport);
+        print("weightListDataSource");
+        print(weightListDataSource);
         isLoading = false;
         update();
       }
@@ -343,21 +419,6 @@ class HomeController extends GetxController {
     update();
   }
 
-  List<MarkWiseWeightListDetails> markWiseWeightList = [];
-
-  getMarkWiseWeightList(){
-    if(selectedBillDateToShow == ""){
-      showToast("Please select bill date!"); update();
-    }
-    else if(selectedCustNo == 0){
-      showToast("Please select customer!"); update();
-    }
-    else{
-      callMarkWiseWeightListReport();
-    }
-    update();
-  }
-
   callMarkWiseWeightListReport() async{
 
     markWiseWeightList.clear();
@@ -367,6 +428,7 @@ class HomeController extends GetxController {
 
       if (response.statusCode==200) {
         markWiseWeightList.addAll(response.markWiseWeightListDetails!);
+        markWiseWeightListDataSource = MarkWiseWeightListDataSource(weightListData: markWiseWeightList);
         isLoading = false;
         update();
       }
@@ -416,6 +478,7 @@ class HomeController extends GetxController {
     totalSupplierLedgerShortReportAmt=0;
     totalCustomerLedgerShortAmtList.clear();
     addedAmt = 0;
+    editingController.clear();
     update();
     Get.toNamed(screen);
   }
@@ -432,7 +495,6 @@ class HomeController extends GetxController {
           selectedShortReportToDateToShow,selectedShortReportFromDateToShow,selectedFirmId!));
       if (response.statusCode==200) {
         ledgerShortReportList.addAll(response.ledgerShortReportDetails!);
-
         for (var element in response.ledgerShortReportDetails!) {
           addedAmt = addedAmt + int.parse(element.amount!);
           totalCustomerLedgerShortAmtList.add(addedAmt);
@@ -455,6 +517,37 @@ class HomeController extends GetxController {
       update();
     }
     Get.toNamed(AppRoutes.customerLedgerShortReportResult);
+    update();
+  }
+
+  TextEditingController editingController = TextEditingController();
+  //var items = <String>[];
+  bool noDataFoundForSearch = true;
+
+  void filterSearchResults(String query) {
+
+    var newList = ledgerShortReportList.where(
+            (t) => t.accountName!.toLowerCase().contains(query.toLowerCase()) ||
+                t.accountName!.toUpperCase().contains(query.toLowerCase())
+    ).toList();
+
+    print("newList");
+    print(newList);
+    if(newList.isEmpty){
+      ledgerShortReportList.clear();
+      update();
+    }
+    else{
+      ledgerShortReportList.clear();
+      for (var element in newList) {
+        print("result");
+        print(element.accountName);
+        print(element.amount);
+      }
+      noDataFoundForSearch = false;
+      ledgerShortReportList = newList;
+    }
+
     update();
   }
 
@@ -559,6 +652,80 @@ class HomeController extends GetxController {
     update();
   }
 
+  List<BillReportListData> billReportList = [];
+  TextEditingController billNo = TextEditingController();
+  String billDate = "";
+  bool showBillReport = false;
+
+  bool showBillDate = true;
+  bool showBillNo = true;
+
+  void onBillDateSelectionChange(BuildContext context){
+    showBillDate = true; showBillNo = false; Utils.dismissKeyboard();
+    selectCustomerDate(context,"bill date");
+    billNo.clear();
+    update();
+  }
+  void onBillNoSelectionChange(){
+    showBillDate = false; showBillNo = true;
+    billDate="";
+    update();
+  }
+
+
+  ///bill report list
+  callBillReportList() async{
+    print("api call");
+    billReportList.clear();
+    try {
+      Utils.dismissKeyboard();
+      BillReportModel? response = (await repository.getCustomerBillReportList(
+          billNo.text,billDate,selectedFirmId!));
+      print(response.statusCode);
+      if (response.statusCode==200) {
+        billReportList.addAll(response.billReportListData!);
+        isLoading = false;
+        update();
+      }
+      else {
+        print(response.statusCode);
+        isLoading = false;
+        update();
+      }
+      update();
+    } on CustomException catch (e) {
+      isLoading = false;
+      update();
+    } catch (error) {
+      isLoading = false;
+      update();
+    }
+    update();
+  }
+
+  showBillResult(){
+    if(billNo.text==""){
+      print("if");
+      Utils.showErrorSnackBar("Please enter bill no");update();
+    }
+    else if(billDate==""){
+      print("else if");
+      Utils.showErrorSnackBar("Please enter bill date");update();
+    }
+    else{
+      showBillReport = true; update();
+      callBillReportList();
+    }
+    update();
+  }
+
+  onBackPressFromBillReport(){
+    billNo.clear(); billDate = ""; showBillReport = false;
+    showPattiNo= true; showPattiDate = true;
+    update();
+    Get.toNamed(AppRoutes.home);
+  }
+
   ///customer mark wise report
   TextEditingController receiptBillNo = TextEditingController();
   TextEditingController receiptSearchParameter = TextEditingController();
@@ -580,6 +747,7 @@ class HomeController extends GetxController {
   }
 
   navigateFromFarmerReceiptToHome(){
+    isViewSelected = false; showPattiDate = true; showPattiNo = true;
     selectedFromDateToShow=""; pattiNo.clear();
     selectedDate = DateTime.now();
     update();
@@ -603,6 +771,7 @@ class HomeController extends GetxController {
 
   List<int> addedCustomerIndex = [];
   List<int> addedMarkWiseListIndex = [];
+  List<int> addedWeightListIndex = [];
   bool cbCustomer = false;
   bool cbMarkWiseCustomer = false;
 
@@ -673,9 +842,13 @@ class HomeController extends GetxController {
   }
 
   int selectedCustNo = 0;
-  updateCustomerCheckBox(bool selectCustomer,int customerIndex,int custNo){
+  String selectedCustomerNameInMarkList = "";
+  updateCustomerCheckBox(bool selectCustomer,int customerIndex,int custNo,String custName){
     cbCustomer = selectCustomer;
     selectedCustNo = custNo;
+    selectedCustomerNameInMarkList = custName;
+    print("selectedCustomerNameInMarkList");
+    print(selectedCustomerNameInMarkList);
 
     if(addedCustomerIndex.contains(customerIndex)){
       addedCustomerIndex.clear();
@@ -697,6 +870,21 @@ class HomeController extends GetxController {
     else{
       addedMarkWiseListIndex.clear();
       addedMarkWiseListIndex.add(customerIndex);
+    }
+    update();
+  }
+
+  String weightListSelectedCustomerName = "";
+  updateWeightListCheckBox(bool selectCustomer,int customerIndex,String selectedCustomerName){
+    //cbMarkWiseCustomer = selectCustomer;
+    weightListSelectedCustomerName = selectedCustomerName;
+    if(addedWeightListIndex.contains(customerIndex)){
+      addedWeightListIndex.clear();
+      addedWeightListIndex.remove(customerIndex);
+    }
+    else{
+      addedWeightListIndex.clear();
+      addedWeightListIndex.add(customerIndex);
     }
     update();
   }
@@ -985,5 +1173,79 @@ class HomeController extends GetxController {
       update();
     }
   }
+
+  navigateToCustomerWeightListExportScreen() {
+    //callWeightList();
+    Get.toNamed(AppRoutes.customerWeightListExportScreen);
+  }
+
+//   getApplicationDocumentsDirectory(){
+//     Directory(appDocDirectory.path+'/'+'dir').create(recursive: true)
+// // The created directory is returned as a Future.
+//         .then((Directory directory) {
+//       print('Path of New Dir: '+directory.path);
+//     });
+//
+//   }
+  Future<void> downloadPdf() async {
+    final pdf = pw.Document();
+    Directory appDocDirectory = await path_provider.getApplicationDocumentsDirectory();
+    String path = "";
+
+//     Directory('${appDocDirectory.path}/dir').create(recursive: true)
+// // The created directory is returned as a Future.
+//         .then((Directory directory) {
+//           path = directory.path;
+//       print('Path of New Dir: ${directory.path}');
+//     });
+
+    Directory tempDir = await path_provider.getTemporaryDirectory();
+    String tempPath = tempDir.path;
+
+    print("appDocPath");
+    print(tempPath);
+
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) => pw.Center(
+          child: pw.Text('Hello World!'),
+        ),
+      ),
+    );
+
+    //  Directory('dir/subdir').create(recursive: true)
+    // // The created directory is returned as a Future.
+    //     .then((Directory directory) {
+    //   path = directory.path;
+    //   print(directory.path);
+    // });
+
+    final file = File(tempPath);
+    file.open();
+    await file.writeAsBytes(await pdf.save());
+  }
+
+  List<WeightListDetails> weightListForExport = <WeightListDetails>[];
+  late WeightListDataSource weightListDataSource;
+
+  onExportBackScreen(){
+    update();
+  }
+
+  final GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
+
+  Future<void> exportDataGridToPdf() async {
+    final PdfDocument document =
+    key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true);
+
+    final List<int> bytes = document.saveSync();
+    await saveAndLaunchFile(bytes, 'DataGrid.pdf');
+
+    print("pdf");
+    document.dispose();
+  }
+
+  List<MarkWiseWeightListDetails> markWiseWeightListExport = <MarkWiseWeightListDetails>[];
+  late MarkWiseWeightListDataSource markWiseWeightListDataSource;
 
 }

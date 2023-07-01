@@ -352,3 +352,118 @@ class CustomerLedgerReportDetails {
     return data;
   }
 }
+
+class BillReportModel {
+  int? statusCode;
+  List<BillReportListData>? billReportListData;
+
+  BillReportModel({this.statusCode, this.billReportListData});
+
+  BillReportModel.fromJson(Map<String, dynamic> json) {
+    statusCode = json['statusCode'];
+    if (json['result'] != null) {
+      billReportListData = <BillReportListData>[];
+      json['result'].forEach((v) {
+        billReportListData!.add(new BillReportListData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['statusCode'] = this.statusCode;
+    if (this.billReportListData != null) {
+      data['result'] = this.billReportListData!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class BillReportListData {
+  String? engFirmName;
+  String? firmAddress;
+  String? billNo;
+  String? billDate;
+  String? custAccountName;
+  String? city;
+  String? prodName;
+  String? lotNo;
+  String? qty;
+  String? weight;
+  String? rate;
+  String? amount;
+  String? totQty;
+  String? totWeight;
+  String? totAmount;
+  String? adat;
+  String? mcess;
+  String? custHamali;
+  String? netAmount;
+
+  BillReportListData(
+      {this.engFirmName,
+        this.firmAddress,
+        this.billNo,
+        this.billDate,
+        this.custAccountName,
+        this.city,
+        this.prodName,
+        this.lotNo,
+        this.qty,
+        this.weight,
+        this.rate,
+        this.amount,
+        this.totQty,
+        this.totWeight,
+        this.totAmount,
+        this.adat,
+        this.mcess,
+        this.custHamali,
+        this.netAmount});
+
+  BillReportListData.fromJson(Map<String, dynamic> json) {
+    engFirmName = json['engFirmName'].toString();
+    firmAddress = json['firmAddress'].toString();
+    billNo = json['billNo'].toString();
+    billDate = json['billDate'].toString();
+    custAccountName = json['custAccountName'].toString();
+    city = json['city'].toString();
+    prodName = json['prod_name'].toString();
+    lotNo = json['lotNo'].toString();
+    qty = json['qty'].toString();
+    weight = json['weight'].toString();
+    rate = json['rate'].toString();
+    amount = json['amount'].toString();
+    totQty = json['totQty'].toString();
+    totWeight = json['totWeight'].toString();
+    totAmount = json['totAmount'].toString();
+    adat = json['adat'].toString();
+    mcess = json['mcess'].toString();
+    custHamali = json['custHamali'].toString();
+    netAmount = json['netAmount'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['engFirmName'] = this.engFirmName;
+    data['firmAddress'] = this.firmAddress;
+    data['billNo'] = this.billNo;
+    data['billDate'] = this.billDate;
+    data['custAccountName'] = this.custAccountName;
+    data['city'] = this.city;
+    data['prod_name'] = this.prodName;
+    data['lotNo'] = this.lotNo;
+    data['qty'] = this.qty;
+    data['weight'] = this.weight;
+    data['rate'] = this.rate;
+    data['amount'] = this.amount;
+    data['totQty'] = this.totQty;
+    data['totWeight'] = this.totWeight;
+    data['totAmount'] = this.totAmount;
+    data['adat'] = this.adat;
+    data['mcess'] = this.mcess;
+    data['custHamali'] = this.custHamali;
+    data['netAmount'] = this.netAmount;
+    return data;
+  }
+}
