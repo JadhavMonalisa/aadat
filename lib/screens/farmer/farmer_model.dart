@@ -136,7 +136,7 @@ class FarmerPattiDetailsModel {
     if (json['result'] != null) {
       farmerPattiDetailsList = <FarmerPattiDetailsList>[];
       json['result'].forEach((v) {
-        farmerPattiDetailsList!.add(new FarmerPattiDetailsList.fromJson(v));
+        farmerPattiDetailsList!.add(FarmerPattiDetailsList.fromJson(v));
       });
     }
   }

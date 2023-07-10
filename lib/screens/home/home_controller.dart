@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:io';
 
 import 'package:adat/constant/provider/custom_exception.dart';
 import 'package:adat/constant/repository/api_repository.dart';
@@ -21,11 +20,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_datagrid_export/export.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
-import 'dart:io';
 
 import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart'
-as path_provider_interface;
 import 'package:path_provider/path_provider.dart' as path_provider;
 
 class HomeController extends GetxController {
@@ -99,7 +95,7 @@ class HomeController extends GetxController {
     GetStorage().remove("selectedFirm");
     GetStorage().remove("selectedFirmId");
     Navigator.of(context).pop();
-    Get.toNamed(AppRoutes.login);
+    Get.offNamed(AppRoutes.login);
     update();
   }
 
@@ -138,6 +134,7 @@ class HomeController extends GetxController {
       Get.toNamed(AppRoutes.customerReceipt); update();
     }
     else if(title == "WEIGHT LIST ( ROUGH BILL )\n(वजन चिट्ठी)" && fromScreen == "customer"){
+
       callCustomerList();
       Get.toNamed(AppRoutes.customerWightListScreen,); update();
     }
@@ -153,6 +150,7 @@ class HomeController extends GetxController {
       Get.toNamed(AppRoutes.customerLedgerSummaryReport); update();
     }
     else if(title == "MARK WISE WEIGHT LIST REPORT\n(मार्कनुसार वजन चिट्ठी)" && fromScreen == "customer"){
+      isLoading = true;
       callCustomerList();
       Get.toNamed(AppRoutes.customerMarkWiseWeightListReportScreen); update();
     }
@@ -303,6 +301,7 @@ class HomeController extends GetxController {
   }
   callCustomerList() async{
     customerList.clear();
+    isLoading=true;
     try {
       Utils.dismissKeyboard();
       CustomerListModel? response = (await repository.getCustomerList(selectedFirmId!));
@@ -315,8 +314,6 @@ class HomeController extends GetxController {
         isLoading = false;
         update();
       }
-      print("customer list response");
-      print(response);
       update();
     } on CustomException catch (e) {
       isLoading = false;
@@ -399,8 +396,6 @@ class HomeController extends GetxController {
         weightList.addAll(response.weightListDetails!);
         weightListForExport.addAll(response.weightListDetails!);
         weightListDataSource = WeightListDataSource(weightListData: weightListForExport);
-        print("weightListDataSource");
-        print(weightListDataSource);
         isLoading = false;
         update();
       }
@@ -509,10 +504,8 @@ class HomeController extends GetxController {
       update();
     } on CustomException catch (e) {
       isLoading = false;
-      print(e);
       update();
     } catch (error) {
-      print(error);
       isLoading = false;
       update();
     }
@@ -531,8 +524,6 @@ class HomeController extends GetxController {
                 t.accountName!.toUpperCase().contains(query.toLowerCase())
     ).toList();
 
-    print("newList");
-    print(newList);
     if(newList.isEmpty){
       ledgerShortReportList.clear();
       update();
@@ -540,9 +531,6 @@ class HomeController extends GetxController {
     else{
       ledgerShortReportList.clear();
       for (var element in newList) {
-        print("result");
-        print(element.accountName);
-        print(element.amount);
       }
       noDataFoundForSearch = false;
       ledgerShortReportList = newList;
@@ -675,20 +663,17 @@ class HomeController extends GetxController {
 
   ///bill report list
   callBillReportList() async{
-    print("api call");
     billReportList.clear();
     try {
       Utils.dismissKeyboard();
       BillReportModel? response = (await repository.getCustomerBillReportList(
           billNo.text,billDate,selectedFirmId!));
-      print(response.statusCode);
       if (response.statusCode==200) {
         billReportList.addAll(response.billReportListData!);
         isLoading = false;
         update();
       }
       else {
-        print(response.statusCode);
         isLoading = false;
         update();
       }
@@ -705,11 +690,9 @@ class HomeController extends GetxController {
 
   showBillResult(){
     if(billNo.text==""){
-      print("if");
       Utils.showErrorSnackBar("Please enter bill no");update();
     }
     else if(billDate==""){
-      print("else if");
       Utils.showErrorSnackBar("Please enter bill date");update();
     }
     else{
@@ -847,8 +830,6 @@ class HomeController extends GetxController {
     cbCustomer = selectCustomer;
     selectedCustNo = custNo;
     selectedCustomerNameInMarkList = custName;
-    print("selectedCustomerNameInMarkList");
-    print(selectedCustomerNameInMarkList);
 
     if(addedCustomerIndex.contains(customerIndex)){
       addedCustomerIndex.clear();
@@ -933,9 +914,9 @@ class HomeController extends GetxController {
         supplierLedgerReportList.addAll(response.supplierLedgerReportDetails!);
         isLoading = false;
 
-        response.supplierLedgerReportDetails!.forEach((element) {
+        for (var element in response.supplierLedgerReportDetails!) {
           totalSupplierLedgerShortReportAmt = totalSupplierLedgerShortReportAmt + int.parse(element.debitBalance!);
-        });
+        }
         Get.toNamed(AppRoutes.supplierResult);
         update();
       }
@@ -1029,8 +1010,6 @@ class HomeController extends GetxController {
         isLoading = false;
         update();
       }
-      print("supplierSearchList.length");
-      print(supplierSearchList.length);
       update();
     } on CustomException catch (e) {
       isLoading = false;
@@ -1058,7 +1037,8 @@ class HomeController extends GetxController {
     }
 
     if(selection == "fromDate"){
-      selectedFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedFromDateToShow = "${selectedDate.day.toString().length==1 ? "0${selectedDate.day}":selectedDate.day}/"
+          "${selectedDate.month.toString().length==1?"0${selectedDate.month}":selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "toDate"){
@@ -1152,7 +1132,7 @@ class HomeController extends GetxController {
       Utils.dismissKeyboard();
       FarmerPattiDetailsModel? response = (await repository.getFarmerPattiList(
           pattiNo.text.isEmpty ? 0 : int.parse(pattiNo.text),
-          selectedFromDateToShow == "" ? "" : selectedFromDateToShow,selectedFirmId!));
+          selectedFromDateToShow == "" ? "0" : selectedFromDateToShow,selectedFirmId!));
       if (response.statusCode==200) {
         farmerPattiList.addAll(response.farmerPattiDetailsList!);
         isLoading = false;
@@ -1164,11 +1144,9 @@ class HomeController extends GetxController {
       }
       update();
     } on CustomException catch (e) {
-      print(e);
       isLoading = false;
       update();
     } catch (error) {
-      print(error);
       isLoading = false;
       update();
     }
@@ -1202,8 +1180,6 @@ class HomeController extends GetxController {
     Directory tempDir = await path_provider.getTemporaryDirectory();
     String tempPath = tempDir.path;
 
-    print("appDocPath");
-    print(tempPath);
 
     pdf.addPage(
       pw.Page(
@@ -1241,7 +1217,6 @@ class HomeController extends GetxController {
     final List<int> bytes = document.saveSync();
     await saveAndLaunchFile(bytes, 'DataGrid.pdf');
 
-    print("pdf");
     document.dispose();
   }
 

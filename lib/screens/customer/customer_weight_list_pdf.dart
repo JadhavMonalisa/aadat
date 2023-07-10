@@ -6,12 +6,10 @@ import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:syncfusion_flutter_datagrid_export/export.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row;
-import 'package:syncfusion_flutter_pdf/pdf.dart' as pdfDoc;
 
 import '../../theme/app_colors.dart';
 
@@ -40,7 +38,6 @@ class _CustomerWeightListExportScreenState extends State<CustomerWeightListExpor
 
     final List<int> bytes = document.saveSync();
     await saveAndLaunchFile(bytes, 'DataGrid.pdf');
-    print("pdf exp");
     //document.dispose();
   }
 

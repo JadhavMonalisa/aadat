@@ -23,6 +23,7 @@ abstract class AppRoutes {
   static const supplierResult = '/supplierResult-page';
 
   static const farmerReceipt = '/farmerReceipt-page';
+  static const testPdf = '/testPdf-page';
 
   static const defaultRoute = '/';
   }

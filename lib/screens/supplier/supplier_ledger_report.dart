@@ -1,17 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
 
-import 'package:adat/constant/api_endpoint.dart';
 import 'package:adat/screens/home/home_controller.dart';
-import 'package:adat/screens/supplier/supplier_model.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/common_widget/widget.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:easy_search_bar/easy_search_bar.dart';
 
 class SupplierLedgerReport extends StatefulWidget {
@@ -131,8 +124,6 @@ class _SupplierLedgerReportState extends State<SupplierLedgerReport> {
                                 },
                                 suggestions: cont.supplierNameList,
                                 onSuggestionTap: (str){
-                                  print("str");
-                                  print(str);
                                 },
                               ),
                             ),

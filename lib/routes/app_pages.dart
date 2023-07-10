@@ -129,7 +129,6 @@ class AppPages {
       page: () => const SupplierResultScreen(),
       binding: HomeBinding(),
     ),
-
     GetPage(
       name: AppRoutes.farmerReceipt,
       page: () => const FarmerReceipt(),

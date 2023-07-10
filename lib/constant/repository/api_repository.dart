@@ -101,8 +101,6 @@ class ApiRepository {
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
-    print("responsebody");
-    print(responsebody);
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return MarkWiseWeightList.fromJson(jsonBody);
   }
@@ -117,14 +115,10 @@ class ApiRepository {
 
     var params = {"Fromdate":fromDate,"Todate":toDate,"ClientID": clientId,"FirmID":firmId};
 
-    print("params");
-    print(params);
     request.body = jsonEncode(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
-    print("responsebody");
-    print(responsebody);
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return LedgerShortReportModel.fromJson(jsonBody);
   }

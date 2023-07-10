@@ -364,16 +364,16 @@ class BillReportModel {
     if (json['result'] != null) {
       billReportListData = <BillReportListData>[];
       json['result'].forEach((v) {
-        billReportListData!.add(new BillReportListData.fromJson(v));
+        billReportListData!.add(BillReportListData.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statusCode'] = this.statusCode;
-    if (this.billReportListData != null) {
-      data['result'] = this.billReportListData!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (billReportListData != null) {
+      data['result'] = billReportListData!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -444,26 +444,26 @@ class BillReportListData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['engFirmName'] = this.engFirmName;
-    data['firmAddress'] = this.firmAddress;
-    data['billNo'] = this.billNo;
-    data['billDate'] = this.billDate;
-    data['custAccountName'] = this.custAccountName;
-    data['city'] = this.city;
-    data['prod_name'] = this.prodName;
-    data['lotNo'] = this.lotNo;
-    data['qty'] = this.qty;
-    data['weight'] = this.weight;
-    data['rate'] = this.rate;
-    data['amount'] = this.amount;
-    data['totQty'] = this.totQty;
-    data['totWeight'] = this.totWeight;
-    data['totAmount'] = this.totAmount;
-    data['adat'] = this.adat;
-    data['mcess'] = this.mcess;
-    data['custHamali'] = this.custHamali;
-    data['netAmount'] = this.netAmount;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['engFirmName'] = engFirmName;
+    data['firmAddress'] = firmAddress;
+    data['billNo'] = billNo;
+    data['billDate'] = billDate;
+    data['custAccountName'] = custAccountName;
+    data['city'] = city;
+    data['prod_name'] = prodName;
+    data['lotNo'] = lotNo;
+    data['qty'] = qty;
+    data['weight'] = weight;
+    data['rate'] = rate;
+    data['amount'] = amount;
+    data['totQty'] = totQty;
+    data['totWeight'] = totWeight;
+    data['totAmount'] = totAmount;
+    data['adat'] = adat;
+    data['mcess'] = mcess;
+    data['custHamali'] = custHamali;
+    data['netAmount'] = netAmount;
     return data;
   }
 }

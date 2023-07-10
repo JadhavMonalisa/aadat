@@ -1,21 +1,11 @@
+
 import 'package:adat/common_widget/widget.dart';
-import 'package:adat/screens/customer/customer_model.dart';
-import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/home/home_controller.dart';
-import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart' hide Column, Row;
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:syncfusion_flutter_datagrid_export/export.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:flutter/src/painting/box_border.dart' as border;
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:syncfusion_flutter_datagrid_export/export.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart' as pdfDoc;
 
 class WeightListScreen extends StatefulWidget {
   const WeightListScreen({Key? key}) : super(key: key);
@@ -25,12 +15,6 @@ class WeightListScreen extends StatefulWidget {
 }
 
 class _WeightListScreenState extends State<WeightListScreen> {
-
-  GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
-
-  List<WeightListDetails> weightListForExport = <WeightListDetails>[];
-  late WeightListDataSource weightListDataSource;
-  final pdf = pw.Document();
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +97,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                             );
                           }),
                         ),
-
+                        //
                         // Padding(
                         //   padding: const EdgeInsets.only(bottom: 20.0,left: 50.0,right: 50.0),
                         //   child: SizedBox(
@@ -177,19 +161,15 @@ class _WeightListScreenState extends State<WeightListScreen> {
                         //       Flexible(child: GestureDetector(
                         //         onTap: (){
                         //           cont.getWeightList();
-                        //           //cont.navigateToCustomerWeightListExportScreen()
                         //         },
                         //         child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
                         //       )),
                         //       const SizedBox(width: 10.0,),
                         //       Flexible(child: GestureDetector(
-                        //         onTap: (){
-                        //           //cont.navigateToCustomerWeightListExportScreen();
-                        //           //cont.exportDataGridToPdf();
-                        //          // _exportDataGridToPdf();
-                        //          // cont.downloadPdf();
-                        //           pdfDoc.PdfDocument document = key.currentState!.exportToPdfDocument();
-                        //           final List<int> bytes = document.saveSync();
+                        //         onTap: () async{
+                        //           //cont.getWeightList();
+                        //           final pdfFile = await PdfSubscriptionHistoryApi.generate(cont.weightList,0);
+                        //           PdfApi.openFile(pdfFile);
                         //         },
                         //         child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
                         //       )),
@@ -210,7 +190,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                               child:
                               Table(
                                 border: TableBorder.all(color: whiteColor,width: 2.0),
-                                defaultColumnWidth: IntrinsicColumnWidth(),
+                                defaultColumnWidth: const IntrinsicColumnWidth(),
                                 children: [
                                   TableRow(
                                       children: [
@@ -304,50 +284,5 @@ class _WeightListScreenState extends State<WeightListScreen> {
         ),
       );
     });
-  }
-}
-
-class WeightListDataSource extends DataGridSource {
-  WeightListDataSource({required List<WeightListDetails> claimData}) {
-    _weightListData = claimData
-        .map<DataGridRow>((WeightListDetails e) =>
-        DataGridRow(cells: <DataGridCell>[
-          DataGridCell<String>(
-            columnName: 'Bill Date',
-            value: e.billDate,
-          ),
-          DataGridCell<String>(
-            columnName: 'Customer',
-            value: e.custAccountName,
-          ),
-          DataGridCell<String>(
-              columnName: 'LOT No', value: e.remark),
-          DataGridCell<String>(columnName: 'Quantity', value: e.qty),
-          DataGridCell<String>(columnName: 'Weight', value: e.weight),
-          DataGridCell<String>(
-              columnName: 'Rate', value: e.rate),
-          DataGridCell<String>(columnName: 'Supplier', value: e.suppAccountName),
-        ]))
-        .toList();
-  }
-
-  List<DataGridRow> _weightListData = <DataGridRow>[];
-
-  @override
-  List<DataGridRow> get rows => _weightListData;
-
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((DataGridCell cell) {
-          return Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.all(8.0),
-            color: blackColor,
-            child: Text(
-              cell.value.toString(),
-            ),
-          );
-        }).toList());
   }
 }

@@ -123,15 +123,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                         controller: cont.loginPasswordController,
                                         keyboardType: TextInputType.text,
                                         textAlign: TextAlign.left,
-                                        obscureText: true,
+                                        obscureText: cont.showPass,
                                         textAlignVertical: TextAlignVertical.center,
                                         textInputAction: TextInputAction.done,
                                         onTap: () {},
                                         style: const TextStyle(fontSize: 15.0),
-                                        decoration: const InputDecoration(
-                                            contentPadding: EdgeInsets.all(
+                                        decoration: InputDecoration(
+                                            contentPadding: const EdgeInsets.all(
                                                 10),
-                                            border: InputBorder.none
+                                            border: InputBorder.none,
+                                          suffixIcon: GestureDetector(
+                                            onTap: () {
+                                              cont.onPassChanges();
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: cont.showPass ? const Icon(
+                                                Icons.visibility_off,color: Colors.black38,size: 30.0,) : const Icon(
+                                                Icons.visibility, color: Colors.black38,size: 30.0,),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),

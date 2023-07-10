@@ -129,7 +129,6 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
 
     final List<int> bytes = document.saveSync();
     await saveAndLaunchFile(bytes, 'DataGrid.pdf');
-    print("pdf exp");
     //document.dispose();
   }
 
