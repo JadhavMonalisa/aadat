@@ -5,6 +5,7 @@ class ApiEndpoint {
   static const String firmListUrl = "http://adatapi.demofms.com/api/Users/GetFirmDetailsByClientID";
   ///customer
   static const String customerListUrl = "http://adatapi.demofms.com/api/Users/GetCustomerDetails";
+  static const String customerListByDateUrl = "http://adatapi.demofms.com/api/Users/GetMarkwiseWeightList";
   static const String weightListUrl = "http://adatapi.demofms.com/api/Users/GetWeightListRoughBillReport";
   static const String markWiseWeightListUrl = "http://adatapi.demofms.com/api/Users/GetMarkwiseWeightListReport";
   static const String customerLedgerShortReportListUrl = "http://adatapi.demofms.com/api/Users/GetCustomerLedgerShortReport";

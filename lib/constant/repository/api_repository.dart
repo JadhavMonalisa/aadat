@@ -70,6 +70,23 @@ class ApiRepository {
     Map<String, dynamic> jsonBody = json.decode(responsebody);
     return CustomerListModel.fromJson(jsonBody);
   }
+  ///customer list by date api
+  Future<CustomerListByDateModel> getCustomerByDateList(String billDate,int firmId) async {
+    var request = http.Request(
+      'GET', Uri.parse(ApiEndpoint.customerListByDateUrl),
+    )..headers.addAll({
+      "Authorization": 'Bearer $token',
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    var params = {"BillDate":billDate,"clientID": clientId,"firmID":firmId};
+    request.body = jsonEncode(params);
+
+    http.StreamedResponse response = await request.send();
+    final responsebody = await response.stream.bytesToString();
+    Map<String, dynamic> jsonBody = json.decode(responsebody);
+    return CustomerListByDateModel.fromJson(jsonBody);
+  }
   ///weight list api
   Future<WeightListModel> getWeightList(String custName,int firmId,String date) async {
     var request = http.Request(
@@ -150,6 +167,7 @@ class ApiRepository {
 
     var params = {"CustomerName":custName,"Todate":toDate,"Fromdate":fromDate,"ClientID": clientId,"FirmID":firmId};
     request.body = jsonEncode(params);
+
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 

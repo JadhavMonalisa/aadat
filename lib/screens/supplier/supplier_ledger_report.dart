@@ -98,6 +98,7 @@ class _SupplierLedgerReportState extends State<SupplierLedgerReport> {
                         //   ),
                         // ),
 
+
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0,left: 50.0,right: 50.0),
                           child: Container(
@@ -112,6 +113,7 @@ class _SupplierLedgerReportState extends State<SupplierLedgerReport> {
                                 appBarHeight: 40.0,
                                 backgroundColor: whiteColor,
                                 searchBackgroundColor: whiteColor,
+
                                 searchHintStyle: const TextStyle(color: primaryColor,fontSize: 15.0),
                                 searchTextStyle: const TextStyle(color: primaryColor,fontSize: 15.0),
                                 titleTextStyle: const TextStyle(color: primaryColor,fontSize: 15.0),
@@ -129,6 +131,7 @@ class _SupplierLedgerReportState extends State<SupplierLedgerReport> {
                             ),
                           ),
                         ),
+
                         Row(
                           children: [
                             Flexible(

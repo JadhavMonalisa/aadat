@@ -74,13 +74,16 @@ class _WeightListScreenState extends State<WeightListScreen> {
                           ),
                         ),
                         const SizedBox(height: 10.0,),
-                        cont.isLoading ? buildCircularIndicator():
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height/1.9,
+
+                        cont.isBillDateAdded ?
+                            cont.loaderForCustomer ? buildCircularIndicator() :
+                          cont.customerByDateList.isEmpty ? buildNoDataFound(context):
+                          SizedBox(
+                          height: MediaQuery.of(context).size.height/2.5,
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: const AlwaysScrollableScrollPhysics(),
-                              itemCount: cont.customerList.length,
+                              itemCount: cont.customerByDateList.length,
                               itemBuilder: (context,index){
                             return Row(
                               children: [
@@ -89,14 +92,16 @@ class _WeightListScreenState extends State<WeightListScreen> {
                                     ? true : false ,
                                     activeColor: Colors.green,
                                     onChanged:(newValue){
-                                      cont.updateWeightListCheckBox(newValue!,index,cont.customerList[index].custAccountName!);
+                                      cont.updateWeightListCheckBox(newValue!,index,cont.customerByDateList[index].custAccountName!);
                                     }),
-                                buildTextRegularWidget(cont.customerList[index].custAccountName!,
+                                buildTextRegularWidget(cont.customerByDateList[index].custAccountName!,
                                     blackColor, context, 15.0),
                               ],
                             );
                           }),
-                        ),
+                        )
+                        : const Opacity(opacity: 0.0),
+
                         //
                         // Padding(
                         //   padding: const EdgeInsets.only(bottom: 20.0,left: 50.0,right: 50.0),
@@ -177,7 +182,22 @@ class _WeightListScreenState extends State<WeightListScreen> {
                         //   ),
                         // ),
 
-                        cont.isLoading ? buildCircularIndicator() :
+                        cont.isViewSelected?
+                        Align(
+                          alignment: Alignment.center,
+                          child:buildTextRegularWidget(
+                              cont.weightList.isEmpty?"":
+                              cont.weightList[0].custAccountName!, blackColor, context, 15.0,align: TextAlign.center),
+                        ):const Opacity(opacity: 0.0,),
+
+                        cont.isViewSelected?
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0,top: 5.0,bottom: 5.0),
+                          child: buildRichTextWidget("Bill Date : ", cont.weightList.isEmpty?"":
+                          cont.weightList[0].billDate!)
+                        ):const Opacity(opacity: 0.0),
+
+                        cont.loaderForWeightList ? buildCircularIndicator() :
                         cont.isViewSelected
                             ?
                         cont.weightList.isEmpty ? Center(child:buildNoDataFound(context)) :
@@ -193,10 +213,11 @@ class _WeightListScreenState extends State<WeightListScreen> {
                                 defaultColumnWidth: const IntrinsicColumnWidth(),
                                 children: [
                                   TableRow(
+                                      decoration: const BoxDecoration(color: grey),
                                       children: [
                                         buildTableTitleForReport(context,"Bill Date"),
                                         buildTableTitleForReport(context,"Customer"),
-                                        buildTableTitleForReport(context,"LOT No"),
+                                        buildTableTitleForReport(context,"LOT No."),
                                         buildTableTitleForReport(context,"Quantity"),
                                         buildTableTitleForReport(context,"Weight"),
                                         buildTableTitleForReport(context,"Rate"),
@@ -205,6 +226,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                                   ),
                                   for (var data in cont.weightList)
                                     TableRow(
+                                        decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                         children: [
                                           buildTableSubtitleForReport(context,data.billDate!),
                                           buildTableSubtitleForReport(context,data.custAccountName!),

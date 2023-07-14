@@ -154,6 +154,7 @@ class FarmerPattiDetailsModel {
 class FarmerPattiDetailsList {
   String? engFirmName;
   String? firmAddress;
+  String? mobileNo;
   String? accountName;
   String? pattiNo;
   String? pattiDate;
@@ -181,6 +182,7 @@ class FarmerPattiDetailsList {
   FarmerPattiDetailsList(
       {this.engFirmName,
         this.firmAddress,
+        this.mobileNo,
         this.accountName,
         this.pattiNo,
         this.pattiDate,
@@ -208,6 +210,7 @@ class FarmerPattiDetailsList {
   FarmerPattiDetailsList.fromJson(Map<String, dynamic> json) {
     engFirmName = json['engFirmName'].toString();
     firmAddress = json['firmAddress'].toString();
+    mobileNo = json['mobileNo'].toString();
     accountName = json['accountName'].toString();
     pattiNo = json['pattiNo'].toString();
     pattiDate = json['pattiDate'].toString();
@@ -237,6 +240,7 @@ class FarmerPattiDetailsList {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['engFirmName'] = engFirmName;
     data['firmAddress'] = firmAddress;
+    data['mobileNo'] = mobileNo;
     data['accountName'] = accountName;
     data['pattiNo'] = pattiNo;
     data['pattiDate'] = pattiDate;

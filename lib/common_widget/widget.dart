@@ -323,10 +323,10 @@ buildTableTitleForReport(BuildContext context,String title,{TextAlign align = Te
 
 
 buildTableSubtitleForReport(BuildContext context,String subtitle,
-    {FontWeight fontWeight = FontWeight.normal}){
+    {FontWeight fontWeight = FontWeight.normal,TextAlign align = TextAlign.center}){
   return Padding(
     padding: const EdgeInsets.all(5.0),
-    child: buildTextRegularWidget(subtitle, blackColor, context, 14.0,align: TextAlign.center,fontWeight: fontWeight),
+    child: buildTextRegularWidget(subtitle, blackColor, context, 14.0,align: align,fontWeight: fontWeight,),
   );
 }
 

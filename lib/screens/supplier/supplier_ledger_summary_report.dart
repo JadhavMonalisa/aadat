@@ -111,43 +111,51 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                         cont.isLoading ? buildCircularIndicator() :
                         cont.supplierLedgerSummaryReportList.isEmpty ? buildNoDataFound(context) :
                         cont.isViewSelected
-                            ? SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: Scrollbar(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:20.0),
-                                child: Table(
-                                  border: TableBorder.all(color: whiteColor,width: 2.0),
-                                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                                  children: [
-                                    TableRow(
-                                        children: [
-                                          buildTableTitleForReport(context,"Account No"),
-                                          buildTableTitleForReport(context,"Supplier"),
-                                          buildTableTitleForReport(context,"Debit Amt"),
-                                          buildTableTitleForReport(context,"Credit Amt"),
-                                          buildTableTitleForReport(context,"Mobile No"),
-                                        ]
-                                    ),
-                                    for (var data in cont.supplierLedgerSummaryReportList)
+                            ? Scrollbar(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:20.0),
+                                  child: Table(
+                                    border: TableBorder.all(color: whiteColor,width: 2.0),
+                                    defaultColumnWidth: const IntrinsicColumnWidth(),
+                                    children: [
                                       TableRow(
+                                          decoration: const BoxDecoration(color: grey),
                                           children: [
-                                            buildTableSubtitleForReport(context,data.acctNO.toString()),
-                                            buildTableSubtitleForReport(context,data.suppAccountName.toString()),
-                                            buildTableSubtitleForReport(context,data.debitAmount.toString()),
-                                            buildTableSubtitleForReport(context,data.creditAmount.toString()),
-                                            buildTableSubtitleForReport(context,data.mobile.toString()),
+                                            buildTableTitleForReport(context,"Account No"),
+                                            buildTableTitleForReport(context,"Supplier"),
+                                            buildTableTitleForReport(context,"Mobile No"),
+                                            buildTableTitleForReport(context,"Debit Amt"),
+                                            buildTableTitleForReport(context,"Credit Amt"),
                                           ]
                                       ),
-                                  ],
+                                      for (var data in cont.supplierLedgerSummaryReportList)
+                                        TableRow(
+                                            decoration: BoxDecoration(color: grey.withOpacity(0.2)),
+                                            children: [
+                                              buildTableSubtitleForReport(context,data.acctNO.toString()),
+                                              buildTableSubtitleForReport(context,data.suppAccountName.toString()),
+                                              buildTableSubtitleForReport(context,data.mobile.toString()),
+                                              buildTableSubtitleForReport(context,data.debitAmount.toString()),
+                                              buildTableSubtitleForReport(context,data.creditAmount.toString()),
+                                            ]
+                                        ),
+                                      TableRow(
+                                          decoration: const BoxDecoration(color: grey),
+                                          children: [
+                                            buildTableSubtitleForReport(context,""),
+                                            buildTableSubtitleForReport(context,""),
+                                            buildTableSubtitleForReport(context,"Total",fontWeight: FontWeight.bold),
+                                            buildTableSubtitleForReport(context,cont.totalSupplierLedgerSummaryReportDebit.toString(),fontWeight: FontWeight.bold),
+                                            buildTableSubtitleForReport(context,cont.totalSupplierLedgerSummaryReportCredit.toString(),fontWeight: FontWeight.bold),
+                                          ]
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ) : const Opacity(opacity: 0.0)
+                            ) : const Opacity(opacity: 0.0)
                       ],
                     )
                 ),

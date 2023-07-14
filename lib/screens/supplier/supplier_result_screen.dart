@@ -28,7 +28,7 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                 backgroundColor: primaryColor,
                 centerTitle: true,
                 title: buildTextBoldWidget(
-                    "Supplier Ledger Report Result", whiteColor, context, 15.0),
+                    "Supplier Ledger Report ", whiteColor, context, 15.0),
                 leading: GestureDetector(
                     onTap: () {
                       cont.backPressNavigation(AppRoutes.supplierLedgerReport);
@@ -60,56 +60,72 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                           child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
                         ),
                         cont.supplierLedgerReportList.isEmpty?const Text(""):
-                        Center(child:buildTextBoldWidget(cont.supplierLedgerReportList[0].accountName!,
+                        Center(child:buildTextBoldWidget(cont.supplierLedgerReportList[0].suppAccountName!,
                             blackColor, context, 15.0)),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10.0,right: 10.0,top: 10.0),
-                            child: Table(
-                              border: TableBorder.all(color: whiteColor,width: 2.0),
-                              defaultColumnWidth: const IntrinsicColumnWidth(),
-                              children: [
-                                // TableRow(
-                                //     children: [
-                                //       buildTableTitleForReport(context,"Patti Date"),
-                                //       buildTableTitleForReport(context,"Total Qty"),
-                                //       buildTableTitleForReport(context,"Debit Balance"),
-                                //       buildTableTitleForReport(context,"Credit Balance"),
-                                //       buildTableTitleForReport(context,"Account Name"),
-                                //     ]
-                                // ),
-                                // for (var data in cont.supplierLedgerReportList)
-                                //   TableRow(
-                                //       children: [
-                                //         buildTableSubtitleForReport(context,data.pattiDate.toString()),
-                                //         buildTableSubtitleForReport(context,data.totQty.toString()),
-                                //         buildTableSubtitleForReport(context,data.debitBalance.toString()),
-                                //         buildTableSubtitleForReport(context,data.creditBalance.toString()),
-                                //         buildTableSubtitleForReport(context,data.accountName.toString()),
-                                //       ]
-                                //   ),
-                                TableRow(
-                                    children: [
-                                      buildTableTitleForReport(context,"Amount",align: TextAlign.center),
-                                      buildTableTitleForReport(context,"Date",align: TextAlign.center),
-                                    ]
-                                ),
-                                for (var data in cont.supplierLedgerReportList)
+                        Scrollbar(
+                          child:SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0,right: 10.0,top: 10.0),
+                              child: Table(
+                                border: TableBorder.all(color: whiteColor,width: 2.0),
+                                defaultColumnWidth: const IntrinsicColumnWidth(),
+                                children: [
                                   TableRow(
+                                    decoration: const BoxDecoration(color: grey),
                                       children: [
-                                        buildTableSubtitleForReport(context,data.debitBalance.toString()),
-                                        buildTableSubtitleForReport(context,data.pattiDate.toString()),
+                                        buildTableTitleForReport(context,"Date"),
+                                        buildTableTitleForReport(context,"Ledger Name"),
+                                        buildTableTitleForReport(context,"Narration"),
+                                        buildTableTitleForReport(context,"Debit"),
+                                        buildTableTitleForReport(context,"Credit"),
                                       ]
                                   ),
-                                TableRow(
-                                    children: [
-                                      buildTableSubtitleForReport(context,cont.totalSupplierLedgerShortReportAmt.toString(),fontWeight: FontWeight.bold),
-                                      buildTableSubtitleForReport(context,""),
-                                    ]
-                                ),
-                              ],
+                                  for (var data in cont.supplierLedgerReportList)
+                                    TableRow(
+                                        decoration: BoxDecoration(color: grey.withOpacity(0.2)),
+                                        children: [
+                                          buildTableSubtitleForReport(context,data.tranDate.toString()),
+                                          buildTableSubtitleForReport(context,data.ledgerName.toString()),
+                                          buildTableSubtitleForReport(context,data.narration.toString()),
+                                          buildTableSubtitleForReport(context,data.debitAmt.toString()),
+                                          buildTableSubtitleForReport(context,data.creditAmt.toString()),
+                                        ]
+                                    ),
+                                  TableRow(
+                                      decoration: const BoxDecoration(color: grey),
+                                      children: [
+                                        buildTableSubtitleForReport(context,""),
+                                        buildTableSubtitleForReport(context,""),
+                                        buildTableSubtitleForReport(context,"Total",fontWeight: FontWeight.bold),
+                                        buildTableSubtitleForReport(context,cont.totalSupplierLedgerReportDebit.toString(),fontWeight: FontWeight.bold),
+                                        buildTableSubtitleForReport(context,cont.totalSupplierLedgerReportCredit.toString(),fontWeight: FontWeight.bold),
+                                      ]
+                                  ),
+
+                                  // TableRow(
+                                  //     children: [
+                                  //       buildTableTitleForReport(context,"Amount",align: TextAlign.center),
+                                  //       buildTableTitleForReport(context,"Date",align: TextAlign.center),
+                                  //     ]
+                                  // ),
+                                  // for (var data in cont.supplierLedgerReportList)
+                                  //   TableRow(
+                                  //       children: [
+                                  //         buildTableSubtitleForReport(context,data.debitBalance.toString()),
+                                  //         buildTableSubtitleForReport(context,data.pattiDate.toString()),
+                                  //       ]
+                                  //   ),
+                                  // TableRow(
+                                  //     children: [
+                                  //       buildTableSubtitleForReport(context,cont.totalSupplierLedgerShortReportAmt.toString(),fontWeight: FontWeight.bold),
+                                  //       buildTableSubtitleForReport(context,""),
+                                  //     ]
+                                  // ),
+                                ],
+                              ),
                             ),
-                          ),
+                          )
                         ),
                       ],
                     )

@@ -48,6 +48,7 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 30.0,bottom: 20.0),
@@ -127,39 +128,47 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                         cont.isViewSelected
                             ?
                         cont.ledgerSummaryReportList.isEmpty ? buildNoDataFound(context):
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: Scrollbar(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                                child:Table(
-                                  border: TableBorder.all(color: whiteColor,width: 2.0),
-                                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                                  children: [
+                        Scrollbar(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                              child:Table(
+                                border: TableBorder.all(color: whiteColor,width: 2.0),
+                                defaultColumnWidth: const IntrinsicColumnWidth(),
+                                children: [
+                                  TableRow(
+                                      decoration: const BoxDecoration(color: grey),
+                                      children: [
+                                        buildTableTitleForReport(context,"Account No"),
+                                        buildTableTitleForReport(context,"Account Name"),
+                                        buildTableTitleForReport(context,"Debit Amt"),
+                                        buildTableTitleForReport(context,"Credit Amt"),
+                                        buildTableTitleForReport(context,"Mobile No"),
+                                      ]
+                                  ),
+                                  for (var data in cont.ledgerSummaryReportList)
                                     TableRow(
+                                        decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                         children: [
-                                          buildTableTitleForReport(context,"Account No"),
-                                          buildTableTitleForReport(context,"Account Name"),
-                                          buildTableTitleForReport(context,"Debit Amt"),
-                                          buildTableTitleForReport(context,"Credit Amt"),
-                                          buildTableTitleForReport(context,"Mobile No"),
+                                          buildTableSubtitleForReport(context,data.acctNO.toString()),
+                                          buildTableSubtitleForReport(context,data.custAccountName!),
+                                          buildTableSubtitleForReport(context,data.debitAmount.toString()),
+                                          buildTableSubtitleForReport(context,data.creditAmount.toString()),
+                                          buildTableSubtitleForReport(context,data.mobile!),
                                         ]
                                     ),
-                                    for (var data in cont.ledgerSummaryReportList)
-                                      TableRow(
-                                          children: [
-                                            buildTableSubtitleForReport(context,data.acctNO.toString()),
-                                            buildTableSubtitleForReport(context,data.custAccountName!),
-                                            buildTableSubtitleForReport(context,data.debitAmount.toString()),
-                                            buildTableSubtitleForReport(context,data.creditAmount.toString()),
-                                            buildTableSubtitleForReport(context,data.mobile!),
-                                          ]
-                                      ),
-                                  ],
-                                ),
+                                  TableRow(
+                                      decoration:const BoxDecoration(color: grey),
+                                      children: [
+                                        buildTableTitleForReport(context,""),
+                                        buildTableTitleForReport(context,"Total",align: TextAlign.center),
+                                        buildTableTitleForReport(context,cont.totalDebitForLedgerSummary.toString(),align: TextAlign.center),
+                                        buildTableTitleForReport(context,cont.totalCreditForLedgerSummary.toString(),align: TextAlign.center),
+                                        buildTableTitleForReport(context,""),
+                                      ]
+                                  ),
+                                ],
                               ),
                             ),
                           ),

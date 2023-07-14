@@ -39,14 +39,14 @@ class _ResultScreenState extends State<ResultScreen> {
                 ),
               ),
               body:
-              cont.isLoading ? buildCircularIndicator() :
-                  cont.ledgerReportList.isEmpty ? buildNoDataFound(context):
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top: 30.0),
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                  child: ListView(
+                  child:
+                  ListView(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
@@ -60,6 +60,8 @@ class _ResultScreenState extends State<ResultScreen> {
                         child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
                       ),
 
+                      cont.isLoading ? buildCircularIndicator() :
+                      cont.ledgerReportList.isEmpty ? buildNoDataFound(context):
                       Scrollbar(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -70,6 +72,7 @@ class _ResultScreenState extends State<ResultScreen> {
                               defaultColumnWidth: const IntrinsicColumnWidth(),
                               children: [
                                 TableRow(
+                                    decoration: const BoxDecoration(color: grey),
                                     children: [
                                       buildTableTitleForReport(context,"Sr No"),
                                       buildTableTitleForReport(context,"Receipt Date"),
@@ -82,6 +85,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                 ),
                                 for (var data in cont.ledgerReportList)
                                   TableRow(
+                                      decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                       children: [
                                         buildTableSubtitleForReport(context,data.srNo.toString()),
                                         buildTableSubtitleForReport(context,data.recieptDate.toString()),
@@ -92,6 +96,18 @@ class _ResultScreenState extends State<ResultScreen> {
                                         buildTableSubtitleForReport(context,data.paymentAmonut.toString()),
                                       ]
                                   ),
+                                TableRow(
+                                    decoration: const BoxDecoration(color: grey),
+                                    children: [
+                                      buildTableTitleForReport(context,""),
+                                      buildTableTitleForReport(context,""),
+                                      buildTableTitleForReport(context,""),
+                                      buildTableTitleForReport(context,cont.totalReceiptAmt.toString(),align: TextAlign.center),
+                                      buildTableTitleForReport(context,""),
+                                      buildTableTitleForReport(context,""),
+                                      buildTableTitleForReport(context,cont.totalPaymentAmt.toString(),align: TextAlign.center),
+                                    ]
+                                ),
                               ],
                             ),
                           ),

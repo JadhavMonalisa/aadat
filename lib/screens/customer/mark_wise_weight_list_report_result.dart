@@ -82,6 +82,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                                 defaultColumnWidth: const IntrinsicColumnWidth(),
                                 children: [
                                   TableRow(
+                                      decoration: const BoxDecoration(color: grey),
                                       children: [
                                         buildTableTitleForReport(context,"",boxColor:Colors.white),
                                         buildTableTitleForReport(context,"Customer Mark"),
@@ -93,6 +94,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                                   ),
                                     for (int index = 0 ; index < cont.markWiseWeightList.length ; index ++)
                                     TableRow(
+                                        decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                         children: [
                                           Checkbox(value:
                                           cont.addedMarkWiseListIndex.contains(index)

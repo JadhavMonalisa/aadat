@@ -86,7 +86,6 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                   textAlignVertical: TextAlignVertical.center,
                                   textInputAction: TextInputAction.done,
                                   onTap: () {
-                                    cont.onPattiDateSelectionChange(context);
                                   },
                                   onChanged: (val){
                                   },
@@ -126,6 +125,33 @@ class _BillReportScreenState extends State<BillReportScreen> {
                           child:buildTextRegularWidget(cont.billReportList.isEmpty?"":
                               cont.billReportList[0].firmAddress!, blackColor, context, 15.0,align: TextAlign.center),
                         ),
+                        cont.showBillReport?
+                        Padding(
+                            padding: const EdgeInsets.only(left: 10.0,top: 10.0),
+                            child:buildRichTextWidget("Mobile No. : ", cont.billReportList.isEmpty?"":
+                        cont.billReportList[0].mobileNo!))
+                        :const Opacity(opacity: 0.0),
+
+                        cont.showBillReport?
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0,top: 5.0),
+                          child: Row(
+                            children: [
+                              buildRichTextWidget("Bill No. : ", cont.billReportList.isEmpty?"":
+                              cont.billReportList[0].billNo!),const Spacer(),
+                              buildRichTextWidget("Bill Date : ", cont.billReportList.isEmpty?"":
+                              cont.billReportList[0].billDate!)
+                            ],
+                          ),
+                        ):const Opacity(opacity: 0.0),
+
+                        cont.showBillReport?
+                        Padding(
+                            padding: const EdgeInsets.only(left: 10.0,top: 5.0),
+                            child:buildRichTextWidget("Customer Name : ", cont.billReportList.isEmpty?"":
+                            cont.billReportList[0].custAccountName!))
+                            :const Opacity(opacity: 0.0),
+
                         cont.showBillReport
                             ? cont.isLoading ? buildCircularIndicator() :
                         cont.billReportList.isEmpty ? buildNoDataFound(context):
@@ -140,10 +166,11 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Table(
-                                      border: TableBorder.all(color: blackColor,width: 2.0),
+                                      border: TableBorder.all(color: whiteColor,width: 2.0),
                                       defaultColumnWidth: const IntrinsicColumnWidth(),
                                       children: [
                                         TableRow(
+                                          decoration: const BoxDecoration(color: grey),
                                             children: [
                                               buildTableTitleForReport(context,"Product Name"),
                                               buildTableTitleForReport(context,"LOT No"),
@@ -155,6 +182,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                         ),
                                         for (var data in cont.billReportList)
                                           TableRow(
+                                              decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                               children: [
                                                 buildTableSubtitleForReport(context,data.prodName.toString()),
                                                 buildTableSubtitleForReport(context,data.lotNo.toString()),
@@ -165,6 +193,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                               ]
                                           ),
                                           TableRow(
+                                              decoration: const BoxDecoration(color: grey),
                                             children: [
                                               buildTableTitleForReport(context,"Total"),
                                               buildTableTitleForReport(context,""),
@@ -183,7 +212,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                       children:[
                                         TableRow(
                                             children: [
-                                              buildTableTitleForReport(context,"Adat"),
+                                              buildTableTitleForReport(context,"Adat",),
                                               buildTableSubtitleForReport(context,cont.billReportList[0].adat!),
                                             ]
                                         ),
@@ -212,7 +241,6 @@ class _BillReportScreenState extends State<BillReportScreen> {
                             ),
                           ),
                         ) : const Opacity(opacity: 0.0),
-
                       ],
                     )
                 ),

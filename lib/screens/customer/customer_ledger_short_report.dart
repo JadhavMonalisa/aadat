@@ -46,7 +46,9 @@ class _CustomerLedgerShortReportState extends State<CustomerLedgerShortReport> {
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
-                    child: ListView(
+                    child:
+                    cont.isLoading ? buildCircularIndicator() :
+                    ListView(
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 30.0,bottom: 20.0),
@@ -95,7 +97,7 @@ class _CustomerLedgerShortReportState extends State<CustomerLedgerShortReport> {
                                     height: 40.0,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      border: Border.all(color:grey),),
+                                      border: Border.all(color:primaryColor),),
                                     child: Row(
                                       children: [
                                         const SizedBox(width: 10.0,),
@@ -121,101 +123,6 @@ class _CustomerLedgerShortReportState extends State<CustomerLedgerShortReport> {
                             )
                         ),
                         const SizedBox(height: 20.0,),
-                        cont.isLoading ? buildCircularIndicator() :
-                        cont.isViewSelected 
-                        ? SizedBox(
-                          height: MediaQuery.of(context).size.height,
-                          width: MediaQuery.of(context).size.width,
-                          child: Scrollbar(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                                child: Table(
-                                  border: TableBorder.all(color: whiteColor,width: 2.0),
-                                  defaultColumnWidth: const FixedColumnWidth(120.0),
-                                  children: [
-                                    TableRow(
-                                        children: [
-                                          Container(
-                                            color: grey,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextBoldWidget("Column 1", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            color: grey,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextBoldWidget("Column 2", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            color: grey,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextBoldWidget("Column 3", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                        ]
-                                    ),
-                                    TableRow(
-                                        children: [
-                                          Container(
-                                            color: grey.withOpacity(0.2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextRegularWidget("data 1", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            color: grey.withOpacity(0.2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextRegularWidget("data 2", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            color: grey.withOpacity(0.2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextRegularWidget("data 3", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                        ]
-                                    ),
-                                    TableRow(
-                                        children: [
-                                          Container(
-                                            color: grey.withOpacity(0.2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextRegularWidget("data 1", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            color: grey.withOpacity(0.2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextRegularWidget("data 2", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                          Container(
-                                            color: grey.withOpacity(0.2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(5.0),
-                                              child: buildTextRegularWidget("data 3", blackColor, context, 14.0),
-                                            ),
-                                          ),
-                                        ]
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ) : const Opacity(opacity: 0.0)
                       ],
                     )
                 ),

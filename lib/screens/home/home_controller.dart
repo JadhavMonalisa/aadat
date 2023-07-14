@@ -212,7 +212,10 @@ class HomeController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   navigateFromWeightListToHome(){
+    customerByDateList.clear();weightList.clear();
+    addedWeightListIndex.clear();
     weightListSelectedCustomerName = ""; isViewSelected = false;selectedDateForWeightList = "";
+    loaderForCustomer = false; isBillDateAdded = false;
     update();
     Get.toNamed(AppRoutes.home);
   }
@@ -231,13 +234,14 @@ class HomeController extends GetxController {
   String selectedBillDateToShow = "";
   bool showSelectionCustomerList = false;
   bool showCustomerList = false;
+  bool isBillDateAdded = false;
   TextEditingController customerName = TextEditingController();
 
   Future<void> selectCustomerDate(BuildContext context,String selection) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: selection == "shortReportToDate" || selection == "summaryReportToDate"
+        firstDate: selection == "summaryReportToDate"
             || selection == "toDate" || selection == "summaryReportToDate"
             ? selectedDate : DateTime(1700, 1),
         lastDate: DateTime(2100, 1));
@@ -247,15 +251,18 @@ class HomeController extends GetxController {
     }
 
     if (selection == "forWeightList"){
-      selectedDateForWeightList = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      selectedDateForWeightList = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
+      selectedDateForWeightList == ""? null: validateCustomerMarkWiseReport(selectedDateForWeightList);
+
+      selectedDateForWeightList == "" ? isBillDateAdded = false : isBillDateAdded = true;
       update();
     }
     else if(selection == "fromDate"){
-      selectedFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedFromDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "toDate"){
-      selectedToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedToDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "receiptDate"){
@@ -263,11 +270,11 @@ class HomeController extends GetxController {
       update();
     }
     else if(selection == "shortReportFromDate"){
-      selectedShortReportFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedShortReportFromDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "shortReportToDate"){
-      selectedShortReportToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedShortReportToDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "summaryReportFromDate"){
@@ -289,6 +296,8 @@ class HomeController extends GetxController {
 
       selectedBillDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       showCustomerList = true;
+
+      selectedBillDateToShow == ""? null: validateCustomerMarkWiseReport(selectedBillDateToShow);
       update();
     }
 
@@ -323,6 +332,43 @@ class HomeController extends GetxController {
       update();
     }
   }
+
+  List<CustomerListByDateData> customerByDateList = [];
+  bool loaderForCustomer = false;
+  bool loaderForWeightList = false;
+
+  validateCustomerMarkWiseReport(String date){
+    isLoading=true;
+    loaderForCustomer = true;
+    callCustomerByDateList(date);
+  }
+  callCustomerByDateList(String date) async{
+    customerByDateList.clear();
+    try {
+      Utils.dismissKeyboard();
+      CustomerListByDateModel? response = (await repository.getCustomerByDateList(date,selectedFirmId!));
+      if (response.statusCode==200) {
+        customerByDateList.addAll(response.customerListByDateData!);
+        isLoading = false;
+        loaderForCustomer = false;
+        update();
+      }
+      else {
+        isLoading = false;
+        loaderForCustomer = false;
+        update();
+      }
+      update();
+    } on CustomException catch (e) {
+      isLoading = false;
+      loaderForCustomer = false;
+      update();
+    } catch (error) {
+      isLoading = false;
+      loaderForCustomer = false;
+      update();
+    }
+  }
   updateSelectedCustomer(String value){
     selectedCustomer = value; update();
   }
@@ -331,12 +377,16 @@ class HomeController extends GetxController {
   List<WeightListDetails> weightList = [];
   getWeightList(){
     isLoading = true;
+    loaderForWeightList = true;
     if(weightListSelectedCustomerName == ""){
       showToast("Please select customer!");
-      isLoading = false; update();
+      isLoading = false;
+      loaderForWeightList = false;
+      update();
     }
     else{
       isViewSelected = true;
+      loaderForWeightList = true;
       callWeightList();
     }
     update();
@@ -397,18 +447,22 @@ class HomeController extends GetxController {
         weightListForExport.addAll(response.weightListDetails!);
         weightListDataSource = WeightListDataSource(weightListData: weightListForExport);
         isLoading = false;
+        loaderForWeightList = false;
         update();
       }
       else {
         isLoading = false;
+        loaderForWeightList = false;
         update();
       }
       update();
     } on CustomException catch (e) {
       isLoading = false;
+      loaderForWeightList = false;
       update();
     } catch (error) {
       isLoading = false;
+      loaderForWeightList = false;
       update();
     }
     update();
@@ -444,6 +498,7 @@ class HomeController extends GetxController {
   }
 
   ///customer ledger short report
+  //List<LedgerShortReportDetails> ledgerShortReportList = [];
   List<LedgerShortReportDetails> ledgerShortReportList = [];
   List<int> totalCustomerLedgerShortAmtList = [];
 
@@ -464,44 +519,59 @@ class HomeController extends GetxController {
       isLoading = false; update();
     }
     else{
+      isLoading = true;
       callLedgerShortReportList();
     }
     update();
   }
   backPressNavigation(String screen){
     clearForm();
-    totalSupplierLedgerShortReportAmt=0;
+    totalSupplierLedgerReportDebit=0;
+    totalSupplierLedgerReportCredit=0;
     totalCustomerLedgerShortAmtList.clear();
+    ledgerShortReportList.clear();
     addedAmt = 0;
+    totalAmt = 0;
     editingController.clear();
     update();
     Get.toNamed(screen);
   }
   clearForm(){
+    ledgerReportList.clear(); totalPaymentAmt = 0; totalReceiptAmt = 0;
     customerName.clear(); selectedFromDateToShow = ""; selectedToDateToShow = "";
     update();
   }
+
   int addedAmt = 0;
+  List<ShortReportList> shortReportList = [];
+  int total = 0;
+  int totalAmt = 0;
+
   callLedgerShortReportList() async{
     ledgerShortReportList.clear();
+    shortReportList.clear();
     try {
       Utils.dismissKeyboard();
       LedgerShortReportModel? response = (await repository.getCustomerLedgerShortReportList(
           selectedShortReportToDateToShow,selectedShortReportFromDateToShow,selectedFirmId!));
-      if (response.statusCode==200) {
-        ledgerShortReportList.addAll(response.ledgerShortReportDetails!);
-        for (var element in response.ledgerShortReportDetails!) {
-          addedAmt = addedAmt + int.parse(element.amount!);
-          totalCustomerLedgerShortAmtList.add(addedAmt);
+      if(response.statusCode==200){
+        ledgerShortReportList.addAll(response.result!);
+
+        for (var element1 in ledgerShortReportList) {
+          total = 0;
+          for (var element2 in element1.shortReportList!) {
+            total = total + int.parse(element2.amount!);
+          }
+          totalCustomerLedgerShortAmtList.add(total);
         }
+
         isLoading = false;
         update();
       }
-      else {
+      else{
         isLoading = false;
         update();
       }
-      update();
     } on CustomException catch (e) {
       isLoading = false;
       update();
@@ -514,26 +584,103 @@ class HomeController extends GetxController {
   }
 
   TextEditingController editingController = TextEditingController();
-  //var items = <String>[];
   bool noDataFoundForSearch = true;
 
   void filterSearchResults(String query) {
 
-    var newList = ledgerShortReportList.where(
-            (t) => t.accountName!.toLowerCase().contains(query.toLowerCase()) ||
-                t.accountName!.toUpperCase().contains(query.toLowerCase())
-    ).toList();
+    // var newList = ledgerShortReportList.where(
+    //         (t) => t.accountName!.toLowerCase().contains(query.toLowerCase()) ||
+    //             t.accountName!.toUpperCase().contains(query.toLowerCase())
+    // ).toList();
 
+    List<LedgerShortReportDetails> resultList = [];
+    List<ShortReportList> resultShortList = [];
+
+    var newList = ledgerShortReportList.where(
+            (t) => t.shortReportList!.any((element) =>
+            element.accountName!.contains(query.toUpperCase()) || element.accountName!.contains(query.toLowerCase())))
+        .toList();
+
+    // for (int i =0;i<ledgerShortReportList.length; i++){
+    //   for(int j=0; j<ledgerShortReportList[i].shortReportList!.length; j++){
+    //     if(ledgerShortReportList[i].shortReportList!.any((element) =>
+    //         element.accountName!.contains(query.toUpperCase()))){
+    //       print("present");
+    //
+    //       for (var element in ledgerShortReportList[i].shortReportList!) {
+    //         resultShortList.add(
+    //             ShortReportList(
+    //               acctNo:element.acctNo,
+    //               billDate: element.billDate,
+    //               accountName: element.accountName,
+    //               amount: element.amount
+    //             )
+    //         );
+    //       }
+    //
+    //       resultList.add(LedgerShortReportDetails(
+    //         shortReportList:resultShortList,
+    //         acctNo: ledgerShortReportList[i].acctNo,
+    //         total: 0
+    //       ));
+    //
+    //       resultList.forEach((element) {
+    //        element.shortReportList!.forEach((element2) {
+    //          print("element2.accountName");
+    //          print(element2.accountName);
+    //        });
+    //       });
+    //
+    //         ledgerShortReportList.clear();
+    //         noDataFoundForSearch = false;
+    //         ledgerShortReportList = resultList;
+    //
+    //         update();
+    //     }
+    //     else{
+    //       ledgerShortReportList.clear();
+    //       print("not present");
+    //       update();
+    //     }
+    //   }
+    //   update();
+    // }
+
+    //     var newList = ledgerShortReportList.where(
+    //         (t) => t.shortReportList!.any((element)
+    //         {
+    //           bool test = ledgerShortReportList.any((element) =>
+    //               element.shortReportList!.any((element2) => element2.accountName=="RM"));
+    //           print("test");
+    //           print(test);
+    //           print(element.accountName  == query.toUpperCase());
+    //           return element.accountName  == query.toUpperCase();
+    //         })
+    // ).toList();
+
+    // print("newList");
+    // print(newList.length);
+    //
     if(newList.isEmpty){
       ledgerShortReportList.clear();
+      totalCustomerLedgerShortAmtList.clear();
       update();
     }
     else{
       ledgerShortReportList.clear();
-      for (var element in newList) {
-      }
+      totalCustomerLedgerShortAmtList.clear();
       noDataFoundForSearch = false;
       ledgerShortReportList = newList;
+
+      for (var element1 in ledgerShortReportList) {
+        total = 0;
+        for (var element2 in element1.shortReportList!) {
+          total = total + int.parse(element2.amount!);
+        }
+        totalCustomerLedgerShortAmtList.add(total);
+      }
+
+      update();
     }
 
     update();
@@ -543,16 +690,19 @@ class HomeController extends GetxController {
   List<LedgerSummaryReportDetails> ledgerSummaryReportList = [];
 
   navigateFromSummaryToHome(){
+    totalCreditForLedgerSummary = 0;
+    totalDebitForLedgerSummary = 0;
     isViewSelected = false; selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = "";
     Get.toNamed(AppRoutes.home);
     update();
   }
   getLedgerSummaryReport(){
+    isLoading = true;
     if(selectedSummaryReportToDateToShow==""){
-      showToast("Please select to date!");
+      showToast("Please select to date!"); isLoading = false; update();
     }
     else if(selectedSummaryReportFromDateToShow==""){
-      showToast("Please select from date!");
+      showToast("Please select from date!"); isLoading = false; update();
     }
     else{
       isViewSelected = true;
@@ -560,6 +710,10 @@ class HomeController extends GetxController {
     }
     update();
   }
+
+  int totalCreditForLedgerSummary = 0;
+  int totalDebitForLedgerSummary = 0;
+
   callLedgerSummaryReportList() async{
     ledgerSummaryReportList.clear();
     try {
@@ -568,6 +722,11 @@ class HomeController extends GetxController {
           selectedSummaryReportToDateToShow,selectedSummaryReportFromDateToShow,selectedFirmId!));
       if (response.statusCode==200) {
         ledgerSummaryReportList.addAll(response.ledgerSummaryReportDetails!);
+
+        for (var element in ledgerSummaryReportList) {
+          totalDebitForLedgerSummary= totalCreditForLedgerSummary + element.debitAmount!;
+          totalCreditForLedgerSummary= totalCreditForLedgerSummary + element.creditAmount!;
+        }
         isLoading = false;
         update();
       }
@@ -612,6 +771,10 @@ class HomeController extends GetxController {
       callLedgerReportList();
     }
   }
+
+  int totalReceiptAmt = 0;
+  int totalPaymentAmt = 0;
+
   callLedgerReportList() async{
     ledgerReportList.clear();
     try {
@@ -620,10 +783,19 @@ class HomeController extends GetxController {
           selectedCustomer, selectedToDateToShow,selectedFromDateToShow,selectedFirmId!));
       if (response.statusCode==200) {
         ledgerReportList.addAll(response.customerLedgerReportDetails!);
+
+        for (var element in ledgerReportList) {
+          String payAmtToAdd  = element.paymentAmonut == "-" ? "0" : element.paymentAmonut!;
+          String recAmtToAdd  = element.recieptAmount == "-" ? "0" : element.recieptAmount!;
+
+          totalReceiptAmt= totalReceiptAmt + int.parse(recAmtToAdd);
+          totalPaymentAmt= totalPaymentAmt + int.parse(payAmtToAdd);
+        }
         isLoading = false;
         Get.toNamed(AppRoutes.customerLedgerReportResultScreen,
             arguments: [AppRoutes.customerLedgerReport]);
         update();
+
       }
       else {
         isLoading = false;
@@ -668,6 +840,7 @@ class HomeController extends GetxController {
       Utils.dismissKeyboard();
       BillReportModel? response = (await repository.getCustomerBillReportList(
           billNo.text,billDate,selectedFirmId!));
+
       if (response.statusCode==200) {
         billReportList.addAll(response.billReportListData!);
         isLoading = false;
@@ -689,20 +862,24 @@ class HomeController extends GetxController {
   }
 
   showBillResult(){
-    if(billNo.text==""){
-      Utils.showErrorSnackBar("Please enter bill no");update();
-    }
-    else if(billDate==""){
-      Utils.showErrorSnackBar("Please enter bill date");update();
-    }
-    else{
-      showBillReport = true; update();
-      callBillReportList();
-    }
+    // if(billNo.text==""){
+    //   Utils.showErrorSnackBar("Please enter bill no");update();
+    // }
+    // else if(billDate==""){
+    //   Utils.showErrorSnackBar("Please enter bill date");update();
+    // }
+    // else{
+    //   showBillReport = true; update();
+    //   callBillReportList();
+    // }
+    isLoading = true;
+    showBillReport = true;
+    callBillReportList();
     update();
   }
 
   onBackPressFromBillReport(){
+    billReportList.clear();
     billNo.clear(); billDate = ""; showBillReport = false;
     showPattiNo= true; showPattiDate = true;
     update();
@@ -717,6 +894,7 @@ class HomeController extends GetxController {
     isViewSelected = false;
     selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = "";
     selectedBillDateToShow = "";
+    customerByDateList.clear();
     addedCustomerIndex.clear(); showCustomerList = false; isViewSelected = false;
     selectedDate = DateTime.now();
     Get.toNamed(AppRoutes.home);
@@ -730,6 +908,7 @@ class HomeController extends GetxController {
   }
 
   navigateFromFarmerReceiptToHome(){
+    farmerPattiList.clear();
     isViewSelected = false; showPattiDate = true; showPattiNo = true;
     selectedFromDateToShow=""; pattiNo.clear();
     selectedDate = DateTime.now();
@@ -786,6 +965,7 @@ class HomeController extends GetxController {
       selectedSummaryReportToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
       update();
     }
+    Utils.dismissKeyboard();
   }
 
   List<String> supplierNameList = [];
@@ -872,7 +1052,8 @@ class HomeController extends GetxController {
 
   ///supplier ledger report
   List<SupplierLedgerReportDetails> supplierLedgerReportList = [];
-  int totalSupplierLedgerShortReportAmt = 0;
+  int totalSupplierLedgerReportDebit = 0;
+  int totalSupplierLedgerReportCredit = 0;
 
   navigateFromReportToHomeScreen(){
     selectedSupplier = "";
@@ -915,9 +1096,9 @@ class HomeController extends GetxController {
         isLoading = false;
 
         for (var element in response.supplierLedgerReportDetails!) {
-          totalSupplierLedgerShortReportAmt = totalSupplierLedgerShortReportAmt + int.parse(element.debitBalance!);
+          totalSupplierLedgerReportDebit = totalSupplierLedgerReportDebit + int.parse(element.debitAmt!);
+          totalSupplierLedgerReportCredit = totalSupplierLedgerReportCredit + int.parse(element.creditAmt!);
         }
-        Get.toNamed(AppRoutes.supplierResult);
         update();
       }
       else {
@@ -933,6 +1114,7 @@ class HomeController extends GetxController {
       update();
     }
     update();
+    Get.toNamed(AppRoutes.supplierResult);
   }
 
   ///supplier ledger summary report
@@ -944,7 +1126,9 @@ class HomeController extends GetxController {
   }
   navigateFromSummaryToHomeScreen(){
     selectedFromDateToShow = ""; selectedToDateToShow = "";
-    isViewSelected = false;
+    isViewSelected = false; supplierLedgerSummaryReportList.clear();
+    totalSupplierLedgerSummaryReportDebit = 0;
+    totalSupplierLedgerSummaryReportCredit = 0;
     Get.toNamed(AppRoutes.home);
     update();
   }
@@ -965,6 +1149,10 @@ class HomeController extends GetxController {
     }
     update();
   }
+
+  int totalSupplierLedgerSummaryReportDebit = 0;
+  int totalSupplierLedgerSummaryReportCredit= 0;
+
   callSupplierLedgerSummaryReportList() async{
     supplierLedgerSummaryReportList.clear();
     try {
@@ -975,6 +1163,11 @@ class HomeController extends GetxController {
       if (response.statusCode==200) {
         supplierLedgerSummaryReportList.addAll(response.supplierLedgerSummaryReportDetails!);
         isLoading = false;
+
+        for (var element in response.supplierLedgerSummaryReportDetails!) {
+          totalSupplierLedgerSummaryReportDebit = totalSupplierLedgerSummaryReportDebit + int.parse(element.debitAmount!);
+          totalSupplierLedgerSummaryReportCredit = totalSupplierLedgerSummaryReportCredit + int.parse(element.creditAmount!);
+        }
         update();
       }
       else {
@@ -1120,6 +1313,7 @@ class HomeController extends GetxController {
     //   isViewSelected = true;
     //   callFarmerPattiList(); update();
     // }
+    isLoading = true;
     isViewSelected = true;
     callFarmerPattiList(); update();
   }

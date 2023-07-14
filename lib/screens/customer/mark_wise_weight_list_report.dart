@@ -140,12 +140,12 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                       ): const Opacity(opacity: 0.0),
 
                       cont.showCustomerList
-                          ? cont.customerList.isEmpty ? buildCircularIndicator() :
+                          ? cont.customerByDateList.isEmpty ? buildCircularIndicator() :
 
                       Expanded(
                         child: ListView.builder(
                             shrinkWrap: true,
-                            itemCount: cont.customerList.length,
+                            itemCount: cont.customerByDateList.length,
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemBuilder: (context,index){
                               return Row(
@@ -155,10 +155,12 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                                       ? true : false ,
                                       activeColor: Colors.green,
                                       onChanged:(newValue){
-                                        cont.updateCustomerCheckBox(newValue!,index,cont.customerList[index].custAccountNo!,cont.customerList[index].custAccountName!);
+                                        cont.updateCustomerCheckBox(newValue!,index,
+                                            int.parse(cont.customerByDateList[index].custAccountNo!),
+                                            cont.customerByDateList[index].custAccountName!);
                                       }),
                                   const SizedBox(width: 5.0,),
-                                  buildTextRegularWidget(cont.customerList[index].custAccountName!, blackColor, context, 14.0)
+                                  buildTextRegularWidget(cont.customerByDateList[index].custAccountName!, blackColor, context, 14.0)
                                 ],
                               );
                             }),
@@ -169,6 +171,7 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                           padding: const EdgeInsets.only(left: 100.0,right: 100.0,top: 20.0),
                           child:GestureDetector(
                             onTap: (){
+                              //cont.validateCustomerMarkWiseReport();
                               cont.getMarkWiseWeightList();
                             },
                             child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),

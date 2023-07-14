@@ -73,34 +73,38 @@ class SupplierLedgerReportModel {
 }
 
 class SupplierLedgerReportDetails {
-  String? pattiDate;
-  String? totQty;
-  String? debitBalance;
-  String? creditBalance;
-  String? accountName;
+  String? suppAccountName;
+  String? tranDate;
+  String? ledgerName;
+  String? narration;
+  String? creditAmt;
+  String? debitAmt;
 
   SupplierLedgerReportDetails(
-      {this.pattiDate,
-        this.totQty,
-        this.debitBalance,
-        this.creditBalance,
-        this.accountName});
+      {this.suppAccountName,
+        this.tranDate,
+        this.ledgerName,
+        this.narration,
+        this.creditAmt,
+        this.debitAmt});
 
   SupplierLedgerReportDetails.fromJson(Map<String, dynamic> json) {
-    pattiDate = json['pattiDate'].toString();
-    totQty = json['totQty'].toString();
-    debitBalance = json['debitBalance'].toString();
-    creditBalance = json['creditBalance'].toString();
-    accountName = json['accountName'].toString();
+    suppAccountName = json['suppAccountName'].toString();
+    tranDate = json['tran_date'].toString();
+    ledgerName = json['ledgerName'].toString();
+    narration = json['narration'].toString();
+    creditAmt = json['creditAmt'].toString();
+    debitAmt = json['debitAmt'].toString();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['pattiDate'] = pattiDate;
-    data['totQty'] = totQty;
-    data['debitBalance'] = debitBalance;
-    data['creditBalance'] = creditBalance;
-    data['accountName'] = accountName;
+    data['suppAccountName'] = suppAccountName;
+    data['tran_date'] = tranDate;
+    data['ledgerName'] = ledgerName;
+    data['narration'] = narration;
+    data['creditAmt'] = creditAmt;
+    data['debitAmt'] = debitAmt;
     return data;
   }
 }
@@ -132,10 +136,10 @@ class SupplierLedgerSummaryReportModel {
 }
 
 class SupplierLedgerSummaryReportDetails {
-  int? acctNO;
+  String? acctNO;
   String? suppAccountName;
-  int? debitAmount;
-  int? creditAmount;
+  String? debitAmount;
+  String? creditAmount;
   String? mobile;
 
   SupplierLedgerSummaryReportDetails(
@@ -146,11 +150,11 @@ class SupplierLedgerSummaryReportDetails {
         this.mobile});
 
   SupplierLedgerSummaryReportDetails.fromJson(Map<String, dynamic> json) {
-    acctNO = json['acctNO'];
-    suppAccountName = json['suppAccountName'];
-    debitAmount = json['debitAmount'];
-    creditAmount = json['creditAmount'];
-    mobile = json['mobile'];
+    acctNO = json['acctNO'].toString();
+    suppAccountName = json['suppAccountName'].toString();
+    debitAmount = json['debitAmount'].toString();
+    creditAmount = json['creditAmount'].toString();
+    mobile = json['mobile'].toString();
   }
 
   Map<String, dynamic> toJson() {

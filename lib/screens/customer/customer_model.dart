@@ -46,6 +46,73 @@ class CustomerListDetails {
   }
 }
 
+class CustomerListByDateModel {
+  int? statusCode;
+  List<CustomerListByDateData>? customerListByDateData;
+
+  CustomerListByDateModel({this.statusCode, this.customerListByDateData});
+
+  CustomerListByDateModel.fromJson(Map<String, dynamic> json) {
+    statusCode = json['statusCode'];
+    if (json['result'] != null) {
+      customerListByDateData = <CustomerListByDateData>[];
+      json['result'].forEach((v) {
+        customerListByDateData!.add(CustomerListByDateData.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statusCode'] = statusCode;
+    if (customerListByDateData != null) {
+      data['result'] = customerListByDateData!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class CustomerListByDateData {
+  String? mark;
+  String? qty;
+  String? weight;
+  String? amount;
+  String? billDate;
+  String? custAccountName;
+  String? custAccountNo;
+
+  CustomerListByDateData(
+      {this.mark,
+        this.qty,
+        this.weight,
+        this.amount,
+        this.billDate,
+        this.custAccountName,
+        this.custAccountNo});
+
+  CustomerListByDateData.fromJson(Map<String, dynamic> json) {
+    mark = json['mark'].toString();
+    qty = json['qty'].toString();
+    weight = json['weight'].toString();
+    amount = json['amount'].toString();
+    billDate = json['billDate'].toString();
+    custAccountName = json['custAccountName'].toString();
+    custAccountNo = json['custAccountNo'].toString();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['mark'] = mark;
+    data['qty'] = qty;
+    data['weight'] = weight;
+    data['amount'] = amount;
+    data['billDate'] = billDate;
+    data['custAccountName'] = custAccountName;
+    data['custAccountNo'] = custAccountNo;
+    return data;
+  }
+}
+
 class WeightListModel {
   int? statusCode;
   List<WeightListDetails>? weightListDetails;
@@ -175,19 +242,70 @@ class MarkWiseWeightListDetails {
     return data;
   }
 }
+//
+// class LedgerShortReportModel {
+//   int? statusCode;
+//   List<LedgerShortReportDetails>? ledgerShortReportDetails;
+//
+//   LedgerShortReportModel({this.statusCode, this.ledgerShortReportDetails});
+//
+//   LedgerShortReportModel.fromJson(Map<String, dynamic> json) {
+//     statusCode = json['statusCode'];
+//     if (json['result'] != null) {
+//       ledgerShortReportDetails = <LedgerShortReportDetails>[];
+//       json['result'].forEach((v) {
+//         ledgerShortReportDetails!.add(LedgerShortReportDetails.fromJson(v));
+//       });
+//     }
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['statusCode'] = statusCode;
+//     if (ledgerShortReportDetails != null) {
+//       data['result'] = ledgerShortReportDetails!.map((v) => v.toJson()).toList();
+//     }
+//     return data;
+//   }
+// }
+//
+// class LedgerShortReportDetails {
+//   String? amount;
+//   String? billDate;
+//   String? accountName;
+//   String? acctNo;
+//
+//   LedgerShortReportDetails({this.amount, this.billDate, this.accountName, this.acctNo});
+//
+//   LedgerShortReportDetails.fromJson(Map<String, dynamic> json) {
+//     amount = json['amount'].toString();
+//     billDate = json['billDate'].toString();
+//     accountName = json['accountName'].toString();
+//     acctNo = json['acctNo'].toString();
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['amount'] = amount;
+//     data['billDate'] = billDate;
+//     data['accountName'] = accountName;
+//     data['acctNo'] = acctNo;
+//     return data;
+//   }
+// }
 
 class LedgerShortReportModel {
   int? statusCode;
-  List<LedgerShortReportDetails>? ledgerShortReportDetails;
+  List<LedgerShortReportDetails>? result;
 
-  LedgerShortReportModel({this.statusCode, this.ledgerShortReportDetails});
+  LedgerShortReportModel({this.statusCode, this.result});
 
   LedgerShortReportModel.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
     if (json['result'] != null) {
-      ledgerShortReportDetails = <LedgerShortReportDetails>[];
+      result = <LedgerShortReportDetails>[];
       json['result'].forEach((v) {
-        ledgerShortReportDetails!.add(LedgerShortReportDetails.fromJson(v));
+        result!.add(LedgerShortReportDetails.fromJson(v));
       });
     }
   }
@@ -195,22 +313,50 @@ class LedgerShortReportModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['statusCode'] = statusCode;
-    if (ledgerShortReportDetails != null) {
-      data['result'] = ledgerShortReportDetails!.map((v) => v.toJson()).toList();
+    if (result != null) {
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class LedgerShortReportDetails {
+  String? acctNo;
+  int? total;
+  List<ShortReportList>? shortReportList;
+
+  LedgerShortReportDetails({this.acctNo, this.total, this.shortReportList});
+
+  LedgerShortReportDetails.fromJson(Map<String, dynamic> json) {
+    acctNo = json['acctNo'];
+    if (json['shortReportList'] != null) {
+      shortReportList = <ShortReportList>[];
+      json['shortReportList'].forEach((v) {
+        shortReportList!.add(ShortReportList.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['acctNo'] = acctNo;
+    if (shortReportList != null) {
+      data['shortReportList'] =
+          shortReportList!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ShortReportList {
   String? amount;
   String? billDate;
   String? accountName;
   String? acctNo;
 
-  LedgerShortReportDetails({this.amount, this.billDate, this.accountName, this.acctNo});
+  ShortReportList({this.amount, this.billDate, this.accountName, this.acctNo});
 
-  LedgerShortReportDetails.fromJson(Map<String, dynamic> json) {
+  ShortReportList.fromJson(Map<String, dynamic> json) {
     amount = json['amount'].toString();
     billDate = json['billDate'].toString();
     accountName = json['accountName'].toString();
@@ -382,6 +528,7 @@ class BillReportModel {
 class BillReportListData {
   String? engFirmName;
   String? firmAddress;
+  String? mobileNo;
   String? billNo;
   String? billDate;
   String? custAccountName;
@@ -403,6 +550,7 @@ class BillReportListData {
   BillReportListData(
       {this.engFirmName,
         this.firmAddress,
+        this.mobileNo,
         this.billNo,
         this.billDate,
         this.custAccountName,
@@ -424,6 +572,7 @@ class BillReportListData {
   BillReportListData.fromJson(Map<String, dynamic> json) {
     engFirmName = json['engFirmName'].toString();
     firmAddress = json['firmAddress'].toString();
+    mobileNo = json['mobileNo'].toString();
     billNo = json['billNo'].toString();
     billDate = json['billDate'].toString();
     custAccountName = json['custAccountName'].toString();
@@ -447,6 +596,7 @@ class BillReportListData {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['engFirmName'] = engFirmName;
     data['firmAddress'] = firmAddress;
+    data['mobileNo'] = mobileNo;
     data['billNo'] = billNo;
     data['billDate'] = billDate;
     data['custAccountName'] = custAccountName;
