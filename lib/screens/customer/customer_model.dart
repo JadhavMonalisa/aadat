@@ -400,10 +400,10 @@ class LedgerSummaryReport {
 }
 
 class LedgerSummaryReportDetails {
-  int? acctNO;
+  String? acctNO;
   String? custAccountName;
-  int? debitAmount;
-  int? creditAmount;
+  String? debitAmount;
+  String? creditAmount;
   String? mobile;
 
   LedgerSummaryReportDetails(
@@ -414,11 +414,11 @@ class LedgerSummaryReportDetails {
         this.mobile});
 
   LedgerSummaryReportDetails.fromJson(Map<String, dynamic> json) {
-    acctNO = json['acctNO'];
-    custAccountName = json['custAccountName'];
-    debitAmount = json['debitAmount'];
-    creditAmount = json['creditAmount'];
-    mobile = json['mobile'];
+    acctNO = json['acctNO'].toString();
+    custAccountName = json['custAccountName'].toString();
+    debitAmount = json['debitAmount'].toString();
+    creditAmount = json['creditAmount'].toString();
+    mobile = json['mobile'].toString();
   }
 
   Map<String, dynamic> toJson() {

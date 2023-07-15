@@ -6,35 +6,98 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
-class PdfSubscriptionHistoryApi {
+class BillReportExportScreen {
 
   static int startIndex = 0;
   static int endIndex = 0;
   //static int totalLength = 0;
 
-  static Future<File> generate(List<WeightListDetails> weightListPdf, int totalLength) async {
+  static Future<File> generate(List<BillReportListData> billListPdf, int totalLength) async {
     final pdf = Document();
     final font = await rootBundle.load("assets/font/Hindi.ttf");
     final ttf = pw.Font.ttf(font);
 
-    int divideValue = weightListPdf.length ~/ 10;
-    int modeValue = weightListPdf.length % 10;
+    int divideValue = billListPdf.length ~/ 10;
+    int modeValue = billListPdf.length % 10;
 
-    totalLength = divideValue + modeValue;
+    //totalLength = divideValue + modeValue;
 
-    for(int i = 0; i<=totalLength; i++ ) {
-      startIndex = i == 0 ? startIndex = 0 : startIndex + 10;
+    if(divideValue<modeValue){
+      totalLength = divideValue + 1;
+    }
+    print("totalLength");
+    print(totalLength);
+    for(int i = 0; i<totalLength-1; i++ ) {
+      startIndex = i == 0 ? 0 : startIndex + 10;
 
-      if(weightListPdf.length < endIndex){
-        endIndex = startIndex + modeValue;
-      }
-      else{
-        endIndex = endIndex + 10;
-      }
+      // if(i == 0){
+      //   startIndex = 0;
+      //   endIndex = 10;
+      // }
+      // else{
+      //   startIndex = startIndex + 10;
+      // }
+
+      print(i);
+
+      // if(billListPdf.length <endIndex){
+      //   print("if");
+      //   print(billListPdf.length);
+      //   print(endIndex);
+      //   endIndex = startIndex + modeValue;
+      // }
+      // else{
+      //   print("else");
+      //   endIndex = endIndex + 10;
+      // }
+
+      print("start index : $startIndex");
+      print("end index : $endIndex");
 
       pdf.addPage(MultiPage(
+        pageFormat: PdfPageFormat.letter,
+        header: (context) => buildHeader(billListPdf[0].billDate!,billListPdf[0].custAccountName!),
+        build: (context) => [
+          SizedBox(height: 0.2 * PdfPageFormat.cm),
+          Table(
+            border:TableBorder.all(width: 0.1,color: PdfColor.fromHex("#9E9E9E")),
+            defaultColumnWidth: const IntrinsicColumnWidth(),
+            children: [
+              TableRow(
+                children: [
+                  buildTitleForTable("Product Name"),
+                  buildTitleForTable("LOT No"),
+                  buildTitleForTable("Quantity"),
+                  buildTitleForTable("Weight"),
+                  buildTitleForTable("Rate"),
+                  buildTitleForTable("Amount"),
+                ],
+              ),
+              for(int i = startIndex ;i < endIndex ; i++)
+                TableRow(
+                  children: [
+                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].custAccountName.toString()),
+                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].lotNo.toString()),
+                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].qty.toString()),
+                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].weight.toString()),
+                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].rate.toString()),
+                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].amount.toString()),
+                  ],
+                ),
+            ],
+          )
+        ],
+      ));
+    }
+
+    if(endIndex<billListPdf.length){
+      startIndex = startIndex + 10;
+      endIndex = endIndex + modeValue;
+    }
+
+    pdf.addPage(MultiPage(
       pageFormat: PdfPageFormat.letter,
-      header: (context) => buildHeader(weightListPdf[0].billDate!,weightListPdf[0].custAccountName!),
+      //header: (context) => buildHeader(billListPdf[0].billDate!,billListPdf[0].custAccountName!),
       build: (context) => [
         SizedBox(height: 0.2 * PdfPageFormat.cm),
         Table(
@@ -43,33 +106,36 @@ class PdfSubscriptionHistoryApi {
           children: [
             TableRow(
               children: [
-                buildTitleForTable("Bill Date"),
-                buildTitleForTable("Customer"),
+                buildTitleForTable("Product Name"),
                 buildTitleForTable("LOT No"),
                 buildTitleForTable("Quantity"),
                 buildTitleForTable("Weight"),
                 buildTitleForTable("Rate"),
-                buildTitleForTable("Supplier"),
+                buildTitleForTable("Amount"),
               ],
             ),
             for(int i = startIndex ;i < endIndex ; i++)
               TableRow(
                 children: [
-                  buildRowTextForTable(weightListPdf.isEmpty ? "" : "${weightListPdf[i].billDate}"),
-                  buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[i].custAccountName}"),
-                  buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[i].remark}"),
-                  buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[i].qty}"),
-                  buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[i].weight}"),
-                  buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[i].rate}"),
-                  buildRowTextForTableMarathi(weightListPdf.isEmpty ? "" :"${weightListPdf[i].suppAccountName}",ttf),
+                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].custAccountName.toString()),
+                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].lotNo.toString()),
+                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].qty.toString()),
+                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].weight.toString()),
+                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].rate.toString()),
+                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].amount.toString()),
                 ],
               ),
           ],
         )
       ],
-      ));
-    }
-    return PdfApi.saveDocument(name: 'weight_list.pdf', pdf: pdf);
+    ));
+
+    // else{
+    //   print("else");
+    //   endIndex = endIndex + 10;
+    // }
+
+    return PdfApi.saveDocument(name: 'bill_list.pdf', pdf: pdf);
   }
 
   ///pdf header
@@ -114,17 +180,17 @@ class PdfSubscriptionHistoryApi {
             ],
           ),
           for(var data = startIndex; data < endIndex; data++)
-          TableRow(
-            children: [
-              buildRowTextForTable(weightListPdf.isEmpty ? "" : "${weightListPdf[data].billDate}"),
-              buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].custAccountName}"),
-              buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].remark}"),
-              buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].qty}"),
-              buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].weight}"),
-              buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].rate}"),
-              buildRowTextForTableMarathi(weightListPdf.isEmpty ? "" :"${weightListPdf[data].suppAccountName}",ttf),
-            ],
-          ),
+            TableRow(
+              children: [
+                buildRowTextForTable(weightListPdf.isEmpty ? "" : "${weightListPdf[data].billDate}"),
+                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].custAccountName}"),
+                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].remark}"),
+                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].qty}"),
+                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].weight}"),
+                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].rate}"),
+                buildRowTextForTableMarathi(weightListPdf.isEmpty ? "" :"${weightListPdf[data].suppAccountName}",ttf),
+              ],
+            ),
         ],
       )
     ],
@@ -152,7 +218,7 @@ class PdfSubscriptionHistoryApi {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0,right: 5.0,bottom: 5.0,left: 10.0),
       child: Text(title, style: TextStyle(fontSize: 13,color: PdfColor.fromHex("#546cb1"),
-        font: ttf
+          font: ttf
       ),textAlign: TextAlign.center,
       ),
     );

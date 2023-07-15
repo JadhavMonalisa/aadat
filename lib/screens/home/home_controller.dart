@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:adat/constant/provider/custom_exception.dart';
 import 'package:adat/constant/repository/api_repository.dart';
 import 'package:adat/routes/app_pages.dart';
+import 'package:adat/screens/customer/bill_report_pdf.dart';
 import 'package:adat/screens/customer/customer_model.dart';
 import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
@@ -241,9 +242,7 @@ class HomeController extends GetxController {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: selection == "summaryReportToDate"
-            || selection == "toDate" || selection == "summaryReportToDate"
-            ? selectedDate : DateTime(1700, 1),
+        firstDate: DateTime(1700, 1),
         lastDate: DateTime(2100, 1));
 
     if (picked != null && picked != selectedDate) {
@@ -266,7 +265,7 @@ class HomeController extends GetxController {
       update();
     }
     else if(selection == "receiptDate"){
-      selectedReceiptBillDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedReceiptBillDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "shortReportFromDate"){
@@ -278,16 +277,16 @@ class HomeController extends GetxController {
       update();
     }
     else if(selection == "summaryReportFromDate"){
-      selectedSummaryReportFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedSummaryReportFromDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "bill date"){
-      billDate = "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      billDate = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "summaryReportToDate"){
       showSelectionCustomerList = true;
-      selectedSummaryReportToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedSummaryReportToDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "markWiseBillDate"){
@@ -560,7 +559,8 @@ class HomeController extends GetxController {
         for (var element1 in ledgerShortReportList) {
           total = 0;
           for (var element2 in element1.shortReportList!) {
-            total = total + int.parse(element2.amount!);
+            String amt = element2.amount! == "-" || element2.amount! == "" ? "0" : element2.amount!;
+            total = total + int.parse(amt);
           }
           totalCustomerLedgerShortAmtList.add(total);
         }
@@ -724,8 +724,12 @@ class HomeController extends GetxController {
         ledgerSummaryReportList.addAll(response.ledgerSummaryReportDetails!);
 
         for (var element in ledgerSummaryReportList) {
-          totalDebitForLedgerSummary= totalCreditForLedgerSummary + element.debitAmount!;
-          totalCreditForLedgerSummary= totalCreditForLedgerSummary + element.creditAmount!;
+
+          String debitAmt  = element.debitAmount == "-" || element.debitAmount == "" ? "0" : element.debitAmount!;
+          String creditAmt  = element.creditAmount == "-" || element.creditAmount == ""? "0" : element.creditAmount!;
+
+          totalDebitForLedgerSummary= totalDebitForLedgerSummary + int.parse(debitAmt);
+          totalCreditForLedgerSummary= totalCreditForLedgerSummary + int.parse(creditAmt);
         }
         isLoading = false;
         update();
@@ -785,8 +789,8 @@ class HomeController extends GetxController {
         ledgerReportList.addAll(response.customerLedgerReportDetails!);
 
         for (var element in ledgerReportList) {
-          String payAmtToAdd  = element.paymentAmonut == "-" ? "0" : element.paymentAmonut!;
-          String recAmtToAdd  = element.recieptAmount == "-" ? "0" : element.recieptAmount!;
+          String payAmtToAdd  = element.paymentAmonut == "-" || element.paymentAmonut == "" ? "0" : element.paymentAmonut!;
+          String recAmtToAdd  = element.recieptAmount == "-" || element.recieptAmount == "" ? "0" : element.recieptAmount!;
 
           totalReceiptAmt= totalReceiptAmt + int.parse(recAmtToAdd);
           totalPaymentAmt= totalPaymentAmt + int.parse(payAmtToAdd);
@@ -841,6 +845,7 @@ class HomeController extends GetxController {
       BillReportModel? response = (await repository.getCustomerBillReportList(
           billNo.text,billDate,selectedFirmId!));
 
+      print(response.statusCode);
       if (response.statusCode==200) {
         billReportList.addAll(response.billReportListData!);
         isLoading = false;
@@ -850,6 +855,8 @@ class HomeController extends GetxController {
         isLoading = false;
         update();
       }
+      print("billReportList.length");
+      print(billReportList.length);
       update();
     } on CustomException catch (e) {
       isLoading = false;
@@ -859,6 +866,10 @@ class HomeController extends GetxController {
       update();
     }
     update();
+  }
+
+  navigateFromBillReportPdf(){
+
   }
 
   showBillResult(){
@@ -881,7 +892,7 @@ class HomeController extends GetxController {
   onBackPressFromBillReport(){
     billReportList.clear();
     billNo.clear(); billDate = ""; showBillReport = false;
-    showPattiNo= true; showPattiDate = true;
+    showBillNo= true; showBillDate = true;
     update();
     Get.toNamed(AppRoutes.home);
   }
@@ -1096,8 +1107,11 @@ class HomeController extends GetxController {
         isLoading = false;
 
         for (var element in response.supplierLedgerReportDetails!) {
-          totalSupplierLedgerReportDebit = totalSupplierLedgerReportDebit + int.parse(element.debitAmt!);
-          totalSupplierLedgerReportCredit = totalSupplierLedgerReportCredit + int.parse(element.creditAmt!);
+          String debitAmt  = element.debitAmt == "-" || element.debitAmt == "" ? "0" : element.debitAmt!;
+          String creditAmt  = element.creditAmt == "-" || element.creditAmt == ""? "0" : element.creditAmt!;
+
+          totalSupplierLedgerReportDebit = totalSupplierLedgerReportDebit + int.parse(debitAmt);
+          totalSupplierLedgerReportCredit = totalSupplierLedgerReportCredit + int.parse(creditAmt);
         }
         update();
       }
@@ -1165,8 +1179,11 @@ class HomeController extends GetxController {
         isLoading = false;
 
         for (var element in response.supplierLedgerSummaryReportDetails!) {
-          totalSupplierLedgerSummaryReportDebit = totalSupplierLedgerSummaryReportDebit + int.parse(element.debitAmount!);
-          totalSupplierLedgerSummaryReportCredit = totalSupplierLedgerSummaryReportCredit + int.parse(element.creditAmount!);
+          String debitAmt  = element.debitAmount == "-" || element.debitAmount == "" ? "0" : element.debitAmount!;
+          String creditAmt  = element.creditAmount == "-" || element.creditAmount == ""? "0" : element.creditAmount!;
+
+          totalSupplierLedgerSummaryReportDebit = totalSupplierLedgerSummaryReportDebit + int.parse(debitAmt);
+          totalSupplierLedgerSummaryReportCredit = totalSupplierLedgerSummaryReportCredit + int.parse(creditAmt);
         }
         update();
       }
@@ -1404,15 +1421,15 @@ class HomeController extends GetxController {
 
   final GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
 
-  Future<void> exportDataGridToPdf() async {
-    final PdfDocument document =
-    key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true);
-
-    final List<int> bytes = document.saveSync();
-    await saveAndLaunchFile(bytes, 'DataGrid.pdf');
-
-    document.dispose();
-  }
+  // Future<void> exportDataGridToPdf() async {
+  //   final PdfDocument document =
+  //   key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true);
+  //
+  //   final List<int> bytes = document.saveSync();
+  //   await saveAndLaunchFile(bytes, 'DataGrid.pdf');
+  //
+  //   document.dispose();
+  // }
 
   List<MarkWiseWeightListDetails> markWiseWeightListExport = <MarkWiseWeightListDetails>[];
   late MarkWiseWeightListDataSource markWiseWeightListDataSource;

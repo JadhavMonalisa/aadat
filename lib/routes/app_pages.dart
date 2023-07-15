@@ -1,5 +1,6 @@
 
 import 'package:adat/screens/common/splash_screen.dart';
+import 'package:adat/screens/customer/bill_report_pdf.dart';
 import 'package:adat/screens/customer/customer_bill_report.dart';
 import 'package:adat/screens/customer/customer_ledger_short_report.dart';
 import 'package:adat/screens/customer/customer_ledger_summary_report.dart';
@@ -78,6 +79,11 @@ class AppPages {
       page: () => const BillReportScreen(),
       binding: HomeBinding(),
     ),
+    // GetPage(
+    //   name: AppRoutes.customerBillReportExport,
+    //   page: () =>  BillReportExportScreen(),
+    //   binding: HomeBinding(),
+    // ),
     GetPage(
       name: AppRoutes.customerReceipt,
       page: () => const CustomerReceipt(),

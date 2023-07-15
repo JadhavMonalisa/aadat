@@ -119,59 +119,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                         cont.farmerPattiList.isEmpty ?
                         buildTextBoldWidget("No Data Found", blackColor, context, 14,align: TextAlign.center):
 
-                        // cont.isViewSelected?
-                        // cont.showPattiNo
-                        //     ? Align(
-                        //     alignment: Alignment.center,
-                        //     child: buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].engFirmName!, blackColor, context, 16.0)
-                        // ) : const Opacity(opacity: 0.0) : const Opacity(opacity: 0.0),
-                        //
-                        // cont.isViewSelected?
-                        // cont.showPattiNo
-                        // ? Align(
-                        //   alignment: Alignment.center,
-                        //   child: buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].firmAddress!, blackColor, context, 16.0)
-                        // ) : const Opacity(opacity: 0.0) : const Opacity(opacity: 0.0),
-
-                        // cont.isViewSelected?
-                        // cont.showPattiNo
-                        //     ? Padding(
-                        //       padding: const EdgeInsets.only(left: 10.0),
-                        //       child: Align(
-                        //       alignment: Alignment.topLeft,
-                        //       child: buildRichTextWidget("Mobile No. : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].mobileNo!,),),
-                        //     )
-                        //         : const Opacity(opacity: 0.0) : const Opacity(opacity: 0.0),
-
-
-                        // cont.isViewSelected?
-                        // cont.showPattiNo
-                        //     ?
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 10.0,right: 20.0),
-                        //   child: Row(
-                        //     children: [
-                        //       Align(
-                        //         alignment: Alignment.topLeft,
-                        //         child: buildRichTextWidget("Patti No. : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].pattiNo!,),),
-                        //        const Spacer(),
-                        //       Align(
-                        //         alignment: Alignment.topRight,
-                        //         child: buildRichTextWidget("Patti Date : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].pattiDate!,),),
-                        //     ],
-                        //   ),
-                        // ) : const Opacity(opacity: 0.0) : const Opacity(opacity: 0.0),
-
-                        // cont.isViewSelected?
-                        // cont.showPattiNo
-                        //     ?
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 10.0,right: 20.0),
-                        //   child: Align(
-                        //     alignment: Alignment.topLeft,
-                        //     child: buildRichTextWidget("Farmer Name : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].accountName!,),),
-                        // ) : const Opacity(opacity: 0.0) : const Opacity(opacity: 0.0),
-
                         cont.isViewSelected ? cont.isLoading ? buildCircularIndicator() :
 
                         cont.showPattiNo
@@ -272,7 +219,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                               buildTableTitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].totAmount!),
                                             ]
                                         ),
-                                        //for (var data in cont.farmerPattiList)
                                         TableRow(
                                             decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                             children: [
@@ -295,7 +241,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                               buildTableTitleForReport(context,""),
                                             ]
                                         ),
-                                        //for (var data in cont.farmerPattiList)
                                           TableRow(
                                               decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                               children: [
@@ -307,17 +252,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                                 buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].netAmount!),
                                               ]
                                           ),
-                                        // for (var data in cont.farmerPattiList)
-                                        //   TableRow(
-                                        //       children: [
-                                        //         buildTableSubtitleForReport(context,data.mEngName.toString()),
-                                        //         const Opacity(opacity: 0.0,),
-                                        //         buildTableSubtitleForReport(context,data.mEngName!),
-                                        //         buildTableSubtitleForReport(context,data.mEngName!),
-                                        //         const Opacity(opacity: 0.0,),
-                                        //         const Opacity(opacity: 0.0,),
-                                        //       ]
-                                        //   ),
                                       ],
                                     ),
                                   ),
@@ -349,7 +283,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                                               alignment: Alignment.center,
                                                               child: buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[index].engFirmName!, blackColor, context, 16.0)
                                                           ),
-
                                                           Align(
                                                               alignment: Alignment.center,
                                                               child: buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[index].firmAddress!, blackColor, context, 16.0)
@@ -436,7 +369,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                                                     buildTableTitleForReport(context,cont.farmerPattiList[index].totAmount!),
                                                                   ]
                                                               ),
-                                                              //for (var data in cont.farmerPattiList)
                                                               TableRow(
                                                                   decoration: BoxDecoration(
                                                                     color: grey.withOpacity(0.2),
@@ -463,7 +395,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                                                     buildTableTitleForReport(context,""),
                                                                   ]
                                                               ),
-                                                              //for (var data in cont.farmerPattiList)
                                                               TableRow(
                                                                   decoration: BoxDecoration(
                                                                     color: grey.withOpacity(0.2),
@@ -477,17 +408,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                                                     buildTableSubtitleForReport(context,cont.farmerPattiList[index].netAmount!),
                                                                   ]
                                                               ),
-                                                              // for (var data in cont.farmerPattiList)
-                                                              //   TableRow(
-                                                              //       children: [
-                                                              //         buildTableSubtitleForReport(context,data.mEngName.toString()),
-                                                              //         const Opacity(opacity: 0.0,),
-                                                              //         buildTableSubtitleForReport(context,data.mEngName!),
-                                                              //         buildTableSubtitleForReport(context,data.mEngName!),
-                                                              //         const Opacity(opacity: 0.0,),
-                                                              //         const Opacity(opacity: 0.0,),
-                                                              //       ]
-                                                              //   ),
                                                             ],
                                                           ),
                                                           const SizedBox(height: 10.0,),

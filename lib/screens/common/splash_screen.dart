@@ -46,15 +46,6 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      // child:Scaffold(
-      //   backgroundColor: whiteColor,
-      //   body: Center(
-      //       child: SizedBox(
-      //         height: MediaQuery.of(context).size.height/3,width: MediaQuery.of(context).size.width,
-      //         child: Image.asset(Assets.splashLogo,fit: BoxFit.fill),
-      //       )
-      //   ),
-      // ),
       child:Scaffold(
           backgroundColor: blueColor,
         body:Stack(

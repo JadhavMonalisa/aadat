@@ -1,10 +1,22 @@
+import 'dart:io';
+
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
+import 'package:adat/screens/customer/bill_report_pdf.dart';
+import 'package:adat/screens/customer/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import 'package:syncfusion_flutter_datagrid_export/export.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:open_file/open_file.dart' as open_file;
+// ignore: depend_on_referenced_packages
+import 'package:path_provider_platform_interface/path_provider_platform_interface.dart'
+as path_provider_interface;
 
 class BillReportScreen extends StatefulWidget {
   const BillReportScreen({Key? key}) : super(key: key);
@@ -14,6 +26,47 @@ class BillReportScreen extends StatefulWidget {
 }
 
 class _BillReportScreenState extends State<BillReportScreen> {
+  final GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
+
+  Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
+    String? path;
+    if (Platform.isAndroid ||
+        Platform.isIOS ||
+        Platform.isLinux ||
+        Platform.isWindows) {
+      final Directory directory =
+      await path_provider.getApplicationSupportDirectory();
+      path = directory.path;
+    } else {
+      path = await path_provider_interface.PathProviderPlatform.instance
+          .getApplicationSupportPath();
+    }
+
+    final String fileLocation =
+    Platform.isWindows ? '$path\\$fileName' : '$path/$fileName';
+    final File file = File(fileLocation);
+    await file.writeAsBytes(bytes, flush: true);
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      await open_file.OpenFile.open(fileLocation);
+    } else if (Platform.isWindows) {
+      await Process.run('start', <String>[fileLocation], runInShell: true);
+    } else if (Platform.isMacOS) {
+      await Process.run('open', <String>[fileLocation], runInShell: true);
+    } else if (Platform.isLinux) {
+      await Process.run('xdg-open', <String>[fileLocation], runInShell: true);
+    }
+  }
+
+  Future<void> exportDataGridToPdf() async {
+    final PdfDocument document =
+    key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true);
+
+    final List<int> bytes = document.saveSync();
+    await saveAndLaunchFile(bytes, 'DataGrid.pdf');
+    document.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (cont)
@@ -44,7 +97,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 30.0,bottom: 20.0),
-                          child: buildTextRegularWidget("FARMER RECEIPT REPORT FOR\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                          child: buildTextRegularWidget("Bill REPORT FOR\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
                         const SizedBox(height: 20.0,),
                         Row(
@@ -88,6 +141,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                   onTap: () {
                                   },
                                   onChanged: (val){
+                                    cont.onBillNoSelectionChange();
                                   },
                                   style:const TextStyle(fontSize: 15.0,color: primaryColor),
                                   decoration: InputDecoration(
@@ -106,12 +160,29 @@ class _BillReportScreenState extends State<BillReportScreen> {
                         const SizedBox(height: 20.0,),
 
                         Padding(
-                            padding: const EdgeInsets.only(left: 100.0,right: 100.0,bottom: 10.0),
-                            child:GestureDetector(
-                              onTap: (){
-                                cont.showBillResult();
-                              },
-                              child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                            padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10.0),
+                            child:Row(
+                              children: [
+                                Flexible(
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      cont.showBillResult();
+                                    },
+                                    child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                                  ),
+                                ),
+                                      const SizedBox(width: 10.0,),
+                                      Flexible(child: GestureDetector(
+                                        onTap: () async{
+                                          //cont.showBillResult();
+                                          final pdfFile = await BillReportExportScreen.generate(cont.billReportList,0);
+                                          Future.delayed(const Duration(seconds: 5), () async {
+                                            PdfApi.openFile(pdfFile);
+                                          });
+                                        },
+                                        child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
+                                      )),
+                              ],
                             )
                         ),
                         Align(
@@ -126,6 +197,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                               cont.billReportList[0].firmAddress!, blackColor, context, 15.0,align: TextAlign.center),
                         ),
                         cont.showBillReport?
+                        cont.billReportList.isEmpty ? const Opacity(opacity: 0.0):
                         Padding(
                             padding: const EdgeInsets.only(left: 10.0,top: 10.0),
                             child:buildRichTextWidget("Mobile No. : ", cont.billReportList.isEmpty?"":
@@ -133,6 +205,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                         :const Opacity(opacity: 0.0),
 
                         cont.showBillReport?
+                        cont.billReportList.isEmpty ? const Opacity(opacity: 0.0):
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0,top: 5.0),
                           child: Row(
@@ -146,6 +219,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                         ):const Opacity(opacity: 0.0),
 
                         cont.showBillReport?
+                        cont.billReportList.isEmpty ? const Opacity(opacity: 0.0):
                         Padding(
                             padding: const EdgeInsets.only(left: 10.0,top: 5.0),
                             child:buildRichTextWidget("Customer Name : ", cont.billReportList.isEmpty?"":
@@ -166,6 +240,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Table(
+                                      key: key,
                                       border: TableBorder.all(color: whiteColor,width: 2.0),
                                       defaultColumnWidth: const IntrinsicColumnWidth(),
                                       children: [
