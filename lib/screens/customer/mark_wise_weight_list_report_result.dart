@@ -1,6 +1,8 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
 import 'package:adat/screens/customer/customer_model.dart';
+import 'package:adat/screens/customer/pdf/mark_wise_weight_list_report_pdf.dart';
+import 'package:adat/screens/customer/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/theme/app_colors.dart';
@@ -63,9 +65,9 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                         Padding(
                           padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
                           child: GestureDetector(
-                            onTap: (){
-                              // exportThisDocument();
-                              // exportDataGridToPdf();
+                            onTap: () async {
+                              final pdfFile = await MarkWiseWeightListReportExportScreen.generate(cont.markWiseWeightList,cont);
+                              PdfApi.openFile(pdfFile);
                             },
                             child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
                           ),

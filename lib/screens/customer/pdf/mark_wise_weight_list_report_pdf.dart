@@ -1,62 +1,29 @@
 import 'dart:io';
 import 'package:adat/screens/customer/customer_model.dart';
 import 'package:adat/screens/customer/pdf_api.dart';
+import 'package:adat/screens/home/home_controller.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
-class BillReportExportScreen {
+class MarkWiseWeightListReportExportScreen {
 
   static int startIndex = 0;
   static int endIndex = 0;
-  //static int totalLength = 0;
+  static int totalLength = 0;
 
-  static Future<File> generate(List<BillReportListData> billListPdf, int totalLength) async {
+  static Future<File> generate(List<MarkWiseWeightListDetails> markWiseWeightListPdf,HomeController cont) async {
     final pdf = Document();
     final font = await rootBundle.load("assets/font/Hindi.ttf");
     final ttf = pw.Font.ttf(font);
 
-    int divideValue = billListPdf.length ~/ 10;
-    int modeValue = billListPdf.length % 10;
-
-    //totalLength = divideValue + modeValue;
-
-    if(divideValue<modeValue){
-      totalLength = divideValue + 1;
-    }
-    print("totalLength");
-    print(totalLength);
-    for(int i = 0; i<totalLength-1; i++ ) {
-      startIndex = i == 0 ? 0 : startIndex + 10;
-
-      // if(i == 0){
-      //   startIndex = 0;
-      //   endIndex = 10;
-      // }
-      // else{
-      //   startIndex = startIndex + 10;
-      // }
-
-      print(i);
-
-      // if(billListPdf.length <endIndex){
-      //   print("if");
-      //   print(billListPdf.length);
-      //   print(endIndex);
-      //   endIndex = startIndex + modeValue;
-      // }
-      // else{
-      //   print("else");
-      //   endIndex = endIndex + 10;
-      // }
-
-      print("start index : $startIndex");
-      print("end index : $endIndex");
-
+    if(markWiseWeightListPdf.length <=10){
       pdf.addPage(MultiPage(
         pageFormat: PdfPageFormat.letter,
-        header: (context) => buildHeader(billListPdf[0].billDate!,billListPdf[0].custAccountName!),
+        header: (context) =>
+        startIndex ==0?
+        buildHeader("Mark Wise Weight List Report",cont,markWiseWeightListPdf[0].custAccountName!): Opacity(opacity: 0.0),
         build: (context) => [
           SizedBox(height: 0.2 * PdfPageFormat.cm),
           Table(
@@ -64,92 +31,142 @@ class BillReportExportScreen {
             defaultColumnWidth: const IntrinsicColumnWidth(),
             children: [
               TableRow(
+                decoration: BoxDecoration(color: PdfColor.fromHex("#808080")),
                 children: [
-                  buildTitleForTable("Product Name"),
-                  buildTitleForTable("LOT No"),
-                  buildTitleForTable("Quantity"),
-                  buildTitleForTable("Weight"),
-                  buildTitleForTable("Rate"),
-                  buildTitleForTable("Amount"),
+                  buildTitleForTable("Customer Mark"),
+                  buildTitleForTable("Customer Name"),
+                  buildTitleForTable("Total Quantity"),
+                  buildTitleForTable("Total Weight"),
+                  buildTitleForTable("Avg. Rate"),
+                ],
+              ),
+              for(int i = 0 ;i < markWiseWeightListPdf.length ; i++)
+                TableRow(
+                  decoration: BoxDecoration(color: PdfColor.fromHex("#E5E4E2")),
+                  children: [
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].mark!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].custAccountName!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].qty!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].weight!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].amount!),
+                  ],
+                ),
+            ],
+          ),
+          SizedBox(height: 0.2 * PdfPageFormat.cm),
+        ],
+      ));
+    }
+    else{
+      int divideValue = markWiseWeightListPdf.length ~/ 10;
+      int modeValue = markWiseWeightListPdf.length % 10;
+
+      if(divideValue<modeValue){
+        totalLength = divideValue + 1;
+      }
+
+      for(int i = 0; i<totalLength-1; i++ ) {
+        startIndex = i == 0 ? 0 : startIndex + 10;
+        endIndex = i == 0 ? 10 : endIndex + 10;
+
+        pdf.addPage(MultiPage(
+          pageFormat: PdfPageFormat.letter,
+          header: (context) =>
+          i ==0?
+          buildHeader("Mark Wise Weight List Report",cont,markWiseWeightListPdf[0].custAccountName!): Opacity(opacity: 0.0),
+          build: (context) => [
+            SizedBox(height: 0.2 * PdfPageFormat.cm),
+            Table(
+              border:TableBorder.all(width: 0.1,color: PdfColor.fromHex("#9E9E9E")),
+              defaultColumnWidth: const IntrinsicColumnWidth(),
+              children: [
+                TableRow(
+                  decoration: BoxDecoration(color: PdfColor.fromHex("#808080")),
+                  children: [
+                    buildTitleForTable("Customer Mark"),
+                    buildTitleForTable("Customer Name"),
+                    buildTitleForTable("Total Quantity"),
+                    buildTitleForTable("Total Weight"),
+                    buildTitleForTable("Avg. Rate"),
+                  ],
+                ),
+                for(int i = startIndex ;i < endIndex ; i++)
+                  TableRow(
+                    decoration: BoxDecoration(color: PdfColor.fromHex("#E5E4E2")),
+                    children: [
+                      buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].mark!),
+                      buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].custAccountName!),
+                      buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].qty!),
+                      buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].weight!),
+                      buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].amount!),
+                    ],
+                  ),
+              ],
+            )
+          ],
+        ));
+      }
+
+      if(endIndex<markWiseWeightListPdf.length){
+        startIndex = startIndex + 10;
+        endIndex = endIndex + modeValue;
+      }
+
+      pdf.addPage(MultiPage(
+        pageFormat: PdfPageFormat.letter,
+        header: (context) =>
+        startIndex ==0?
+        buildHeader("Mark Wise Weight List Report",cont,markWiseWeightListPdf[0].custAccountName!): Opacity(opacity: 0.0),
+        build: (context) => [
+          SizedBox(height: 0.2 * PdfPageFormat.cm),
+          Table(
+            border:TableBorder.all(width: 0.1,color: PdfColor.fromHex("#9E9E9E")),
+            defaultColumnWidth: const IntrinsicColumnWidth(),
+            children: [
+              TableRow(
+                decoration: BoxDecoration(color: PdfColor.fromHex("#808080")),
+                children: [
+                  buildTitleForTable("Customer Mark"),
+                  buildTitleForTable("Customer Name"),
+                  buildTitleForTable("Total Quantity"),
+                  buildTitleForTable("Total Weight"),
+                  buildTitleForTable("Avg. Rate"),
                 ],
               ),
               for(int i = startIndex ;i < endIndex ; i++)
                 TableRow(
+                  decoration: BoxDecoration(color: PdfColor.fromHex("#E5E4E2")),
                   children: [
-                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].custAccountName.toString()),
-                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].lotNo.toString()),
-                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].qty.toString()),
-                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].weight.toString()),
-                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].rate.toString()),
-                    buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].amount.toString()),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].mark!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].custAccountName!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].qty!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].weight!),
+                    buildRowTextForTable(markWiseWeightListPdf.isEmpty ? "" : markWiseWeightListPdf[i].amount!),
                   ],
                 ),
             ],
-          )
+          ),
+          SizedBox(height: 0.2 * PdfPageFormat.cm),
         ],
       ));
     }
 
-    if(endIndex<billListPdf.length){
-      startIndex = startIndex + 10;
-      endIndex = endIndex + modeValue;
-    }
-
-    pdf.addPage(MultiPage(
-      pageFormat: PdfPageFormat.letter,
-      //header: (context) => buildHeader(billListPdf[0].billDate!,billListPdf[0].custAccountName!),
-      build: (context) => [
-        SizedBox(height: 0.2 * PdfPageFormat.cm),
-        Table(
-          border:TableBorder.all(width: 0.1,color: PdfColor.fromHex("#9E9E9E")),
-          defaultColumnWidth: const IntrinsicColumnWidth(),
-          children: [
-            TableRow(
-              children: [
-                buildTitleForTable("Product Name"),
-                buildTitleForTable("LOT No"),
-                buildTitleForTable("Quantity"),
-                buildTitleForTable("Weight"),
-                buildTitleForTable("Rate"),
-                buildTitleForTable("Amount"),
-              ],
-            ),
-            for(int i = startIndex ;i < endIndex ; i++)
-              TableRow(
-                children: [
-                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].custAccountName.toString()),
-                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].lotNo.toString()),
-                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].qty.toString()),
-                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].weight.toString()),
-                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].rate.toString()),
-                  buildRowTextForTable(billListPdf.isEmpty ? "" : billListPdf[i].amount.toString()),
-                ],
-              ),
-          ],
-        )
-      ],
-    ));
-
-    // else{
-    //   print("else");
-    //   endIndex = endIndex + 10;
-    // }
-
-    return PdfApi.saveDocument(name: 'bill_list.pdf', pdf: pdf);
+    return PdfApi.saveDocument(name: 'Mark Wise Weight List Report.pdf', pdf: pdf);
   }
 
   ///pdf header
-  static Widget buildHeader(String billDate, String customerName) => Column(
+  static Widget buildHeader(String title,HomeController cont,String customerName) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(
-        children: [
-          Text(billDate),
-          SizedBox(width: 100),
-          Text(customerName),
-        ],
+      Align(
+          alignment: Alignment.center,
+          child:Text(title,style: TextStyle(fontWeight: FontWeight.bold))
       ),
       pw.SizedBox(height: 20),
+      Align(
+          alignment: Alignment.center,
+          child:Text(customerName,style: TextStyle(fontWeight: FontWeight.bold))
+      ),
     ],
   );
 
@@ -169,6 +186,7 @@ class BillReportExportScreen {
         defaultColumnWidth: const IntrinsicColumnWidth(),
         children: [
           TableRow(
+            decoration: BoxDecoration(color: PdfColor.fromHex("#808080")),
             children: [
               buildTitleForTable("Bill Date"),
               buildTitleForTable("Customer"),
@@ -181,6 +199,7 @@ class BillReportExportScreen {
           ),
           for(var data = startIndex; data < endIndex; data++)
             TableRow(
+              decoration: BoxDecoration(color: PdfColor.fromHex("#C0C0C0")),
               children: [
                 buildRowTextForTable(weightListPdf.isEmpty ? "" : "${weightListPdf[data].billDate}"),
                 buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].custAccountName}"),
@@ -208,8 +227,7 @@ class BillReportExportScreen {
   static Widget buildRowTextForTable(String title) {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0,right: 5.0,bottom: 5.0,left: 10.0),
-      child: Text(title, style: TextStyle(fontSize: 13,color: PdfColor.fromHex("#546cb1")),textAlign: TextAlign.center,
-
+      child: Text(title, style: TextStyle(fontSize: 13,color: PdfColor.fromHex("#000000")),textAlign: TextAlign.center,
       ),
     );
   }

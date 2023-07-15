@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
-import 'package:adat/screens/customer/bill_report_pdf.dart';
+import 'package:adat/screens/customer/pdf/bill_report_pdf.dart';
 import 'package:adat/screens/customer/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -174,11 +175,14 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                       const SizedBox(width: 10.0,),
                                       Flexible(child: GestureDetector(
                                         onTap: () async{
-                                          //cont.showBillResult();
-                                          final pdfFile = await BillReportExportScreen.generate(cont.billReportList,0);
-                                          Future.delayed(const Duration(seconds: 5), () async {
+                                          if(cont.showBillReport==false)
+                                           {
+                                             Utils.showErrorSnackBar("Please first get report!");
+                                           }
+                                          else{
+                                            final pdfFile = await BillReportExportScreen.generate(cont.billReportList,cont);
                                             PdfApi.openFile(pdfFile);
-                                          });
+                                          }
                                         },
                                         child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
                                       )),

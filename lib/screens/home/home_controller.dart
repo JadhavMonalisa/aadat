@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:adat/constant/provider/custom_exception.dart';
 import 'package:adat/constant/repository/api_repository.dart';
 import 'package:adat/routes/app_pages.dart';
-import 'package:adat/screens/customer/bill_report_pdf.dart';
+import 'package:adat/screens/customer/pdf/bill_report_pdf.dart';
 import 'package:adat/screens/customer/customer_model.dart';
 import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
@@ -367,6 +367,8 @@ class HomeController extends GetxController {
       loaderForCustomer = false;
       update();
     }
+    loaderForCustomer = false;
+    update();
   }
   updateSelectedCustomer(String value){
     selectedCustomer = value; update();
@@ -836,14 +838,14 @@ class HomeController extends GetxController {
     update();
   }
 
-
   ///bill report list
   callBillReportList() async{
     billReportList.clear();
     try {
       Utils.dismissKeyboard();
       BillReportModel? response = (await repository.getCustomerBillReportList(
-          billNo.text,billDate,selectedFirmId!));
+          billNo.text.isEmpty || billNo.text == "" ? "0" :billNo.text,
+          billDate=="" ? "0" : billDate,selectedFirmId!));
 
       print(response.statusCode);
       if (response.statusCode==200) {
@@ -887,6 +889,18 @@ class HomeController extends GetxController {
     showBillReport = true;
     callBillReportList();
     update();
+  }
+
+  validateBillReportPdf() async{
+    // if(billNo.text.isEmpty || billDate=="")
+    // {
+    //   Utils.showErrorSnackBar("Please first get report!");update();
+    // }
+    // else{
+    //   final pdfFile = await BillReportExportScreen.generate(cont.billReportList,cont);
+    //   PdfApi.openFile(pdfFile);
+    //   update();
+    // }
   }
 
   onBackPressFromBillReport(){

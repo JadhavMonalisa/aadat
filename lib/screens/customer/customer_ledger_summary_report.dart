@@ -1,7 +1,10 @@
 import 'package:adat/common_widget/widget.dart';
+import 'package:adat/screens/customer/pdf/ledger_summary_report_pdf.dart';
+import 'package:adat/screens/customer/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -113,12 +116,32 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                         ),
                         const SizedBox(height: 20.0,),
                         Padding(
-                            padding: const EdgeInsets.only(left: 100.0,right: 100.0),
-                            child:GestureDetector(
-                              onTap: (){
-                                cont.getLedgerSummaryReport();
-                              },
-                              child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                            padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                            child:Row(
+                              children: [
+                                Flexible(
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      cont.getLedgerSummaryReport();
+                                    },
+                                    child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                                  ),
+                                ),
+                                const SizedBox(width: 10.0,),
+                                Flexible(child: GestureDetector(
+                                  onTap: () async{
+                                    if(cont.isViewSelected==false)
+                                    {
+                                      Utils.showErrorSnackBar("Please first get report!");
+                                    }
+                                    else{
+                                      final pdfFile = await LedgerSummaryReportExportScreen.generate(cont.ledgerSummaryReportList,cont);
+                                      PdfApi.openFile(pdfFile);
+                                    }
+                                  },
+                                  child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
+                                )),
+                              ],
                             )
                         ),
                         const SizedBox(height: 20.0,),
@@ -144,7 +167,7 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                                         buildTableTitleForReport(context,"Account Name"),
                                         buildTableTitleForReport(context,"Debit Amt"),
                                         buildTableTitleForReport(context,"Credit Amt"),
-                                        buildTableTitleForReport(context,"Mobile No"),
+                                        buildTableTitleForReport(context,"Mobile No."),
                                       ]
                                   ),
                                   for (var data in cont.ledgerSummaryReportList)

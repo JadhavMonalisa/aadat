@@ -185,6 +185,9 @@ class ApiRepository {
 
     var params = {"BillNo":int.parse(billNo),"BillDate":billDate,"ClientID": clientId,"FirmID":firmId};
     request.body = jsonEncode(params);
+
+    print("params");
+    print(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 
