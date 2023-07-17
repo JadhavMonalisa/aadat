@@ -62,8 +62,8 @@ class _ResultScreenState extends State<ResultScreen> {
                         padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
                         child: GestureDetector(
                           onTap: () async {
-                            final pdfFile = await LedgerShortReportExportScreen.generate(cont.ledgerReportList,cont);
-                            PdfApi.openFile(pdfFile);
+                            // final pdfFile = await LedgerShortReportExportScreen.generate(cont.ledgerReportList,cont);
+                            // PdfApi.openFile(pdfFile);
                           },
                           child:buildButtonWidget(context, "Export to",width: 100.0,height: 40.0)
                         ),

@@ -11,7 +11,7 @@ import 'package:adat/screens/customer/mark_wise_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/customer/receipt.dart';
-import 'package:adat/screens/customer/result_screen.dart';
+import 'package:adat/screens/customer/ledger_report_result_screen.dart';
 import 'package:adat/screens/customer/weight_list.dart';
 import 'package:adat/screens/farmer/farmer_receipt.dart';
 import 'package:adat/screens/home/home_binding.dart';

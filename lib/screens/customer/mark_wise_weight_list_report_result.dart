@@ -66,8 +66,8 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                           padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
                           child: GestureDetector(
                             onTap: () async {
-                              final pdfFile = await MarkWiseWeightListReportExportScreen.generate(cont.markWiseWeightList,cont);
-                              PdfApi.openFile(pdfFile);
+                              // final pdfFile = await MarkWiseWeightListReportExportScreen.generate(cont.markWiseWeightList,cont);
+                              // PdfApi.openFile(pdfFile);
                             },
                             child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
                           ),

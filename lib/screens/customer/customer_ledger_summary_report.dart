@@ -130,14 +130,14 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                                 const SizedBox(width: 10.0,),
                                 Flexible(child: GestureDetector(
                                   onTap: () async{
-                                    if(cont.isViewSelected==false)
-                                    {
-                                      Utils.showErrorSnackBar("Please first get report!");
-                                    }
-                                    else{
-                                      final pdfFile = await LedgerSummaryReportExportScreen.generate(cont.ledgerSummaryReportList,cont);
-                                      PdfApi.openFile(pdfFile);
-                                    }
+                                    // if(cont.isViewSelected==false)
+                                    // {
+                                    //   Utils.showErrorSnackBar("Please first get report!");
+                                    // }
+                                    // else{
+                                    //   final pdfFile = await LedgerSummaryReportExportScreen.generate(cont.ledgerSummaryReportList,cont);
+                                    //   PdfApi.openFile(pdfFile);
+                                    // }
                                   },
                                   child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
                                 )),
