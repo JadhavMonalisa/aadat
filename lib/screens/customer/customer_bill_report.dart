@@ -84,7 +84,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                 title: buildTextBoldWidget("Bill Report", whiteColor, context, 15.0),
                 leading: GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoutes.home);
+                      cont.onBackPressFromBillReport();
                     },
                     child: const Icon(Icons.arrow_back_ios, color: whiteColor,)
                 ),
@@ -191,7 +191,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                         ),
                         Align(
                           alignment: Alignment.center,
-                          child:buildTextRegularWidget(
+                          child:buildTextBoldWidget(
                               cont.billReportList.isEmpty?"":
                               cont.billReportList[0].custAccountName!, blackColor, context, 15.0,align: TextAlign.center),
                         ),
@@ -204,8 +204,17 @@ class _BillReportScreenState extends State<BillReportScreen> {
                         cont.billReportList.isEmpty ? const Opacity(opacity: 0.0):
                         Padding(
                             padding: const EdgeInsets.only(left: 10.0,top: 10.0),
-                            child:buildRichTextWidget("Mobile No. : ", cont.billReportList.isEmpty?"":
-                        cont.billReportList[0].mobileNo!))
+                            child:Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                buildTextBoldWidget("Mobile No. : ", blackColor, context, 15.0),
+                                Flexible(
+                                  child:buildTextRegularWidget(cont.billReportList.isEmpty?"":
+                                  cont.billReportList[0].mobileNo!, blackColor, context, 15.0,align: TextAlign.left),
+                                )
+                              ],
+                            )
+                        )
                         :const Opacity(opacity: 0.0),
 
                         cont.showBillReport?
@@ -267,19 +276,19 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                                 buildTableSubtitleForReport(context,data.lotNo.toString()),
                                                 buildTableSubtitleForReport(context,data.qty.toString()),
                                                 buildTableSubtitleForReport(context,data.weight!),
-                                                buildTableSubtitleForReport(context,data.rate.toString()),
-                                                buildTableSubtitleForReport(context,data.amount.toString()),
+                                                buildTableSubtitleForReport(context,data.rate.toString(),align: TextAlign.right),
+                                                buildTableSubtitleForReport(context,data.amount.toString(),align: TextAlign.right),
                                               ]
                                           ),
                                           TableRow(
                                               decoration: const BoxDecoration(color: grey),
                                             children: [
-                                              buildTableTitleForReport(context,"Total"),
+                                              buildTableTitleForReport(context,"Total",align: TextAlign.center),
                                               buildTableTitleForReport(context,""),
-                                              buildTableTitleForReport(context,cont.billReportList[0].totQty.toString()),
-                                              buildTableTitleForReport(context,cont.billReportList[0].totWeight!),
+                                              buildTableTitleForReport(context,cont.billReportList[0].totQty.toString(),align: TextAlign.right),
+                                              buildTableTitleForReport(context,cont.billReportList[0].totWeight!,align: TextAlign.right),
                                               buildTableTitleForReport(context,""),
-                                              buildTableTitleForReport(context,cont.billReportList[0].totAmount.toString()),
+                                              buildTableTitleForReport(context,cont.billReportList[0].totAmount.toString(),align: TextAlign.right),
                                             ]
                                         ),
                                       ],
@@ -292,25 +301,25 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                         TableRow(
                                             children: [
                                               buildTableTitleForReport(context,"Adat",),
-                                              buildTableSubtitleForReport(context,cont.billReportList[0].adat!),
+                                              buildTableSubtitleForReport(context,cont.billReportList[0].adat!,align: TextAlign.right),
                                             ]
                                         ),
                                         TableRow(
                                             children: [
                                               buildTableTitleForReport(context,"M. Ses"),
-                                              buildTableSubtitleForReport(context,cont.billReportList[0].mcess!),
+                                              buildTableSubtitleForReport(context,cont.billReportList[0].mcess!,align: TextAlign.right),
                                             ]
                                         ),
                                         TableRow(
                                             children: [
                                               buildTableTitleForReport(context,"Hamali"),
-                                              buildTableSubtitleForReport(context,cont.billReportList[0].custHamali!),
+                                              buildTableSubtitleForReport(context,cont.billReportList[0].custHamali!,align: TextAlign.right),
                                             ]
                                         ),
                                         TableRow(
                                             children: [
                                               buildTableTitleForReport(context,"Net Amount"),
-                                              buildTableSubtitleForReport(context,cont.billReportList[0].netAmount!),
+                                              buildTableSubtitleForReport(context,cont.billReportList[0].netAmount!,align: TextAlign.right),
                                             ]
                                         ),
                                       ]

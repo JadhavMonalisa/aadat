@@ -316,7 +316,7 @@ buildChoiceDetails(BuildContext context,String title,HomeController cont,List li
 
 buildTableTitleForReport(BuildContext context,String title,{TextAlign align = TextAlign.left,Color boxColor = grey}){
   return Padding(
-    padding: const EdgeInsets.all(5.0),
+    padding: const EdgeInsets.all(10.0),
     child: buildTextBoldWidget(title, blackColor, context, 14.0,align: align),
   );
 }
@@ -325,7 +325,7 @@ buildTableTitleForReport(BuildContext context,String title,{TextAlign align = Te
 buildTableSubtitleForReport(BuildContext context,String subtitle,
     {FontWeight fontWeight = FontWeight.normal,TextAlign align = TextAlign.center}){
   return Padding(
-    padding: const EdgeInsets.all(5.0),
+    padding: const EdgeInsets.all(10.0),
     child: buildTextRegularWidget(subtitle, blackColor, context, 14.0,align: align,fontWeight: fontWeight,),
   );
 }

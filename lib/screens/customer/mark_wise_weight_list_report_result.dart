@@ -41,7 +41,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                     "Mark Wise Weight List Report Result", whiteColor, context, 15.0),
                 leading: GestureDetector(
                     onTap: () {
-                      cont.backPressNavigationFromResult(AppRoutes.customerLedgerReport);
+                      cont.backPressNavigationFromResult(AppRoutes.customerMarkWiseWeightListReportScreen);
                     },
                     child: const Icon(Icons.arrow_back_ios, color: whiteColor,)
                 ),
@@ -59,17 +59,25 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
                           child: buildTextRegularWidget("CUSTOMER MARK WISE WEIGHT LIST REPORT FOR\n${cont.selectedCustomer} "
                               "BILL DATE ${cont.selectedBillDateToShow} "
-                              "OF ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                              "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
+                        //   child:buildRichTextWidget("CUSTOMER MARK WISE WEIGHT LIST REPORT FOR ${cont.selectedCustomer} "
+                        //       "BILL DATE ${cont.selectedBillDateToShow} ",
+                        //       "OF ${cont.selectedFirm}",title1Weight: FontWeight.normal,title2Weight: FontWeight.normal,
+                        //   title1Color: orangeColor,title2Color: orangeColor,title1Size: 17.0,title2Size: 17.0)
+                        // ),
 
+                        cont.addedMarkWiseListIndex.isEmpty?const Opacity(opacity: 0.0):
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
+                          padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
                           child: GestureDetector(
                             onTap: () async {
                               // final pdfFile = await MarkWiseWeightListReportExportScreen.generate(cont.markWiseWeightList,cont);
                               // PdfApi.openFile(pdfFile);
                             },
-                            child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                            child: buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0),
                           ),
                         ),
 
@@ -78,7 +86,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                              padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 30.0),
                               child:  Table(
                                 border: TableBorder.all(color: whiteColor,width: 2.0),
                                 defaultColumnWidth: const IntrinsicColumnWidth(),
@@ -109,7 +117,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                                           buildTableSubtitleForReport(context,cont.selectedCustomerNameInMarkList),
                                           buildTableSubtitleForReport(context,cont.markWiseWeightList[index].qty.toString()),
                                           buildTableSubtitleForReport(context,cont.markWiseWeightList[index].weight.toString()),
-                                          buildTableSubtitleForReport(context,cont.markWiseWeightList[index].amount.toString()),
+                                          buildTableSubtitleForReport(context,cont.markWiseWeightList[index].amount.toString(),align: TextAlign.right),
                                         ]
                                     ),
                                 ],

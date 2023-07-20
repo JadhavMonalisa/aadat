@@ -185,7 +185,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                         cont.isViewSelected?
                         Align(
                           alignment: Alignment.center,
-                          child:buildTextRegularWidget(
+                          child:buildTextBoldWidget(
                               cont.weightList.isEmpty?"":
                               cont.weightList[0].custAccountName!, blackColor, context, 15.0,align: TextAlign.center),
                         ):const Opacity(opacity: 0.0,),
@@ -201,47 +201,51 @@ class _WeightListScreenState extends State<WeightListScreen> {
                         cont.isViewSelected
                             ?
                         cont.weightList.isEmpty ? Center(child:buildNoDataFound(context)) :
-                        Scrollbar(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                              child:
-                              Table(
-                                border: TableBorder.all(color: whiteColor,width: 2.0),
-                                defaultColumnWidth: const IntrinsicColumnWidth(),
-                                children: [
-                                  TableRow(
-                                      decoration: const BoxDecoration(color: grey),
-                                      children: [
-                                        buildTableTitleForReport(context,"Bill Date"),
-                                        buildTableTitleForReport(context,"Customer"),
-                                        buildTableTitleForReport(context,"LOT No."),
-                                        buildTableTitleForReport(context,"Quantity"),
-                                        buildTableTitleForReport(context,"Weight"),
-                                        buildTableTitleForReport(context,"Rate"),
-                                        buildTableTitleForReport(context,"Supplier"),
-                                      ]
-                                  ),
-                                  for (var data in cont.weightList)
-                                    TableRow(
-                                        decoration: BoxDecoration(color: grey.withOpacity(0.2)),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10.0,right: 10.0,),
+                              child:Scrollbar(
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(bottom:30.0),
+                                      child:
+                                      Table(
+                                        border: TableBorder.all(color: whiteColor,width: 2.0),
+                                        defaultColumnWidth: const IntrinsicColumnWidth(),
                                         children: [
-                                          buildTableSubtitleForReport(context,data.billDate!),
-                                          buildTableSubtitleForReport(context,data.custAccountName!),
-                                          buildTableSubtitleForReport(context,data.remark!),
-                                          buildTableSubtitleForReport(context,data.qty.toString()),
-                                          buildTableSubtitleForReport(context,data.weight.toString()),
-                                          buildTableSubtitleForReport(context,data.rate.toString()),
-                                          buildTableSubtitleForReport(context,data.suppAccountName!),
-                                        ]
-                                    ),
-                                ],
+                                          TableRow(
+                                              decoration: const BoxDecoration(color: grey),
+                                              children: [
+                                                buildTableTitleForReport(context,"Bill Date"),
+                                                buildTableTitleForReport(context,"Customer"),
+                                                buildTableTitleForReport(context,"LOT No."),
+                                                buildTableTitleForReport(context,"Quantity"),
+                                                buildTableTitleForReport(context,"Weight"),
+                                                buildTableTitleForReport(context,"Rate"),
+                                                buildTableTitleForReport(context,"Supplier"),
+                                              ]
+                                          ),
+                                          for (var data in cont.weightList)
+                                            TableRow(
+                                                decoration: BoxDecoration(color: grey.withOpacity(0.2)),
+                                                children: [
+                                                  buildTableSubtitleForReport(context,data.billDate!),
+                                                  buildTableSubtitleForReport(context,data.custAccountName!),
+                                                  buildTableSubtitleForReport(context,data.remark!),
+                                                  buildTableSubtitleForReport(context,data.qty.toString()),
+                                                  buildTableSubtitleForReport(context,data.weight.toString()),
+                                                  buildTableSubtitleForReport(context,data.rate.toString(),align: TextAlign.right),
+                                                  buildTableSubtitleForReport(context,data.suppAccountName!),
+                                                ]
+                                            ),
+                                        ],
+                                      )
+                                  ),
+                                ),
                               )
-                            ),
-                          ),
-                        )
+                            )
+
                         // ?  SfDataGrid(
                         //   key: cont.key,
                         //   source: cont.weightListDataSource,

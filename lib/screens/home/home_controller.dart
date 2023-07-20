@@ -424,11 +424,12 @@ class HomeController extends GetxController {
   List<MarkWiseWeightListDetails> markWiseWeightList = [];
 
   getMarkWiseWeightList(){
+    isLoading=true;
     if(selectedBillDateToShow == ""){
-      showToast("Please select bill date!"); update();
+      showToast("Please select bill date!"); isLoading = false; update();
     }
     else if(selectedCustNo == 0){
-      showToast("Please select customer!"); update();
+      showToast("Please select customer!"); isLoading = false; update();
     }
     else{
       callMarkWiseWeightListReport();
@@ -472,6 +473,7 @@ class HomeController extends GetxController {
   callMarkWiseWeightListReport() async{
 
     markWiseWeightList.clear();
+    Get.toNamed(AppRoutes.markWiseWeightListResultReport);
     try {
       Utils.dismissKeyboard();
       MarkWiseWeightList? response = (await repository.getMarkWiseWeightList(selectedCustNo,selectedBillDateToShow,selectedFirmId!));
@@ -494,7 +496,6 @@ class HomeController extends GetxController {
       isLoading = false;
       update();
     }
-    Get.toNamed(AppRoutes.markWiseWeightListResultReport);
     update();
   }
 
@@ -907,6 +908,7 @@ class HomeController extends GetxController {
     billReportList.clear();
     billNo.clear(); billDate = ""; showBillReport = false;
     showBillNo= true; showBillDate = true;
+    selectedDate = DateTime.now();
     update();
     Get.toNamed(AppRoutes.home);
   }
