@@ -109,9 +109,8 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                         ),
 
                         cont.isLoading ? buildCircularIndicator() :
-                        cont.supplierLedgerSummaryReportList.isEmpty ? buildNoDataFound(context) :
-                        cont.isViewSelected
-                            ? Scrollbar(
+                        cont.isViewSelected ? cont.supplierLedgerSummaryReportList.isEmpty ? buildNoDataFound(context) :
+                             Scrollbar(
                               child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
@@ -123,11 +122,11 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                                       TableRow(
                                           decoration: const BoxDecoration(color: grey),
                                           children: [
-                                            buildTableTitleForReport(context,"Account No"),
-                                            buildTableTitleForReport(context,"Supplier"),
-                                            buildTableTitleForReport(context,"Mobile No"),
-                                            buildTableTitleForReport(context,"Debit Amt"),
-                                            buildTableTitleForReport(context,"Credit Amt"),
+                                            buildTableTitleForReport(context,"Account No",align: TextAlign.center),
+                                            buildTableTitleForReport(context,"Supplier",align: TextAlign.center),
+                                            buildTableTitleForReport(context,"Mobile No",align: TextAlign.center),
+                                            buildTableTitleForReport(context,"Debit Amt",align: TextAlign.center),
+                                            buildTableTitleForReport(context,"Credit Amt",align: TextAlign.center),
                                           ]
                                       ),
                                       for (var data in cont.supplierLedgerSummaryReportList)
@@ -135,10 +134,10 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                                             decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                             children: [
                                               buildTableSubtitleForReport(context,data.acctNO.toString()),
-                                              buildTableSubtitleForReport(context,data.suppAccountName.toString()),
+                                              buildTableSubtitleForReport(context,data.suppAccountName.toString(),align: TextAlign.left),
                                               buildTableSubtitleForReport(context,data.mobile.toString()),
-                                              buildTableSubtitleForReport(context,data.debitAmount.toString()),
-                                              buildTableSubtitleForReport(context,data.creditAmount.toString()),
+                                              buildTableSubtitleForReport(context,data.debitAmount.toString(),align: TextAlign.right),
+                                              buildTableSubtitleForReport(context,data.creditAmount.toString(),align: TextAlign.right),
                                             ]
                                         ),
                                       TableRow(
@@ -147,8 +146,10 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                                             buildTableSubtitleForReport(context,""),
                                             buildTableSubtitleForReport(context,""),
                                             buildTableSubtitleForReport(context,"Total",fontWeight: FontWeight.bold),
-                                            buildTableSubtitleForReport(context,cont.totalSupplierLedgerSummaryReportDebit.toString(),fontWeight: FontWeight.bold),
-                                            buildTableSubtitleForReport(context,cont.totalSupplierLedgerSummaryReportCredit.toString(),fontWeight: FontWeight.bold),
+                                            buildTableSubtitleForReport(context,cont.totalSupplierLedgerSummaryReportDebit.toString(),
+                                                fontWeight: FontWeight.bold,align: TextAlign.right),
+                                            buildTableSubtitleForReport(context,cont.totalSupplierLedgerSummaryReportCredit.toString(),
+                                                fontWeight: FontWeight.bold,align: TextAlign.right),
                                           ]
                                       ),
                                     ],

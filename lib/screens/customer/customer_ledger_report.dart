@@ -38,7 +38,9 @@ class _CustomerLedgerReportState extends State<CustomerLedgerReport> {
               ),
               body: Padding(
                 padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top: 30.0),
-                child: SizedBox(
+                child:
+                cont.isLoading ?buildCircularIndicator():
+                SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: ListView(
@@ -149,6 +151,7 @@ class _CustomerLedgerReportState extends State<CustomerLedgerReport> {
                           padding: const EdgeInsets.only(left: 100.0,right: 100.0,top: 20.0),
                           child:GestureDetector(
                             onTap: (){
+                              cont.isLoading=true;
                               cont.showCustomerLedgerReport();
                             },
                             child:  buildButtonWidget(context, "Get Report", buttonColor: orangeColor),

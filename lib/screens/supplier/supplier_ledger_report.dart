@@ -113,7 +113,6 @@ class _SupplierLedgerReportState extends State<SupplierLedgerReport> {
                                 appBarHeight: 40.0,
                                 backgroundColor: whiteColor,
                                 searchBackgroundColor: whiteColor,
-
                                 searchHintStyle: const TextStyle(color: primaryColor,fontSize: 15.0),
                                 searchTextStyle: const TextStyle(color: primaryColor,fontSize: 15.0),
                                 titleTextStyle: const TextStyle(color: primaryColor,fontSize: 15.0),

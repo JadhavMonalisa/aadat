@@ -163,22 +163,22 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                                   TableRow(
                                       decoration: const BoxDecoration(color: grey),
                                       children: [
-                                        buildTableTitleForReport(context,"Account No"),
-                                        buildTableTitleForReport(context,"Account Name"),
-                                        buildTableTitleForReport(context,"Debit Amt"),
-                                        buildTableTitleForReport(context,"Credit Amt"),
-                                        buildTableTitleForReport(context,"Mobile No."),
-                                      ]
+                                        buildTableTitleForReport(context,"Account No",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Account Name",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Mobile No.",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Debit Amt",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Credit Amt",align: TextAlign.center),
+                                        ]
                                   ),
                                   for (var data in cont.ledgerSummaryReportList)
                                     TableRow(
                                         decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                         children: [
                                           buildTableSubtitleForReport(context,data.acctNO.toString()),
-                                          buildTableSubtitleForReport(context,data.custAccountName!),
-                                          buildTableSubtitleForReport(context,data.debitAmount.toString()),
-                                          buildTableSubtitleForReport(context,data.creditAmount.toString()),
+                                          buildTableSubtitleForReport(context,data.custAccountName!,align: TextAlign.left),
                                           buildTableSubtitleForReport(context,data.mobile!),
+                                          buildTableSubtitleForReport(context,data.debitAmount.toString(),align: TextAlign.right),
+                                          buildTableSubtitleForReport(context,data.creditAmount.toString(),align: TextAlign.right),
                                         ]
                                     ),
                                   TableRow(
@@ -186,9 +186,9 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                                       children: [
                                         buildTableTitleForReport(context,""),
                                         buildTableTitleForReport(context,"Total",align: TextAlign.center),
-                                        buildTableTitleForReport(context,cont.totalDebitForLedgerSummary.toString(),align: TextAlign.center),
-                                        buildTableTitleForReport(context,cont.totalCreditForLedgerSummary.toString(),align: TextAlign.center),
                                         buildTableTitleForReport(context,""),
+                                        buildTableTitleForReport(context,cont.totalDebitForLedgerSummary.toString(),align: TextAlign.right),
+                                        buildTableTitleForReport(context,cont.totalCreditForLedgerSummary.toString(),align: TextAlign.right),
                                       ]
                                   ),
                                 ],

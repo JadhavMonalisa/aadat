@@ -115,11 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       value: value.engFirmName,
                                       child: buildTextBoldWidget(value.engFirmName!, primaryColor, context, 15.0),
                                       onTap: (){
+                                        cont.firmList.isEmpty?null:
                                         cont.updateSelectedFirmId(value.engFirmName!,value.firmId!);
                                       },
                                     );
                                   }).toList(),
                                   onChanged: (val) {
+                                    cont.firmList.isEmpty?null:
                                     cont.updateSelectedFirm(val!);
                                   },
                                 ),

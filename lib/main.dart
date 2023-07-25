@@ -1,26 +1,24 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:oktoast/oktoast.dart';
-
 import 'routes/app_pages.dart';
 
-
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
-  HttpOverrides.global = MyHttpOverrides();
-  ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
-  runZonedGuarded(() {
+  runZonedGuarded(() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    await GetStorage.init();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
+    HttpOverrides.global = MyHttpOverrides();
+    ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
+    SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
+
     runApp(const MyApp());
   }, (error, stackTrace) {
     // FirebaseCrashlytics.instance.recordError(error, stackTrace);

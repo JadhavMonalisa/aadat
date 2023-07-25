@@ -41,6 +41,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 ),
               ),
               body:
+                  cont.isLoading ? buildCircularIndicator() :
               Padding(
                 padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top: 30.0),
                 child: SizedBox(
@@ -50,22 +51,29 @@ class _ResultScreenState extends State<ResultScreen> {
                   ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: [
+                      // Padding(
+                      //   padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
+                      //   child: buildTextRegularWidget("CUSTOMER LEDGER REPORT FOR\n${cont.selectedCustomer} "
+                      //       "from ${cont.selectedFromDateToShow} to ${cont.selectedToDateToShow} "
+                      //       "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                      // ),
+
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
                         child: buildTextRegularWidget("CUSTOMER LEDGER REPORT FOR\n${cont.selectedCustomer} "
-                            "from ${cont.selectedFromDateToShow} to ${cont.selectedToDateToShow} "
-                            "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                            "FROM ${cont.selectedFromDateToShow} to ${cont.selectedToDateToShow} "
+                            "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                       ),
 
 
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
+                        padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
                         child: GestureDetector(
                           onTap: () async {
                             // final pdfFile = await LedgerShortReportExportScreen.generate(cont.ledgerReportList,cont);
                             // PdfApi.openFile(pdfFile);
                           },
-                          child:buildButtonWidget(context, "Export to",width: 100.0,height: 40.0)
+                          child:buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0)
                         ),
                       ),
 
@@ -98,11 +106,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                       children: [
                                         buildTableSubtitleForReport(context,data.srNo.toString()),
                                         buildTableSubtitleForReport(context,data.recieptDate.toString()),
-                                        buildTableSubtitleForReport(context,data.recieptNarration.toString()),
-                                        buildTableSubtitleForReport(context,data.recieptAmount.toString()),
+                                        buildTableSubtitleForReport(context,data.recieptNarration.toString(),align: TextAlign.left),
+                                        buildTableSubtitleForReport(context,data.recieptAmount.toString(),align: TextAlign.right),
                                         buildTableSubtitleForReport(context,data.paymentDate.toString()),
-                                        buildTableSubtitleForReport(context,data.paymentNarration.toString()),
-                                        buildTableSubtitleForReport(context,data.paymentAmonut.toString()),
+                                        buildTableSubtitleForReport(context,data.paymentNarration.toString(),align: TextAlign.left),
+                                        buildTableSubtitleForReport(context,data.paymentAmonut.toString(),align: TextAlign.right),
                                       ]
                                   ),
                                 TableRow(
@@ -111,10 +119,10 @@ class _ResultScreenState extends State<ResultScreen> {
                                       buildTableTitleForReport(context,""),
                                       buildTableTitleForReport(context,""),
                                       buildTableTitleForReport(context,""),
-                                      buildTableTitleForReport(context,cont.totalReceiptAmt.toString(),align: TextAlign.center),
+                                      buildTableTitleForReport(context,cont.totalReceiptAmt.toString(),align: TextAlign.right),
                                       buildTableTitleForReport(context,""),
                                       buildTableTitleForReport(context,""),
-                                      buildTableTitleForReport(context,cont.totalPaymentAmt.toString(),align: TextAlign.center),
+                                      buildTableTitleForReport(context,cont.totalPaymentAmt.toString(),align: TextAlign.right),
                                     ]
                                 ),
                               ],

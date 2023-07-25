@@ -48,16 +48,23 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
+                        //   child: buildTextRegularWidget("SUPPLIER LEDGER REPORT FOR\n${cont.selectedFirm} "
+                        //       "from ${cont.selectedFromDateToShow} to ${cont.selectedToDateToShow} "
+                        //       "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                        // ),
+
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
-                          child: buildTextRegularWidget("SUPPLIER LEDGER REPORT FOR\n${cont.selectedFirm} "
-                              "from ${cont.selectedFromDateToShow} to ${cont.selectedToDateToShow} "
-                              "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                          child: buildTextRegularWidget("SUPPLIER LEDGER REPORT FOR\n${cont.selectedCustomer} "
+                              "FROM DATE ${cont.selectedFromDateToShow} TO ${cont.selectedToDateToShow} "
+                              "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
 
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
-                          child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                          padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
+                          child: buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0),
                         ),
                         cont.supplierLedgerReportList.isEmpty?const Text(""):
                         Center(child:buildTextBoldWidget(cont.supplierLedgerReportList[0].suppAccountName!,
@@ -74,11 +81,11 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                                   TableRow(
                                     decoration: const BoxDecoration(color: grey),
                                       children: [
-                                        buildTableTitleForReport(context,"Date"),
-                                        buildTableTitleForReport(context,"Ledger Name"),
-                                        buildTableTitleForReport(context,"Narration"),
-                                        buildTableTitleForReport(context,"Debit"),
-                                        buildTableTitleForReport(context,"Credit"),
+                                        buildTableTitleForReport(context,"Date",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Ledger Name",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Narration",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Debit",align: TextAlign.center),
+                                        buildTableTitleForReport(context,"Credit",align: TextAlign.center),
                                       ]
                                   ),
                                   for (var data in cont.supplierLedgerReportList)

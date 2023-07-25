@@ -45,20 +45,25 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                     ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
+                        //   child: buildTextRegularWidget("CUSTOMER LEDGER SHORT REPORT FOR\n${cont.selectedCustomer} "
+                        //       "from ${cont.selectedShortReportFromDateToShow} to ${cont.selectedShortReportToDateToShow} "
+                        //       "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
                           child: buildTextRegularWidget("CUSTOMER LEDGER SHORT REPORT FOR\n${cont.selectedCustomer} "
-                              "from ${cont.selectedShortReportFromDateToShow} to ${cont.selectedShortReportToDateToShow} "
-                              "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
+                              "FROM ${cont.selectedShortReportFromDateToShow} to ${cont.selectedShortReportToDateToShow} "
+                              "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
 
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0,left: 250.0),
+                          padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
                           child: GestureDetector(
                             onTap: (){
-
                             },
-                            child: buildButtonWidget(context, "Export to",width: 100.0,height: 40.0),
+                            child: buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0),
                           )
                         ),
 
@@ -93,11 +98,14 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                             itemCount: cont.ledgerShortReportList.length,
                             itemBuilder: (context,index){
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 20.0,),
                               cont.ledgerShortReportList.isEmpty?const Text(""):
-                              Center(child:buildTextBoldWidget(cont.ledgerShortReportList[index].shortReportList![0].accountName!,
-                                  blackColor, context, 15.0)),
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                                  child:buildTextBoldWidget(cont.ledgerShortReportList[index].shortReportList![0].accountName!,
+                                  blackColor, context, 15.0,align: TextAlign.left)),
                               Padding(
                                 padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:10.0),
                                 child: Table(
@@ -116,7 +124,7 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                                           decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                           children: [
                                             buildTableSubtitleForReport(context,data.billDate.toString()),
-                                            buildTableSubtitleForReport(context,data.amount.toString()),
+                                            buildTableSubtitleForReport(context,data.amount.toString(),align: TextAlign.right),
                                           ]
                                       ),
                                     TableRow(
@@ -124,7 +132,7 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                                         children: [
                                           buildTableTitleForReport(context,"Total",align: TextAlign.center),
                                           buildTableTitleForReport(context,cont.totalCustomerLedgerShortAmtList.isEmpty?"":
-                                          cont.totalCustomerLedgerShortAmtList[index].toString(),align: TextAlign.center),
+                                          cont.totalCustomerLedgerShortAmtList[index].toString(),align: TextAlign.right),
                                         ]
                                     ),
                                   ],

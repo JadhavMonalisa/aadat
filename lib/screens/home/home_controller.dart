@@ -936,7 +936,7 @@ class HomeController extends GetxController {
 
   navigateFromFarmerReceiptToHome(){
     farmerPattiList.clear();
-    isViewSelected = false; showPattiDate = true; showPattiNo = true;
+    isViewSelected = false; showPattiDate = true; showPattiNo = true; isLoading = false;
     selectedFromDateToShow=""; pattiNo.clear();
     selectedDate = DateTime.now();
     update();
@@ -969,8 +969,7 @@ class HomeController extends GetxController {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: selection == "toDate" || selection == "summaryReportToDate"
-            ? selectedDate: DateTime(1700, 1),
+        firstDate: selectedDate,
         lastDate: DateTime(2100, 1));
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
@@ -1151,6 +1150,7 @@ class HomeController extends GetxController {
   List<SupplierLedgerSummaryReportDetails> supplierLedgerSummaryReportList = [];
 
   backPressNavigationFromResult(String screen){
+    isLoading = false;
     clearForm();
     Get.toNamed(screen);
   }
