@@ -248,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
         TextButton(
           child: buildTextBoldWidget('Yes', blackColor, context, 15.0),
           onPressed: () {
+            Navigator.of(context).pop();
             homeController.callLogout(context);
           },
         ),

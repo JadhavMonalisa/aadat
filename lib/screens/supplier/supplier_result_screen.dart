@@ -93,10 +93,10 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                                         decoration: BoxDecoration(color: grey.withOpacity(0.2)),
                                         children: [
                                           buildTableSubtitleForReport(context,data.tranDate.toString()),
-                                          buildTableSubtitleForReport(context,data.ledgerName.toString()),
-                                          buildTableSubtitleForReport(context,data.narration.toString()),
-                                          buildTableSubtitleForReport(context,data.debitAmt.toString()),
-                                          buildTableSubtitleForReport(context,data.creditAmt.toString()),
+                                          buildTableSubtitleForReport(context,data.ledgerName.toString(),align: TextAlign.left),
+                                          buildTableSubtitleForReport(context,data.narration.toString(),align: TextAlign.left),
+                                          buildTableSubtitleForReport(context,data.debitAmt.toString(),align: TextAlign.right),
+                                          buildTableSubtitleForReport(context,data.creditAmt.toString(),align: TextAlign.right),
                                         ]
                                     ),
                                   TableRow(
@@ -105,8 +105,8 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                                         buildTableSubtitleForReport(context,""),
                                         buildTableSubtitleForReport(context,""),
                                         buildTableSubtitleForReport(context,"Total",fontWeight: FontWeight.bold),
-                                        buildTableSubtitleForReport(context,cont.totalSupplierLedgerReportDebit.toString(),fontWeight: FontWeight.bold),
-                                        buildTableSubtitleForReport(context,cont.totalSupplierLedgerReportCredit.toString(),fontWeight: FontWeight.bold),
+                                        buildTableSubtitleForReport(context,cont.totalSupplierLedgerReportDebit.toString(),fontWeight: FontWeight.bold,align: TextAlign.right),
+                                        buildTableSubtitleForReport(context,cont.totalSupplierLedgerReportCredit.toString(),fontWeight: FontWeight.bold,align: TextAlign.right),
                                       ]
                                   ),
 

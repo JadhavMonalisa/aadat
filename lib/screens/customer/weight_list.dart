@@ -202,7 +202,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                             ?
                         cont.weightList.isEmpty ? Center(child:buildNoDataFound(context)) :
                             Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10.0,),
+                              padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 20),
                               child:Scrollbar(
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
@@ -236,7 +236,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                                                   buildTableSubtitleForReport(context,data.qty.toString()),
                                                   buildTableSubtitleForReport(context,data.weight.toString()),
                                                   buildTableSubtitleForReport(context,data.rate.toString(),align: TextAlign.right),
-                                                  buildTableSubtitleForReport(context,data.suppAccountName!),
+                                                  buildTableSubtitleForReport(context,data.suppAccountName!,align: TextAlign.left),
                                                 ]
                                             ),
                                         ],

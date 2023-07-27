@@ -240,6 +240,8 @@ class ApiRepository {
 
     var params = {"FromDate":fromDate,"ToDate":toDate,"ClientID": clientId,"FirmID":firmId};
     request.body = jsonEncode(params);
+    print("params");
+    print(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 

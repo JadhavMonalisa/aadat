@@ -152,8 +152,9 @@ class SupplierLedgerSummaryReportDetails {
   SupplierLedgerSummaryReportDetails.fromJson(Map<String, dynamic> json) {
     acctNO = json['acctNO'].toString();
     suppAccountName = json['suppAccountName'].toString();
-    debitAmount = json['debitAmount'].toString();
-    creditAmount = json['creditAmount'].toString();
+    debitAmount = json['debitAmount']==0 ? "0":json['debitAmount'].toString();
+    creditAmount = json['creditAmount']==0 ? "0":json['creditAmount'].toString();
+    // creditAmount = json['creditAmount'].toString();
     mobile = json['mobile'].toString();
   }
 

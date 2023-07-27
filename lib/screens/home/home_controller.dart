@@ -95,7 +95,6 @@ class HomeController extends GetxController {
     GetStorage().erase();
     GetStorage().remove("selectedFirm");
     GetStorage().remove("selectedFirmId");
-    Navigator.of(context).pop();
     Get.offNamed(AppRoutes.login);
     update();
   }
@@ -969,26 +968,35 @@ class HomeController extends GetxController {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: selectedDate,
+        firstDate: selection == "toDate" || selection == "summaryReportToDate"
+            ? selectedDate: DateTime(1700, 1),
         lastDate: DateTime(2100, 1));
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
     }
 
     if(selection == "fromDate"){
-      selectedFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedFromDateToShow = "${selectedDate.day.toString().length == 1
+          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
+          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "toDate"){
-      selectedToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedToDateToShow = "${selectedDate.day.toString().length == 1
+          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
+          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "summaryReportFromDate"){
-      selectedSummaryReportFromDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedSummaryReportFromDateToShow = "${selectedDate.day.toString().length == 1
+          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
+          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     else if(selection == "summaryReportToDate"){
-      selectedSummaryReportToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
+      selectedSummaryReportToDateToShow = "${selectedDate.day.toString().length == 1
+          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
+          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
       update();
     }
     Utils.dismissKeyboard();
@@ -1181,7 +1189,7 @@ class HomeController extends GetxController {
   }
 
   int totalSupplierLedgerSummaryReportDebit = 0;
-  int totalSupplierLedgerSummaryReportCredit= 0;
+  int totalSupplierLedgerSummaryReportCredit = 0;
 
   callSupplierLedgerSummaryReportList() async{
     supplierLedgerSummaryReportList.clear();
@@ -1192,26 +1200,37 @@ class HomeController extends GetxController {
 
       if (response.statusCode==200) {
         supplierLedgerSummaryReportList.addAll(response.supplierLedgerSummaryReportDetails!);
-        isLoading = false;
-
-        for (var element in response.supplierLedgerSummaryReportDetails!) {
-          String debitAmt  = element.debitAmount == "-" || element.debitAmount == "" ? "0" : element.debitAmount!;
-          String creditAmt  = element.creditAmount == "-" || element.creditAmount == ""? "0" : element.creditAmount!;
-
+        //for (var element in response.supplierLedgerSummaryReportDetails!) {
+        for (int i =0;i<supplierLedgerSummaryReportList.length; i++) {
+          String debitAmt  = supplierLedgerSummaryReportList[i].debitAmount == "-" || supplierLedgerSummaryReportList[i].debitAmount == "" || supplierLedgerSummaryReportList[i].debitAmount == "0"
+              ? "0" : supplierLedgerSummaryReportList[i].debitAmount!;
           totalSupplierLedgerSummaryReportDebit = totalSupplierLedgerSummaryReportDebit + int.parse(debitAmt);
-          totalSupplierLedgerSummaryReportCredit = totalSupplierLedgerSummaryReportCredit + int.parse(creditAmt);
+          print("${i}" " : " "${supplierLedgerSummaryReportList[i].debitAmount}"  " : " "${totalSupplierLedgerSummaryReportDebit}");
         }
+        for (int i =0;i<supplierLedgerSummaryReportList.length; i++) {
+          String creditAmt  = supplierLedgerSummaryReportList[i].creditAmount == "-" || supplierLedgerSummaryReportList[i].creditAmount == "" || supplierLedgerSummaryReportList[i].creditAmount == "0"
+              ? "0" : supplierLedgerSummaryReportList[i].creditAmount!;
+          totalSupplierLedgerSummaryReportCredit = totalSupplierLedgerSummaryReportCredit + int.parse(creditAmt);
+          update();
+        }
+
+        isLoading = false;
         update();
       }
       else {
+        print("else");
         isLoading = false;
         update();
       }
       update();
     } on CustomException catch (e) {
+      print("e.exceptionMessage");
+      print(e.exceptionMessage);
       isLoading = false;
       update();
     } catch (error) {
+      print("error");
+      print(error);
       isLoading = false;
       update();
     }
