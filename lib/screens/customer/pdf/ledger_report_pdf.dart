@@ -23,7 +23,7 @@ class LedgerReportExportScreen {
         pageFormat: PdfPageFormat.letter,
         header: (context) =>
         startIndex ==0?
-        buildHeader("Customer Ledger Short Report",cont): Opacity(opacity: 0.0),
+        buildHeader("Customer Ledger Report",cont): Opacity(opacity: 0.0),
         build: (context) => [
           SizedBox(height: 0.2 * PdfPageFormat.cm),
           Table(
@@ -77,7 +77,10 @@ class LedgerReportExportScreen {
       int divideValue = ledgerReportListPdf.length ~/ 10;
       int modeValue = ledgerReportListPdf.length % 10;
 
-      if(divideValue<modeValue){
+      if(modeValue==0){
+        totalLength = divideValue;
+      }
+      else {
         totalLength = divideValue + 1;
       }
 
@@ -89,7 +92,7 @@ class LedgerReportExportScreen {
           pageFormat: PdfPageFormat.letter,
           header: (context) =>
           i ==0?
-          buildHeader("Customer Ledger Short Report",cont): Opacity(opacity: 0.0),
+          buildHeader("Customer Ledger Report",cont): Opacity(opacity: 0.0),
           build: (context) => [
             SizedBox(height: 0.2 * PdfPageFormat.cm),
             Table(
@@ -136,7 +139,7 @@ class LedgerReportExportScreen {
         pageFormat: PdfPageFormat.letter,
         header: (context) =>
         startIndex ==0?
-        buildHeader("Customer Ledger Short Report",cont): Opacity(opacity: 0.0),
+        buildHeader("Customer Ledger Report",cont): Opacity(opacity: 0.0),
         build: (context) => [
           SizedBox(height: 0.2 * PdfPageFormat.cm),
           Table(
@@ -187,7 +190,7 @@ class LedgerReportExportScreen {
       ));
     }
 
-    return PdfApi.saveDocument(name: 'Ledger Short Report.pdf', pdf: pdf);
+    return PdfApi.saveDocument(name: 'Ledger Report.pdf', pdf: pdf);
   }
 
   ///pdf header
@@ -212,51 +215,6 @@ class LedgerReportExportScreen {
                 Text("To Date : ",style: TextStyle(fontWeight: FontWeight.bold)), Text(cont.selectedSupplierLedgerToDate),
               ]
           )),
-    ],
-  );
-
-  ///invoice details
-  static Widget buildWeightListDetails(List<WeightListDetails> weightListPdf,Font ttf,int startIndex,int endIndex) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisAlignment: MainAxisAlignment.start,
-    children: [
-      Center(
-        child: Text("Weight List (Rough Bill)",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold)),
-      ),
-      pw.SizedBox(height: 7),
-      pw.Divider(color: PdfColor.fromHex("#E0E0E0")),
-      pw.SizedBox(height: 10),
-      Table(
-        border:TableBorder.all(width: 0.1,color: PdfColor.fromHex("#9E9E9E")),
-        defaultColumnWidth: const IntrinsicColumnWidth(),
-        children: [
-          TableRow(
-            decoration: BoxDecoration(color: PdfColor.fromHex("#808080")),
-            children: [
-              buildTitleForTable("Bill Date"),
-              buildTitleForTable("Customer"),
-              buildTitleForTable("LOT No"),
-              buildTitleForTable("Quantity"),
-              buildTitleForTable("Weight"),
-              buildTitleForTable("Rate"),
-              buildTitleForTable("Supplier"),
-            ],
-          ),
-          for(var data = startIndex; data < endIndex; data++)
-            TableRow(
-              decoration: BoxDecoration(color: PdfColor.fromHex("#C0C0C0")),
-              children: [
-                buildRowTextForTable(weightListPdf.isEmpty ? "" : "${weightListPdf[data].billDate}"),
-                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].custAccountName}"),
-                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].remark}"),
-                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].qty}"),
-                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].weight}"),
-                buildRowTextForTable(weightListPdf.isEmpty ? "" :"${weightListPdf[data].rate}"),
-                buildRowTextForTableMarathi(weightListPdf.isEmpty ? "" :"${weightListPdf[data].suppAccountName}",ttf),
-              ],
-            ),
-        ],
-      )
     ],
   );
 

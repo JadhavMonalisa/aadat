@@ -1,8 +1,11 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
+import 'package:adat/screens/common/pdf_api.dart';
+import 'package:adat/screens/farmer/pdf/farmer_patti_pdf.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -108,160 +111,39 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                         const SizedBox(height: 20.0,),
 
                         Padding(
-                            padding: const EdgeInsets.only(left: 100.0,right: 100.0,bottom: 20.0),
-                            child:GestureDetector(
-                              onTap: (){
-                                cont.isLoading =true;
-                                cont.showFarmerReceiptResult();
-                              },
-                              child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                            padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 20.0),
+                            child:Row(
+                              children: [
+                                Flexible(
+                                  child: GestureDetector(
+                                    onTap: (){
+                                      cont.isLoading =true;
+                                      cont.showFarmerReceiptResult();
+                                    },
+                                    child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                                  ),
+                                ),
+                                const SizedBox(width: 10.0,),
+                                Flexible(child: GestureDetector(
+                                  onTap: () async{
+                                    if(cont.farmerPattiList.isEmpty){
+                                      Utils.showErrorSnackBar("Please select get report first!");
+                                    }
+                                    else{
+                                      final pdfFile = await FarmerPattiExportScreen.generate(cont.farmerPattiList,cont);
+                                      PdfApi.openFile(pdfFile);
+                                    }
+                                  },
+                                  child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor:
+                                  cont.farmerPattiList.isEmpty?grey:orangeColor),
+                                )),
+                              ],
                             )
                         ),
 
                         cont.isViewSelected ? cont.isLoading ? buildCircularIndicator() :
                         cont.farmerPattiList.isEmpty ?
                         buildTextBoldWidget("No Data Found", blackColor, context, 14,align: TextAlign.center):
-
-                        // cont.showPattiNo
-                        //         ? Scrollbar(
-                        //   child: SingleChildScrollView(
-                        //     scrollDirection: Axis.horizontal,
-                        //     physics: const AlwaysScrollableScrollPhysics(),
-                        //     child: SizedBox(
-                        //       height: MediaQuery.of(context).size.height,
-                        //       width: MediaQuery.of(context).size.width,
-                        //       child: ListView(
-                        //         physics: const NeverScrollableScrollPhysics(),
-                        //         children: [
-                        //           Align(
-                        //             child:buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].engFirmName!,
-                        //                 blackColor, context, 16.0),
-                        //           ),
-                        //           Align(
-                        //               alignment: Alignment.center,
-                        //               child: buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].firmAddress!,
-                        //                   blackColor, context, 16.0)
-                        //           ),
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(left: 10.0),
-                        //             child: Align(
-                        //               alignment: Alignment.topLeft,
-                        //               child: buildRichTextWidget("Mobile No. : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].mobileNo!,),),
-                        //           ),
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(left: 10.0,right: 20.0),
-                        //             child: Row(
-                        //               children: [
-                        //                 Align(
-                        //                   alignment: Alignment.topLeft,
-                        //                   child: buildRichTextWidget("Patti No. : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].pattiNo!,),),
-                        //                 const Spacer(),
-                        //                 Align(
-                        //                   alignment: Alignment.topRight,
-                        //                   child: buildRichTextWidget("Patti Date : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].pattiDate!,),),
-                        //               ],
-                        //             ),
-                        //           ),
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(left: 10.0,right: 20.0),
-                        //             child: Align(
-                        //               alignment: Alignment.topLeft,
-                        //               child: buildRichTextWidget("Farmer Name : ", cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].accountName!,),),
-                        //           ),
-                        //
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0),
-                        //             child: Table(
-                        //               border: TableBorder.all(color: blackColor,width: 2.0),
-                        //               defaultColumnWidth: const IntrinsicColumnWidth(),
-                        //               children: [
-                        //                 TableRow(
-                        //                     decoration: const BoxDecoration(color: grey),
-                        //                     children: [
-                        //                       buildTableTitleForReport(context,"Product Name"),
-                        //                       buildTableTitleForReport(context,"Vakkal"),
-                        //                       buildTableTitleForReport(context,"Daag"),
-                        //                       buildTableTitleForReport(context,"Weight"),
-                        //                       buildTableTitleForReport(context,"Rate"),
-                        //                       buildTableTitleForReport(context,"Total"),
-                        //                     ]
-                        //                 ),
-                        //                 for (var data in cont.farmerPattiList)
-                        //                   TableRow(
-                        //                       decoration: BoxDecoration(color: grey.withOpacity(0.2)),
-                        //                       children: [
-                        //                         buildTableSubtitleForReport(context,data.prodName.toString()),
-                        //                         buildTableSubtitleForReport(context,data.vakkal.toString()),
-                        //                         buildTableSubtitleForReport(context,data.qty.toString()),
-                        //                         buildTableSubtitleForReport(context,data.weight!),
-                        //                         buildTableSubtitleForReport(context,data.rate.toString()),
-                        //                         buildTableSubtitleForReport(context,data.amount.toString()),
-                        //                       ]
-                        //                   ),
-                        //                 TableRow(
-                        //                     decoration: const BoxDecoration(color: grey),
-                        //                     children: [
-                        //                       buildTableTitleForReport(context,"Total"),
-                        //                       buildTableTitleForReport(context,""),
-                        //                       buildTableTitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].totQty!,align: TextAlign.center),
-                        //                       buildTableTitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].totWeight!,align: TextAlign.center),
-                        //                       buildTableTitleForReport(context,""),
-                        //                       buildTableTitleForReport(context,""),
-                        //                     ]
-                        //                 ),
-                        //                 TableRow(
-                        //                     decoration: const BoxDecoration(color: grey),
-                        //                     children: [
-                        //                       buildTableTitleForReport(context,""),
-                        //                       buildTableTitleForReport(context,"Hamali"),
-                        //                       buildTableTitleForReport(context,"Tolai"),
-                        //                       buildTableTitleForReport(context,"Mo. Rent"),
-                        //                       buildTableTitleForReport(context,"Total"),
-                        //                       buildTableTitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].totAmount!),
-                        //                     ]
-                        //                 ),
-                        //                 TableRow(
-                        //                     decoration: BoxDecoration(color: grey.withOpacity(0.2)),
-                        //                     children: [
-                        //                       buildTableSubtitleForReport(context,""),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].hamali!),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].mapai!),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].motorRent!),
-                        //                       buildTableSubtitleForReport(context,"Kharch (-)"),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].netExp!),
-                        //                     ]
-                        //                 ),
-                        //                 TableRow(
-                        //                     decoration: const BoxDecoration(color: grey),
-                        //                     children: [
-                        //                       buildTableTitleForReport(context,"Bharai"),
-                        //                       buildTableTitleForReport(context,"Varai"),
-                        //                       buildTableTitleForReport(context,"Other exp"),
-                        //                       buildTableTitleForReport(context,"Uchal"),
-                        //                       buildTableTitleForReport(context,"Total"),
-                        //                       buildTableTitleForReport(context,""),
-                        //                     ]
-                        //                 ),
-                        //                 TableRow(
-                        //                     decoration: BoxDecoration(color: grey.withOpacity(0.2)),
-                        //                     children: [
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].bharai!),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].varai!),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].other!),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].uchal!),
-                        //                       buildTableSubtitleForReport(context,"Total"),
-                        //                       buildTableSubtitleForReport(context,cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[0].netAmount!),
-                        //                     ]
-                        //                 ),
-                        //               ],
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // )
-                        //         :
 
                         Padding(
                             padding: const EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0,bottom: 50.0),
@@ -424,13 +306,6 @@ class _FarmerReceiptState extends State<FarmerReceipt> {
                                               alignment: Alignment.center,
                                               child: buildTextBoldWidget(cont.farmerPattiList.isEmpty?"":cont.farmerPattiList[index].firmAddress!, blackColor, context, 16.0)
                                           ),
-                                          // Padding(
-                                          //   padding: const EdgeInsets.only(left: 5.0,right: 20.0),
-                                          //   child: Align(
-                                          //       alignment: Alignment.topLeft,
-                                          //       child:buildRichTextWidget("Mobile No. : ", cont.farmerPattiList.isEmpty?"":
-                                          //       cont.farmerPattiList[0].mobileNo!)),
-                                          // ),
                                           Padding(
                                               padding: const EdgeInsets.only(left: 5.0,top: 10.0),
                                               child:Row(

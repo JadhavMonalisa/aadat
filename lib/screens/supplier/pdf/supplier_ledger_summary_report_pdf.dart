@@ -20,6 +20,7 @@ class SupplierLedgerSummaryReportExportScreen {
     final ttf = pw.Font.ttf(font);
 
     if(supplierLedgerSummaryReportList.length<=10){
+      print("in if block");
       pdf.addPage(MultiPage(
         pageFormat: PdfPageFormat.letter,
         header: (context) =>
@@ -69,17 +70,20 @@ class SupplierLedgerSummaryReportExportScreen {
       ));
     }
     else{
+      print("in else if block");
       int divideValue = supplierLedgerSummaryReportList.length ~/ 10;
       int modeValue = supplierLedgerSummaryReportList.length % 10;
 
-      if(divideValue<modeValue){
+      if(modeValue==0){
+        totalLength = divideValue;
+      }
+      else {
         totalLength = divideValue + 1;
       }
 
       for(int i = 0; i<totalLength-1; i++ ) {
         startIndex = i == 0 ? 0 : startIndex + 10;
         endIndex = i == 0 ? 10 : endIndex + 10;
-
         pdf.addPage(MultiPage(
           pageFormat: PdfPageFormat.letter,
           header: (context) =>
@@ -112,6 +116,16 @@ class SupplierLedgerSummaryReportExportScreen {
                       buildRowTextForTable(supplierLedgerSummaryReportList.isEmpty ? "" : supplierLedgerSummaryReportList[i].creditAmount!),
                     ],
                   ),
+                TableRow(
+                  decoration: BoxDecoration(color: PdfColor.fromHex("#808080")),
+                  children: [
+                    buildRowTextForTable(supplierLedgerSummaryReportList.isEmpty ? "" : ""),
+                    buildRowTextForTable(supplierLedgerSummaryReportList.isEmpty ? "" : ""),
+                    buildRowTextForTable("Total"),
+                    buildRowTextForTable(supplierLedgerSummaryReportList.isEmpty ? "" : cont.totalSupplierLedgerSummaryReportDebit.toString()),
+                    buildRowTextForTable(supplierLedgerSummaryReportList.isEmpty ? "" : cont.totalSupplierLedgerSummaryReportCredit.toString()),
+                  ],
+                ),
               ],
             )
           ],
@@ -171,7 +185,6 @@ class SupplierLedgerSummaryReportExportScreen {
         ],
       ));
     }
-
     return PdfApi.saveDocument(name: 'Supplier Ledger Summary Report.pdf', pdf: pdf);
   }
 
@@ -193,8 +206,8 @@ class SupplierLedgerSummaryReportExportScreen {
           padding: const EdgeInsets.only(left: 10.0,top: 5.0),
           child:Row(
               children: [
-                Text("From Date : ",style: TextStyle(fontWeight: FontWeight.bold)), Text(cont.selectedSupplierLedgerFromDateToShow), Spacer(),
-                Text("To Date : ",style: TextStyle(fontWeight: FontWeight.bold)), Text(cont.selectedSupplierLedgerToDate),
+                Text("From Date : ",style: TextStyle(fontWeight: FontWeight.bold)), Text(cont.selectedLedgerSummaryFromDate), Spacer(),
+                Text("To Date : ",style: TextStyle(fontWeight: FontWeight.bold)), Text(cont.selectedLedgerSummaryToDate),
               ]
           )),
     ],

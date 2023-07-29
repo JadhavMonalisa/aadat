@@ -2,7 +2,6 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/screens/customer/pdf/weight_list_report_pdf.dart';
 import 'package:adat/screens/common/pdf_api.dart';
-import 'package:adat/screens/customer/test_pdf.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
@@ -81,7 +80,12 @@ class _WeightListScreenState extends State<WeightListScreen> {
 
                         cont.isBillDateAdded ?
                             cont.loaderForCustomer ? buildCircularIndicator() :
-                          cont.customerByDateList.isEmpty ? buildNoDataFound(context):
+                          cont.customerByDateList.isEmpty ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 30.0,bottom: 30.0),
+                              child: buildTextBoldWidget("No Customer Data Found", blackColor, context, 14,),
+                            ),
+                          ):
                           SizedBox(
                           height: MediaQuery.of(context).size.height/2.5,
                           child: ListView.builder(

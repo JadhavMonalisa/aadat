@@ -140,7 +140,12 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                       ): const Opacity(opacity: 0.0),
 
                       cont.showCustomerList
-                          ? cont.customerByDateList.isEmpty ? buildCircularIndicator() :
+                          ? cont.customerByDateList.isEmpty ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 30.0,bottom: 30.0),
+                          child: buildTextBoldWidget("No Customer Data Found", blackColor, context, 14,),
+                        ),
+                      ) :
 
                       Expanded(
                         child: ListView.builder(

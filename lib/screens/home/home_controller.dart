@@ -4,7 +4,6 @@ import 'package:adat/constant/provider/custom_exception.dart';
 import 'package:adat/constant/repository/api_repository.dart';
 import 'package:adat/routes/app_pages.dart';
 import 'package:adat/screens/customer/customer_model.dart';
-import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/farmer/farmer_model.dart';
 import 'package:adat/screens/home/firm_model.dart';
@@ -16,10 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart' as path_provider;
 
 class HomeController extends GetxController {
 
@@ -45,12 +40,6 @@ class HomeController extends GetxController {
     token = GetStorage().read("clientToken")??"";
     repository.getData();
     callFirmList();
-
-    weightListForExport = getWeightListData();
-    weightListDataSource = WeightListDataSource(weightListData: weightListForExport);
-
-    markWiseWeightListExport = getMarkWiseWeightListDataForPdf();
-    markWiseWeightListDataSource = MarkWiseWeightListDataSource(weightListData: markWiseWeightListExport);
   }
 
   ///common
@@ -394,7 +383,10 @@ class HomeController extends GetxController {
   getWeightList(){
     isLoading = true;
     loaderForWeightList = true;
-    if(weightListSelectedCustomerName == ""){
+    if(customerByDateList.isEmpty){
+      showToast("No customer data is available!");
+    }
+    else if(weightListSelectedCustomerName == ""){
       showToast("Please select customer!");
       isLoading = false;
       loaderForWeightList = false;
@@ -408,39 +400,14 @@ class HomeController extends GetxController {
     update();
   }
 
-  List<WeightListDetails> getWeightListData() {
-    for (var element in weightListForExport) {
-      WeightListDetails(
-        billDate: element.billDate,
-        custAccountName: element.custAccountName,
-        qty: element.qty,
-        rate: element.rate,
-        remark: element.remark,
-        suppAccountName: element.suppAccountName,
-        weight: element.weight
-      );
-    }
-    return weightListForExport;
-  }
-  List<MarkWiseWeightListDetails> getMarkWiseWeightListDataForPdf() {
-    for (var element in markWiseWeightListExport) {
-      MarkWiseWeightListDetails(
-        billDate: element.billDate,
-        custAccountName: element.custAccountName,
-        qty: element.qty,
-        weight: element.weight,
-        amount: element.amount,
-        mark: element.mark
-      );
-    }
-    return markWiseWeightListExport;
-  }
-
   List<MarkWiseWeightListDetails> markWiseWeightList = [];
 
   getMarkWiseWeightList(){
     isLoading=true;
-    if(selectedBillDateForMarkWiseWeightList == ""){
+    if(customerByDateList.isEmpty){
+      showToast("No customer data is available!"); isLoading = false; update();
+    }
+    else if(selectedBillDateForMarkWiseWeightList == ""){
       showToast("Please select bill date!"); isLoading = false; update();
     }
     else if(selectedCustNo == 0){
@@ -455,14 +422,11 @@ class HomeController extends GetxController {
   callWeightList() async{
     //Get.toNamed(AppRoutes.customerWeightListExportScreen);
     weightList.clear();
-    weightListForExport.clear();
     try {
       Utils.dismissKeyboard();
       WeightListModel? response = (await repository.getWeightList(weightListSelectedCustomerName,selectedFirmId!,selectedBillDateForWeightList));
       if (response.statusCode==200) {
         weightList.addAll(response.weightListDetails!);
-        weightListForExport.addAll(response.weightListDetails!);
-        weightListDataSource = WeightListDataSource(weightListData: weightListForExport);
         isLoading = false;
         loaderForWeightList = false;
         update();
@@ -495,7 +459,6 @@ class HomeController extends GetxController {
 
       if (response.statusCode==200) {
         markWiseWeightList.addAll(response.markWiseWeightListDetails!);
-        markWiseWeightListDataSource = MarkWiseWeightListDataSource(weightListData: markWiseWeightList);
         isLoading = false;
         update();
       }
@@ -515,7 +478,6 @@ class HomeController extends GetxController {
   }
 
   ///customer ledger short report
-  //List<LedgerShortReportDetails> ledgerShortReportList = [];
   List<LedgerShortReportDetails> ledgerShortReportList = [];
   List<int> totalCustomerLedgerShortAmtList = [];
 
@@ -565,6 +527,7 @@ class HomeController extends GetxController {
   List<ShortReportList> shortReportList = [];
   int total = 0;
   int totalAmt = 0;
+  int add = 0;
 
   callLedgerShortReportList() async{
     ledgerShortReportList.clear();
@@ -581,9 +544,13 @@ class HomeController extends GetxController {
           for (var element2 in element1.shortReportList!) {
             String amt = element2.amount! == "-" || element2.amount! == "" ? "0" : element2.amount!;
             total = total + int.parse(amt);
+            add = add + 1;
           }
           totalCustomerLedgerShortAmtList.add(total);
         }
+
+        print("add");
+        print(add);
 
         isLoading = false;
         update();
@@ -1390,71 +1357,5 @@ class HomeController extends GetxController {
     //callWeightList();
     Get.toNamed(AppRoutes.customerWeightListExportScreen);
   }
-
-//   getApplicationDocumentsDirectory(){
-//     Directory(appDocDirectory.path+'/'+'dir').create(recursive: true)
-// // The created directory is returned as a Future.
-//         .then((Directory directory) {
-//       print('Path of New Dir: '+directory.path);
-//     });
-//
-//   }
-  Future<void> downloadPdf() async {
-    final pdf = pw.Document();
-    Directory appDocDirectory = await path_provider.getApplicationDocumentsDirectory();
-    String path = "";
-
-//     Directory('${appDocDirectory.path}/dir').create(recursive: true)
-// // The created directory is returned as a Future.
-//         .then((Directory directory) {
-//           path = directory.path;
-//       print('Path of New Dir: ${directory.path}');
-//     });
-
-    Directory tempDir = await path_provider.getTemporaryDirectory();
-    String tempPath = tempDir.path;
-
-
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) => pw.Center(
-          child: pw.Text('Hello World!'),
-        ),
-      ),
-    );
-
-    //  Directory('dir/subdir').create(recursive: true)
-    // // The created directory is returned as a Future.
-    //     .then((Directory directory) {
-    //   path = directory.path;
-    //   print(directory.path);
-    // });
-
-    final file = File(tempPath);
-    file.open();
-    await file.writeAsBytes(await pdf.save());
-  }
-
-  List<WeightListDetails> weightListForExport = <WeightListDetails>[];
-  late WeightListDataSource weightListDataSource;
-
-  onExportBackScreen(){
-    update();
-  }
-
-  final GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
-
-  // Future<void> exportDataGridToPdf() async {
-  //   final PdfDocument document =
-  //   key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true);
-  //
-  //   final List<int> bytes = document.saveSync();
-  //   await saveAndLaunchFile(bytes, 'DataGrid.pdf');
-  //
-  //   document.dispose();
-  // }
-
-  List<MarkWiseWeightListDetails> markWiseWeightListExport = <MarkWiseWeightListDetails>[];
-  late MarkWiseWeightListDataSource markWiseWeightListDataSource;
 
 }

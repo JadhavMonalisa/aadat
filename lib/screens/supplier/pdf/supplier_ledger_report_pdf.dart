@@ -72,7 +72,10 @@ class SupplierLedgerReportExportScreen {
       int divideValue = supplierLedgerReportList.length ~/ 10;
       int modeValue = supplierLedgerReportList.length % 10;
 
-      if(divideValue<modeValue){
+      if(modeValue==0){
+        totalLength = divideValue;
+      }
+      else {
         totalLength = divideValue + 1;
       }
 

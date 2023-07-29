@@ -4,14 +4,13 @@ import 'package:adat/screens/customer/customer_bill_report.dart';
 import 'package:adat/screens/customer/customer_ledger_short_report.dart';
 import 'package:adat/screens/customer/customer_ledger_summary_report.dart';
 import 'package:adat/screens/customer/customer_ledger_report.dart';
-import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/ledger_short_report_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/customer/receipt.dart';
 import 'package:adat/screens/customer/ledger_report_result_screen.dart';
 import 'package:adat/screens/customer/weight_list.dart';
-import 'package:adat/screens/farmer/farmer_receipt.dart';
+import 'package:adat/screens/farmer/farmer_patti.dart';
 import 'package:adat/screens/home/home_binding.dart';
 import 'package:adat/screens/home/home_screen.dart';
 import 'package:adat/screens/login/forgot_password.dart';
@@ -67,20 +66,10 @@ class AppPages {
       binding: HomeBinding(),
     ),
     GetPage(
-      name: AppRoutes.customerWeightListExportScreen,
-      page: () => const CustomerWeightListExportScreen(),
-      binding: HomeBinding(),
-    ),
-    GetPage(
       name: AppRoutes.customerBillReportScreen,
       page: () => const BillReportScreen(),
       binding: HomeBinding(),
     ),
-    // GetPage(
-    //   name: AppRoutes.customerBillReportExport,
-    //   page: () =>  BillReportExportScreen(),
-    //   binding: HomeBinding(),
-    // ),
     GetPage(
       name: AppRoutes.customerReceipt,
       page: () => const CustomerReceipt(),

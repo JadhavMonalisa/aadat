@@ -71,11 +71,14 @@ class LedgerSummaryReportExportScreen {
       int divideValue = ledgerSummaryReportListPdf.length ~/ 10;
       int modeValue = ledgerSummaryReportListPdf.length % 10;
 
-      if(divideValue<modeValue){
+      if(modeValue==0){
+        totalLength = divideValue;
+      }
+      else {
         totalLength = divideValue + 1;
       }
 
-      for(int i = 0; i<totalLength-1; i++ ) {
+      for(int i = 0; i<totalLength; i++ ) {
         startIndex = i == 0 ? 0 : startIndex + 10;
         endIndex = i == 0 ? 10 : endIndex + 10;
 

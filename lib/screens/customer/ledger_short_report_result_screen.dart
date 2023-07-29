@@ -1,8 +1,11 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
+import 'package:adat/screens/common/pdf_api.dart';
+import 'package:adat/screens/customer/pdf/ledger_short_report_pdf.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -63,11 +66,18 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: GestureDetector(
-                              onTap: (){
+                              onTap: () async {
+                                if(cont.ledgerShortReportList.isEmpty){
+                                  Utils.showErrorSnackBar("Please get report first!");
+                                }
+                                else{
+                                  final pdfFile = await LedgerShortReportExportScreen.generate(cont.ledgerShortReportList,cont);
+                                  PdfApi.openFile(pdfFile);
+                                }
                               },
                               child: buildButtonWidget(context, "EXPORT TO PDF",
                                   width: 170.0,
-                                  height: 40.0,buttonColor: orangeColor),
+                                  height: 40.0,buttonColor: cont.ledgerShortReportList.isEmpty?grey:orangeColor),
                             )
                           ),
                         ),

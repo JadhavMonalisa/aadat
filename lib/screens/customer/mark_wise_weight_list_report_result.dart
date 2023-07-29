@@ -62,13 +62,6 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                               "BILL DATE ${cont.selectedBillDateForMarkWiseWeightList} "
                               "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
-                        //   child:buildRichTextWidget("CUSTOMER MARK WISE WEIGHT LIST REPORT FOR ${cont.selectedCustomer} "
-                        //       "BILL DATE ${cont.selectedBillDateToShow} ",
-                        //       "OF ${cont.selectedFirm}",title1Weight: FontWeight.normal,title2Weight: FontWeight.normal,
-                        //   title1Color: orangeColor,title2Color: orangeColor,title1Size: 17.0,title2Size: 17.0)
-                        // ),
 
                         Align(
                           alignment: Alignment.topRight,
@@ -142,104 +135,5 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
         ),
       );
     });
-  }
-
-  Future<void> exportDataGridToPdf() async {
-    final PdfDocument document =
-    key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true,);
-
-    final List<int> bytes = document.saveSync();
-    await saveAndLaunchFile(bytes, 'DataGrid.pdf');
-    //document.dispose();
-  }
-
-  exportThisDocument(){
-    return GetBuilder<HomeController>(builder: (cont){
-      return SfDataGrid(
-        key: key,
-        source: cont.markWiseWeightListDataSource,
-        columnWidthMode: ColumnWidthMode.auto,
-        columns: <GridColumn>[
-          GridColumn(
-              columnName: 'Customer Mark',
-              label: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Customer Mark',
-                  ))),
-          GridColumn(
-              columnName: 'Customer Name',
-              label: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text('Customer Name'))),
-          GridColumn(
-              columnName: 'Total Quantity',
-              width: 100.0,
-              label: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Total Quantity',
-                    overflow: TextOverflow.ellipsis,
-                  ))),
-          GridColumn(
-              columnName: 'Total Weight',
-              label: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text('Total Weight'))),
-          GridColumn(
-              columnName: 'Avg. Rate',
-              label: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  alignment: Alignment.centerLeft,
-                  child: const Text('Avg. Rate'))),
-        ],
-      );
-    });
-  }
-}
-
-
-class MarkWiseWeightListDataSource extends DataGridSource {
-  MarkWiseWeightListDataSource({required List<MarkWiseWeightListDetails> weightListData}) {
-    _markWiseWeightListData = weightListData
-        .map<DataGridRow>((MarkWiseWeightListDetails e) =>
-        DataGridRow(cells: <DataGridCell>[
-          DataGridCell<String>(
-            columnName: 'Customer Mark',
-            value: e.mark,
-          ),
-          DataGridCell<String>(
-            columnName: 'Customer Name',
-            value: e.custAccountName,
-          ),
-          DataGridCell<String>(
-              columnName: 'Total Quantity', value: e.qty),
-          DataGridCell<String>(columnName: 'Total Weight', value: e.weight),
-          DataGridCell<String>(columnName: 'Avg. Rate', value: e.amount),
-        ]))
-        .toList();
-  }
-
-  List<DataGridRow> _markWiseWeightListData = <DataGridRow>[];
-
-  @override
-  List<DataGridRow> get rows => _markWiseWeightListData;
-
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((DataGridCell cell) {
-          return Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              cell.value.toString(),
-            ),
-          );
-        }).toList());
   }
 }
