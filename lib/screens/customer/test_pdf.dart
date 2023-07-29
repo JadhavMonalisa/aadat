@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:adat/screens/customer/customer_model.dart';
-import 'package:adat/screens/customer/pdf_api.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;

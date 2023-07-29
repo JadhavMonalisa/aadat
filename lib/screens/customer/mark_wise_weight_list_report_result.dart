@@ -2,11 +2,12 @@ import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
 import 'package:adat/screens/customer/customer_model.dart';
 import 'package:adat/screens/customer/pdf/mark_wise_weight_list_report_pdf.dart';
-import 'package:adat/screens/customer/pdf_api.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -58,7 +59,7 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
                           child: buildTextRegularWidget("CUSTOMER MARK WISE WEIGHT LIST REPORT FOR\n${cont.selectedCustomer} "
-                              "BILL DATE ${cont.selectedBillDateToShow} "
+                              "BILL DATE ${cont.selectedBillDateForMarkWiseWeightList} "
                               "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
                         // Padding(
@@ -69,15 +70,23 @@ class _MarkWiseWeightListResultReportState extends State<MarkWiseWeightListResul
                         //   title1Color: orangeColor,title2Color: orangeColor,title1Size: 17.0,title2Size: 17.0)
                         // ),
 
-                        cont.addedMarkWiseListIndex.isEmpty?const Opacity(opacity: 0.0):
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
-                          child: GestureDetector(
-                            onTap: () async {
-                              // final pdfFile = await MarkWiseWeightListReportExportScreen.generate(cont.markWiseWeightList,cont);
-                              // PdfApi.openFile(pdfFile);
-                            },
-                            child: buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: GestureDetector(
+                              onTap: () async {
+                                if(cont.markWiseWeightList.isEmpty){
+                                  Utils.showErrorSnackBar("Please get report first!");
+                                }
+                                else{
+                                  final pdfFile = await MarkWiseWeightListReportExportScreen.generate(cont.markWiseWeightList,cont);
+                                  PdfApi.openFile(pdfFile);
+                                }
+                              },
+                              child: buildButtonWidget(context, "EXPORT TO PDF",width: 170.0,height: 40.0,buttonColor:
+                              cont.addedMarkWiseListIndex.isEmpty?grey:orangeColor),
+                            ),
                           ),
                         ),
 

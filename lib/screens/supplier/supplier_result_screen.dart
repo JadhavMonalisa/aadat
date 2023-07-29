@@ -1,8 +1,11 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/routes/app_pages.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
+import 'package:adat/screens/supplier/pdf/supplier_ledger_report_pdf.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,24 +51,32 @@ class _SupplierResultScreenState extends State<SupplierResultScreen> {
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
-                        //   child: buildTextRegularWidget("SUPPLIER LEDGER REPORT FOR\n${cont.selectedFirm} "
-                        //       "from ${cont.selectedFromDateToShow} to ${cont.selectedToDateToShow} "
-                        //       "of ${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
-                        // ),
-
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0,bottom: 20.0),
                           child: buildTextRegularWidget("SUPPLIER LEDGER REPORT FOR\n${cont.selectedCustomer} "
-                              "FROM DATE ${cont.selectedFromDateToShow} TO ${cont.selectedToDateToShow} "
+                              "FROM DATE ${cont.selectedSupplierLedgerFromDateToShow} TO ${cont.selectedSupplierLedgerToDate} "
                               "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
 
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
-                          child: buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0),
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0,),
+                            child: GestureDetector(
+                                onTap: () async {
+                                  if(cont.supplierLedgerReportList.isEmpty){
+                                    Utils.showErrorSnackBar("Please get report first!");
+                                  }
+                                  else{
+                                    final pdfFile = await SupplierLedgerReportExportScreen.generate(cont.supplierLedgerReportList,cont);
+                                    PdfApi.openFile(pdfFile);
+                                  }
+                                },
+                                child:buildButtonWidget(context, "EXPORT TO PDF",width: 170.0,height: 40.0, buttonColor: orangeColor)
+                            ),
+                          ),
                         ),
+
                         cont.supplierLedgerReportList.isEmpty?const Text(""):
                         Center(child:buildTextBoldWidget(cont.supplierLedgerReportList[0].suppAccountName!,
                             blackColor, context, 15.0)),

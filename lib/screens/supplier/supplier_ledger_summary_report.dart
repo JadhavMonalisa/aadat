@@ -1,7 +1,10 @@
 import 'package:adat/common_widget/widget.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
+import 'package:adat/screens/supplier/pdf/supplier_ledger_summary_report_pdf.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -53,7 +56,7 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                             Flexible(
                               child: GestureDetector(
                                 onTap: (){
-                                  cont.selectSupplierDate(context,"fromDate");
+                                  cont.selectSupplierDate(context,"ledgerSummaryFromDate");
                                 },
                                 child: Container(
                                   height: 40.0,
@@ -63,7 +66,7 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                                   child: Row(
                                     children: [
                                       const SizedBox(width: 10.0,),
-                                      buildTextRegularWidget(cont.selectedFromDateToShow==""?"From Date":cont.selectedFromDateToShow, primaryColor, context, 15.0),
+                                      buildTextRegularWidget(cont.selectedLedgerSummaryFromDate==""?"From Date":cont.selectedLedgerSummaryFromDate, primaryColor, context, 15.0),
                                       const Spacer(),
                                       const Icon(Icons.calendar_month,color: primaryColor,),
                                       const SizedBox(width: 10.0,)
@@ -76,7 +79,7 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                             Flexible(
                               child: GestureDetector(
                                 onTap: (){
-                                  cont.selectSupplierDate(context,"toDate");
+                                  cont.selectSupplierDate(context,"ledgerSummaryToDate");
                                 },
                                 child: Container(
                                     height: 40.0,
@@ -86,7 +89,7 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                                     child: Row(
                                       children: [
                                         const SizedBox(width: 10.0,),
-                                        buildTextRegularWidget(cont.selectedToDateToShow==""?"To Date":cont.selectedToDateToShow, primaryColor, context, 15.0),
+                                        buildTextRegularWidget(cont.selectedLedgerSummaryToDate==""?"To Date":cont.selectedLedgerSummaryToDate, primaryColor, context, 15.0),
                                         const Spacer(),
                                         const Icon(Icons.calendar_month,color: primaryColor,),
                                         const SizedBox(width: 10.0,)
@@ -99,13 +102,36 @@ class _SupplierSummaryReportState extends State<SupplierSummaryReport> {
                         ),
 
                         Padding(
-                            padding: const EdgeInsets.only(left: 100.0,right: 100.0,top: 20.0),
-                            child:GestureDetector(
-                              onTap: (){
-                                cont.showSupplierLedgerSummaryReport();
-                              },
-                              child:  buildButtonWidget(context, "Get Report", buttonColor: orangeColor),
-                            )
+                          padding: const EdgeInsets.only(left: 10.0,right: 10.0,top: 20.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child:GestureDetector(
+                                  onTap: (){
+                                    cont.showSupplierLedgerSummaryReport();
+                                  },
+                                  child:  buildButtonWidget(context, "Get Report", buttonColor: orangeColor),
+                                )
+                              ),
+                              const SizedBox(width: 10.0,),
+                              Flexible(
+                                  child:GestureDetector(
+                                    onTap: () async {
+                                      if(cont.supplierLedgerSummaryReportList.isEmpty)
+                                      {
+                                        Utils.showErrorSnackBar("Please first get report!");
+                                      }
+                                      else{
+                                        final pdfFile = await SupplierLedgerSummaryReportExportScreen.generate(cont.supplierLedgerSummaryReportList,cont);
+                                        PdfApi.openFile(pdfFile);
+                                      }
+                                    },
+                                    child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor:
+                                    cont.supplierLedgerSummaryReportList.isEmpty?grey:orangeColor),
+                                  )
+                              )
+                            ],
+                          ),
                         ),
 
                         cont.isLoading ? buildCircularIndicator() :

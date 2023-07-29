@@ -58,13 +58,18 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                               "OF\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
 
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 20.0,left: 200.0),
-                          child: GestureDetector(
-                            onTap: (){
-                            },
-                            child: buildButtonWidget(context, "EXPORT TO PDF",width: 100.0,height: 40.0),
-                          )
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: GestureDetector(
+                              onTap: (){
+                              },
+                              child: buildButtonWidget(context, "EXPORT TO PDF",
+                                  width: 170.0,
+                                  height: 40.0,buttonColor: orangeColor),
+                            )
+                          ),
                         ),
 
                         TextField(
@@ -79,6 +84,7 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                               onTap: (){
                                 cont.isLoading = true;
                                 cont.editingController.clear();
+                                cont.searchList.clear();
                                 cont.callLedgerShortReportList();
                               },
                               child: const Icon(Icons.clear),
@@ -90,57 +96,109 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                             ),
                           ),
                         ),
+
                         cont.isLoading ? buildCircularIndicator():
+                        cont.searchList.isNotEmpty || cont.editingController.text.isNotEmpty ?
+                        ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: cont.searchList.length,
+                            itemBuilder: (context,index){
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 20.0,),
+                                  cont.searchList.isEmpty?const Text(""):
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                                      child:buildTextBoldWidget(cont.searchList[index].shortReportList![0].accountName!,
+                                          blackColor, context, 15.0,align: TextAlign.left)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:10.0),
+                                    child: Table(
+                                      border: TableBorder.all(color: whiteColor,width: 2.0),
+                                      defaultColumnWidth: const IntrinsicColumnWidth(),
+                                      children: [
+                                        TableRow(
+                                            decoration: const BoxDecoration(color: grey),
+                                            children: [
+                                              buildTableTitleForReport(context,"Date",align: TextAlign.center),
+                                              buildTableTitleForReport(context,"Amount",align: TextAlign.center),
+                                            ]
+                                        ),
+                                        for (var data in cont.searchList[index].shortReportList!)
+                                          TableRow(
+                                              decoration: BoxDecoration(color: grey.withOpacity(0.2)),
+                                              children: [
+                                                buildTableSubtitleForReport(context,data.billDate.toString()),
+                                                buildTableSubtitleForReport(context,data.amount.toString(),align: TextAlign.right),
+                                              ]
+                                          ),
+                                        TableRow(
+                                            decoration: const BoxDecoration(color: grey),
+                                            children: [
+                                              buildTableTitleForReport(context,"Total",align: TextAlign.center),
+                                              buildTableTitleForReport(context,cont.totalCustomerLedgerShortAmtList.isEmpty?"":
+                                              cont.totalCustomerLedgerShortAmtList[index].toString(),align: TextAlign.right),
+                                            ]
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              );
+                            })
+                            :
                         cont.ledgerShortReportList.isEmpty ? buildNoDataFound(context):
                         ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: cont.ledgerShortReportList.length,
                             itemBuilder: (context,index){
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 20.0,),
-                              cont.ledgerShortReportList.isEmpty?const Text(""):
-                              Padding(
-                                  padding: const EdgeInsets.only(left: 10.0,right: 10.0),
-                                  child:buildTextBoldWidget(cont.ledgerShortReportList[index].shortReportList![0].accountName!,
-                                  blackColor, context, 15.0,align: TextAlign.left)),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:10.0),
-                                child: Table(
-                                  border: TableBorder.all(color: whiteColor,width: 2.0),
-                                  defaultColumnWidth: const IntrinsicColumnWidth(),
-                                  children: [
-                                    TableRow(
-                                        decoration: const BoxDecoration(color: grey),
-                                        children: [
-                                          buildTableTitleForReport(context,"Date",align: TextAlign.center),
-                                          buildTableTitleForReport(context,"Amount",align: TextAlign.center),
-                                        ]
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 20.0,),
+                                  cont.ledgerShortReportList.isEmpty?const Text(""):
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 10.0,right: 10.0),
+                                      child:buildTextBoldWidget(cont.ledgerShortReportList[index].shortReportList![0].accountName!,
+                                          blackColor, context, 15.0,align: TextAlign.left)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0,right: 10.0,top:10.0),
+                                    child: Table(
+                                      border: TableBorder.all(color: whiteColor,width: 2.0),
+                                      defaultColumnWidth: const IntrinsicColumnWidth(),
+                                      children: [
+                                        TableRow(
+                                            decoration: const BoxDecoration(color: grey),
+                                            children: [
+                                              buildTableTitleForReport(context,"Date",align: TextAlign.center),
+                                              buildTableTitleForReport(context,"Amount",align: TextAlign.center),
+                                            ]
+                                        ),
+                                        for (var data in cont.ledgerShortReportList[index].shortReportList!)
+                                          TableRow(
+                                              decoration: BoxDecoration(color: grey.withOpacity(0.2)),
+                                              children: [
+                                                buildTableSubtitleForReport(context,data.billDate.toString()),
+                                                buildTableSubtitleForReport(context,data.amount.toString(),align: TextAlign.right),
+                                              ]
+                                          ),
+                                        TableRow(
+                                            decoration: const BoxDecoration(color: grey),
+                                            children: [
+                                              buildTableTitleForReport(context,"Total",align: TextAlign.center),
+                                              buildTableTitleForReport(context,cont.totalCustomerLedgerShortAmtList.isEmpty?"":
+                                              cont.totalCustomerLedgerShortAmtList[index].toString(),align: TextAlign.right),
+                                            ]
+                                        ),
+                                      ],
                                     ),
-                                    for (var data in cont.ledgerShortReportList[index].shortReportList!)
-                                      TableRow(
-                                          decoration: BoxDecoration(color: grey.withOpacity(0.2)),
-                                          children: [
-                                            buildTableSubtitleForReport(context,data.billDate.toString()),
-                                            buildTableSubtitleForReport(context,data.amount.toString(),align: TextAlign.right),
-                                          ]
-                                      ),
-                                    TableRow(
-                                        decoration: const BoxDecoration(color: grey),
-                                        children: [
-                                          buildTableTitleForReport(context,"Total",align: TextAlign.center),
-                                          buildTableTitleForReport(context,cont.totalCustomerLedgerShortAmtList.isEmpty?"":
-                                          cont.totalCustomerLedgerShortAmtList[index].toString(),align: TextAlign.right),
-                                        ]
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          );
-                        }),
+                                  )
+                                ],
+                              );
+                            })
                       ],
                     )
                 ),

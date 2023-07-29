@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:adat/common_widget/widget.dart';
-import 'package:adat/routes/app_pages.dart';
 import 'package:adat/screens/customer/pdf/bill_report_pdf.dart';
-import 'package:adat/screens/customer/pdf_api.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
@@ -29,45 +28,6 @@ class BillReportScreen extends StatefulWidget {
 class _BillReportScreenState extends State<BillReportScreen> {
   final GlobalKey<SfDataGridState> key = GlobalKey<SfDataGridState>();
 
-  Future<void> saveAndLaunchFile(List<int> bytes, String fileName) async {
-    String? path;
-    if (Platform.isAndroid ||
-        Platform.isIOS ||
-        Platform.isLinux ||
-        Platform.isWindows) {
-      final Directory directory =
-      await path_provider.getApplicationSupportDirectory();
-      path = directory.path;
-    } else {
-      path = await path_provider_interface.PathProviderPlatform.instance
-          .getApplicationSupportPath();
-    }
-
-    final String fileLocation =
-    Platform.isWindows ? '$path\\$fileName' : '$path/$fileName';
-    final File file = File(fileLocation);
-    await file.writeAsBytes(bytes, flush: true);
-
-    if (Platform.isAndroid || Platform.isIOS) {
-      await open_file.OpenFile.open(fileLocation);
-    } else if (Platform.isWindows) {
-      await Process.run('start', <String>[fileLocation], runInShell: true);
-    } else if (Platform.isMacOS) {
-      await Process.run('open', <String>[fileLocation], runInShell: true);
-    } else if (Platform.isLinux) {
-      await Process.run('xdg-open', <String>[fileLocation], runInShell: true);
-    }
-  }
-
-  Future<void> exportDataGridToPdf() async {
-    final PdfDocument document =
-    key.currentState!.exportToPdfDocument(fitAllColumnsInOnePage: true);
-
-    final List<int> bytes = document.saveSync();
-    await saveAndLaunchFile(bytes, 'DataGrid.pdf');
-    document.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (cont)
@@ -90,17 +50,17 @@ class _BillReportScreenState extends State<BillReportScreen> {
                 ),
               ),
               body: Padding(
-                padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top: 30.0),
+                padding: const EdgeInsets.only(left: 20.0,right: 20.0,bottom: 20.0,top:10.0),
                 child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: ListView(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 30.0,bottom: 20.0),
+                          padding: const EdgeInsets.only(top: 30.0,bottom: 10.0),
                           child: buildTextRegularWidget("Bill REPORT FOR\n${cont.selectedFirm}", orangeColor, context, 16.0,align: TextAlign.center),
                         ),
-                        const SizedBox(height: 20.0,),
+                        const SizedBox(height: 10.0,),
                         Row(
                           children: [
                             Flexible(
@@ -161,7 +121,7 @@ class _BillReportScreenState extends State<BillReportScreen> {
                         const SizedBox(height: 20.0,),
 
                         Padding(
-                            padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 30.0),
                             child:Row(
                               children: [
                                 Flexible(
@@ -179,12 +139,16 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                            {
                                              Utils.showErrorSnackBar("Please first get report!");
                                            }
+                                          else if(cont.billReportList.isEmpty){
+                                            Utils.showErrorSnackBar("No data to export!");
+                                          }
                                           else{
                                             final pdfFile = await BillReportExportScreen.generate(cont.billReportList,cont);
                                             PdfApi.openFile(pdfFile);
                                           }
                                         },
-                                        child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
+                                        child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor:
+                                        cont.billReportList.isEmpty?grey:orangeColor),
                                       )),
                               ],
                             )
@@ -285,10 +249,13 @@ class _BillReportScreenState extends State<BillReportScreen> {
                                             children: [
                                               buildTableTitleForReport(context,"Total",align: TextAlign.center),
                                               buildTableTitleForReport(context,""),
-                                              buildTableTitleForReport(context,cont.billReportList[0].totQty.toString(),align: TextAlign.right),
-                                              buildTableTitleForReport(context,cont.billReportList[0].totWeight!,align: TextAlign.right),
+                                              //buildTableTitleForReport(context,cont.billReportList[0].totQty.toString(),align: TextAlign.center),
+                                              buildTableTitleForReport(context,cont.totalBillQty.toString(),align: TextAlign.center),
+                                              //buildTableTitleForReport(context,cont.billReportList[0].totWeight!,align: TextAlign.center),
+                                              buildTableTitleForReport(context,cont.totalBillWeight.toString(),align: TextAlign.center),
                                               buildTableTitleForReport(context,""),
-                                              buildTableTitleForReport(context,cont.billReportList[0].totAmount.toString(),align: TextAlign.right),
+                                              //buildTableTitleForReport(context,cont.billReportList[0].totAmount.toString(),align: TextAlign.right),
+                                              buildTableTitleForReport(context,cont.totalBillAmount.toString(),align: TextAlign.right),
                                             ]
                                         ),
                                       ],

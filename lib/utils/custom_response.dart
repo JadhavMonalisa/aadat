@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class CustomResponse {
   bool? status;
   String? message;
@@ -56,12 +58,19 @@ class ApiResponse {
 
 class LoginResponse {
   int? statusCode;
+  // int? clientID;
+  // String? token;
+  // String? message;
   List<LoginResponseResult>? loginResponseResult;
 
   LoginResponse({this.statusCode, this.loginResponseResult});
+  //LoginResponse({this.statusCode, this.clientID,this.token,this.message});
 
   LoginResponse.fromJson(Map<String, dynamic> json) {
     statusCode = json['statusCode'];
+    // clientID = json[""];
+    // token = json[""];
+    // message = json[""];
     if (json['result'] != null) {
       loginResponseResult = <LoginResponseResult>[];
       json['result'].forEach((v) {

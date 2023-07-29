@@ -124,7 +124,7 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                             child: Row(
                               children: [
                                 const SizedBox(width: 10.0,),
-                                buildTextRegularWidget(cont.selectedBillDateToShow==""?"Bill Date":cont.selectedBillDateToShow, primaryColor, context, 15.0),
+                                buildTextRegularWidget(cont.selectedBillDateForMarkWiseWeightList==""?"Bill Date":cont.selectedBillDateForMarkWiseWeightList, primaryColor, context, 15.0),
                                 const Spacer(),
                                 const Icon(Icons.calendar_month,color: primaryColor,),
                                 const SizedBox(width: 10.0,)
@@ -171,7 +171,6 @@ class _MarkWiseWeightListReportScreenState extends State<MarkWiseWeightListRepor
                           padding: const EdgeInsets.only(left: 100.0,right: 100.0,top: 20.0),
                           child:GestureDetector(
                             onTap: (){
-                              //cont.validateCustomerMarkWiseReport();
                               cont.getMarkWiseWeightList();
                             },
                             child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),

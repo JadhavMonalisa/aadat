@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:adat/constant/provider/custom_exception.dart';
 import 'package:adat/constant/repository/api_repository.dart';
 import 'package:adat/routes/app_pages.dart';
-import 'package:adat/screens/customer/pdf/bill_report_pdf.dart';
 import 'package:adat/screens/customer/customer_model.dart';
 import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/farmer/farmer_model.dart';
 import 'package:adat/screens/home/firm_model.dart';
-import 'package:adat/screens/home/save_to_mobile.dart';
 import 'package:adat/screens/supplier/supplier_model.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
@@ -19,8 +17,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-import 'package:syncfusion_flutter_datagrid_export/export.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -55,7 +51,6 @@ class HomeController extends GetxController {
 
     markWiseWeightListExport = getMarkWiseWeightListDataForPdf();
     markWiseWeightListDataSource = MarkWiseWeightListDataSource(weightListData: markWiseWeightListExport);
-
   }
 
   ///common
@@ -208,13 +203,14 @@ class HomeController extends GetxController {
 
   bool isViewSelected = false;
   String selectedCustomer = "";
-  String selectedDateForWeightList = "";
+  String selectedBillDateForWeightList = "";
   TextEditingController searchController = TextEditingController();
 
   navigateFromWeightListToHome(){
     customerByDateList.clear();weightList.clear();
     addedWeightListIndex.clear();
-    weightListSelectedCustomerName = ""; isViewSelected = false;selectedDateForWeightList = "";
+    selectedDate = DateTime.now();
+    weightListSelectedCustomerName = ""; isViewSelected = false;selectedBillDateForWeightList = "";
     loaderForCustomer = false; isBillDateAdded = false;
     update();
     Get.toNamed(AppRoutes.home);
@@ -223,19 +219,24 @@ class HomeController extends GetxController {
   ///-------------Customer------------------///
   ///customer common
   List<CustomerListDetails> customerList = [];
-  String selectedFromDateToShow = "";
-  String selectedToDateToShow = "";
+  // String selectedFromDateToShow = "";
+  // String selectedToDateToShow = "";
+  String selectedLedgerReportFromDate = "";
+  String selectedLedgerReportToDate = "";
+  String selectedSupplierLedgerFromDateToShow = "";
+  String selectedSupplierLedgerToDate = "";
   DateTime selectedDate = DateTime.now();
   String selectedReceiptBillDateToShow = "";
   String selectedShortReportFromDateToShow = "";
   String selectedShortReportToDateToShow = "";
   String selectedSummaryReportFromDateToShow = "";
   String selectedSummaryReportToDateToShow = "";
-  String selectedBillDateToShow = "";
+  String selectedBillDateForMarkWiseWeightList = "";
   bool showSelectionCustomerList = false;
   bool showCustomerList = false;
   bool isBillDateAdded = false;
   TextEditingController customerName = TextEditingController();
+  String formattedCustomerDate = "";
 
   Future<void> selectCustomerDate(BuildContext context,String selection) async {
     final DateTime? picked = await showDatePicker(
@@ -246,64 +247,79 @@ class HomeController extends GetxController {
 
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
-    }
+      formattedCustomerDate = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
 
-    if (selection == "forWeightList"){
-      selectedDateForWeightList = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      selectedDateForWeightList == ""? null: validateCustomerMarkWiseReport(selectedDateForWeightList);
+      ///1. weight list
+      if (selection == "forWeightList"){
+        selectedBillDateForWeightList = formattedCustomerDate;
+        selectedBillDateForWeightList == ""? null: validateCustomerMarkWiseReport(selectedBillDateForWeightList);
 
-      selectedDateForWeightList == "" ? isBillDateAdded = false : isBillDateAdded = true;
-      update();
-    }
-    else if(selection == "fromDate"){
-      selectedFromDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "toDate"){
-      selectedToDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "receiptDate"){
-      selectedReceiptBillDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "shortReportFromDate"){
-      selectedShortReportFromDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "shortReportToDate"){
-      selectedShortReportToDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "summaryReportFromDate"){
-      selectedSummaryReportFromDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "bill date"){
-      billDate = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "summaryReportToDate"){
-      showSelectionCustomerList = true;
-      selectedSummaryReportToDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "markWiseBillDate"){
-      //showSelectionCustomerList = true;
-      selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month;
+        selectedBillDateForWeightList == "" ? isBillDateAdded = false : isBillDateAdded = true;
+        update();
+      }
+      ///2. mark wise weight list
+      else if(selection == "markWiseBillDate"){
+        selectedBillDateForMarkWiseWeightList = formattedCustomerDate;
+        showCustomerList = true;
 
-      selectedBillDateToShow = "${selectedDate.day.toString().length == 1 ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1 ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      showCustomerList = true;
+        selectedBillDateForMarkWiseWeightList == ""? null: validateCustomerMarkWiseReport(selectedBillDateForMarkWiseWeightList);
+        update();
+      }
+      ///3. bill
+      else if(selection == "bill date"){
+        billDate = formattedCustomerDate;
+        update();
+      }
+      ///4. ledger short report
+      else if(selection == "shortReportFromDate"){
+        selectedShortReportFromDateToShow = formattedCustomerDate;
+        update();
+      }
+      else if(selection == "shortReportToDate"){
+        selectedShortReportToDateToShow = formattedCustomerDate;
+        update();
+      }
+      ///5. ledger summary report
+      else if(selection == "summaryReportFromDate"){
+        selectedSummaryReportFromDateToShow = formattedCustomerDate;
+        update();
+      }
+      else if(selection == "summaryReportToDate"){
+        showSelectionCustomerList = true;
+        selectedSummaryReportToDateToShow = formattedCustomerDate;
+        update();
+      }
+      ///6. ledger report
+      else if(selection == "ledgerReportFromDate"){
+        selectedLedgerReportFromDate = formattedCustomerDate;
+        update();
+      }
+      else if(selection == "ledgerReportToDate"){
+        selectedLedgerReportToDate = formattedCustomerDate;
+        update();
+      }
+      ///receipt
+      else if(selection == "receiptDate"){
+        selectedReceiptBillDateToShow = formattedCustomerDate;
+        update();
+      }
+      if(selectedSummaryReportFromDateToShow == "" || selectedSummaryReportToDateToShow == "" || selectedBillDateForMarkWiseWeightList == ""){
 
-      selectedBillDateToShow == ""? null: validateCustomerMarkWiseReport(selectedBillDateToShow);
+      }
+      else{
+        showCustomerList = true; update();
+      }
       update();
     }
-
-    if(selectedSummaryReportFromDateToShow == "" || selectedSummaryReportToDateToShow == "" || selectedBillDateToShow == ""){
-
-    }
-    else{
-      showCustomerList = true; update();
+    else if(picked==null){
+      selectedBillDateForWeightList = ""; isBillDateAdded = false;
+      selectedBillDateForMarkWiseWeightList = ""; showCustomerList = false;
+      billDate = "";
+      selectedShortReportFromDateToShow = ""; selectedShortReportToDateToShow = "";
+      selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = ""; showSelectionCustomerList = false;
+      selectedLedgerReportFromDate = ""; selectedLedgerReportToDate = "";
+      selectedReceiptBillDateToShow = "";
+      update();
     }
   }
   callCustomerList() async{
@@ -424,7 +440,7 @@ class HomeController extends GetxController {
 
   getMarkWiseWeightList(){
     isLoading=true;
-    if(selectedBillDateToShow == ""){
+    if(selectedBillDateForMarkWiseWeightList == ""){
       showToast("Please select bill date!"); isLoading = false; update();
     }
     else if(selectedCustNo == 0){
@@ -442,7 +458,7 @@ class HomeController extends GetxController {
     weightListForExport.clear();
     try {
       Utils.dismissKeyboard();
-      WeightListModel? response = (await repository.getWeightList(weightListSelectedCustomerName,selectedFirmId!,selectedDateForWeightList));
+      WeightListModel? response = (await repository.getWeightList(weightListSelectedCustomerName,selectedFirmId!,selectedBillDateForWeightList));
       if (response.statusCode==200) {
         weightList.addAll(response.weightListDetails!);
         weightListForExport.addAll(response.weightListDetails!);
@@ -475,7 +491,7 @@ class HomeController extends GetxController {
     Get.toNamed(AppRoutes.markWiseWeightListResultReport);
     try {
       Utils.dismissKeyboard();
-      MarkWiseWeightList? response = (await repository.getMarkWiseWeightList(selectedCustNo,selectedBillDateToShow,selectedFirmId!));
+      MarkWiseWeightList? response = (await repository.getMarkWiseWeightList(selectedCustNo,selectedBillDateForMarkWiseWeightList,selectedFirmId!));
 
       if (response.statusCode==200) {
         markWiseWeightList.addAll(response.markWiseWeightListDetails!);
@@ -505,7 +521,7 @@ class HomeController extends GetxController {
 
   navigateFromShortReportToHome(){
     selectedShortReportFromDateToShow = ""; selectedShortReportToDateToShow = "";
-    selectedFromDateToShow = ""; selectedToDateToShow = ""; isViewSelected = false;
+    isViewSelected = false;
     update();
     Get.toNamed(AppRoutes.home);
   }
@@ -534,12 +550,14 @@ class HomeController extends GetxController {
     addedAmt = 0;
     totalAmt = 0;
     editingController.clear();
+    searchList.clear();
+    totalCustomerLedgerShortAmtList.clear();
     update();
     Get.toNamed(screen);
   }
   clearForm(){
     ledgerReportList.clear(); totalPaymentAmt = 0; totalReceiptAmt = 0;
-    customerName.clear(); selectedFromDateToShow = ""; selectedToDateToShow = "";
+    customerName.clear();
     update();
   }
 
@@ -587,106 +605,72 @@ class HomeController extends GetxController {
 
   TextEditingController editingController = TextEditingController();
   bool noDataFoundForSearch = true;
+  List<LedgerShortReportDetails> searchList = [];
 
   void filterSearchResults(String query) {
-
-    // var newList = ledgerShortReportList.where(
-    //         (t) => t.accountName!.toLowerCase().contains(query.toLowerCase()) ||
-    //             t.accountName!.toUpperCase().contains(query.toLowerCase())
-    // ).toList();
-
-    List<LedgerShortReportDetails> resultList = [];
-    List<ShortReportList> resultShortList = [];
-
+    isLoading=true;
+    print("query");
+    print(query);
     var newList = ledgerShortReportList.where(
             (t) => t.shortReportList!.any((element) =>
             element.accountName!.contains(query.toUpperCase()) || element.accountName!.contains(query.toLowerCase())))
+            //element.accountName!.startsWith(query.toUpperCase()) || element.accountName!.startsWith(query.toLowerCase())))
         .toList();
 
-    // for (int i =0;i<ledgerShortReportList.length; i++){
-    //   for(int j=0; j<ledgerShortReportList[i].shortReportList!.length; j++){
-    //     if(ledgerShortReportList[i].shortReportList!.any((element) =>
-    //         element.accountName!.contains(query.toUpperCase()))){
-    //       print("present");
-    //
-    //       for (var element in ledgerShortReportList[i].shortReportList!) {
-    //         resultShortList.add(
-    //             ShortReportList(
-    //               acctNo:element.acctNo,
-    //               billDate: element.billDate,
-    //               accountName: element.accountName,
-    //               amount: element.amount
-    //             )
-    //         );
-    //       }
-    //
-    //       resultList.add(LedgerShortReportDetails(
-    //         shortReportList:resultShortList,
-    //         acctNo: ledgerShortReportList[i].acctNo,
-    //         total: 0
-    //       ));
-    //
-    //       resultList.forEach((element) {
-    //        element.shortReportList!.forEach((element2) {
-    //          print("element2.accountName");
-    //          print(element2.accountName);
-    //        });
-    //       });
-    //
-    //         ledgerShortReportList.clear();
-    //         noDataFoundForSearch = false;
-    //         ledgerShortReportList = resultList;
-    //
-    //         update();
-    //     }
-    //     else{
-    //       ledgerShortReportList.clear();
-    //       print("not present");
-    //       update();
-    //     }
-    //   }
-    //   update();
-    // }
 
-    //     var newList = ledgerShortReportList.where(
-    //         (t) => t.shortReportList!.any((element)
-    //         {
-    //           bool test = ledgerShortReportList.any((element) =>
-    //               element.shortReportList!.any((element2) => element2.accountName=="RM"));
-    //           print("test");
-    //           print(test);
-    //           print(element.accountName  == query.toUpperCase());
-    //           return element.accountName  == query.toUpperCase();
-    //         })
-    // ).toList();
+    print("newList.length");
+    print(newList.length);
+    print("searchList.length");
+    print(searchList.length);
 
-    // print("newList");
-    // print(newList.length);
-    //
     if(newList.isEmpty){
-      ledgerShortReportList.clear();
+      //ledgerShortReportList.clear();
+      total = 0;
+      isLoading = false;
       totalCustomerLedgerShortAmtList.clear();
       update();
     }
     else{
-      ledgerShortReportList.clear();
+      // ledgerShortReportList.clear();
+      total = 0;
       totalCustomerLedgerShortAmtList.clear();
-      noDataFoundForSearch = false;
-      ledgerShortReportList = newList;
+      noDataFoundForSearch = false;isLoading = false;
+      searchList = newList;
 
-      for (var element1 in ledgerShortReportList) {
+      for (var element1 in searchList) {
         total = 0;
         for (var element2 in element1.shortReportList!) {
           total = total + int.parse(element2.amount!);
         }
         totalCustomerLedgerShortAmtList.add(total);
       }
-
       update();
     }
-
+    isLoading = false;
     update();
   }
+
+
+  // void filterSearchResults(String text) {
+  //   searchList.clear();
+  //   totalCustomerLedgerShortAmtList.clear();
+  //   if (text.isEmpty) {
+  //     update();
+  //     return;
+  //   }
+  //
+  //   for (var userDetail in ledgerShortReportList) {
+  //     total = 0; totalCustomerLedgerShortAmtList.clear();update();
+  //     for (var element in userDetail.shortReportList!) {
+  //       if (element.accountName!.contains(text.toUpperCase()) || element.accountName!.contains(text.toLowerCase())) {
+  //         searchList.add(userDetail);
+  //         total = total + int.parse(element.amount!);
+  //         totalCustomerLedgerShortAmtList.add(total);
+  //       }
+  //     }
+  //   }
+  //   update();
+  // }
 
   ///customer summary report
   List<LedgerSummaryReportDetails> ledgerSummaryReportList = [];
@@ -755,7 +739,7 @@ class HomeController extends GetxController {
   List<CustomerLedgerReportDetails> ledgerReportList = [];
 
   navigateFromReportToHome(){
-    selectedCustomer = ""; selectedFromDateToShow = ""; selectedToDateToShow = "";
+    selectedCustomer = ""; selectedLedgerReportFromDate = ""; selectedLedgerReportToDate = "";
     update();
     Get.toNamed(AppRoutes.home);
   }
@@ -765,11 +749,11 @@ class HomeController extends GetxController {
       showToast("Please select customer!");
       isLoading = false; update();
     }
-    else if(selectedToDateToShow == ""){
+    else if(selectedLedgerReportToDate == ""){
       showToast("Please select from date!");
       isLoading = false; update();
     }
-    else if(selectedFromDateToShow==""){
+    else if(selectedLedgerReportFromDate==""){
       showToast("Please select to date!");
       isLoading = false; update();
     }
@@ -786,7 +770,7 @@ class HomeController extends GetxController {
     try {
       Utils.dismissKeyboard();
       CustomerLedgerReportModel? response = (await repository.getCustomerLedgerReportList(
-          selectedCustomer, selectedToDateToShow,selectedFromDateToShow,selectedFirmId!));
+          selectedCustomer, selectedLedgerReportToDate,selectedLedgerReportFromDate,selectedFirmId!));
       if (response.statusCode==200) {
         ledgerReportList.addAll(response.customerLedgerReportDetails!);
 
@@ -838,18 +822,29 @@ class HomeController extends GetxController {
     update();
   }
 
+  int totalBillQty = 0;
+  int totalBillWeight = 0;
+  int totalBillAmount = 0;
   ///bill report list
   callBillReportList() async{
-    billReportList.clear();
+    billReportList.clear();totalBillQty=0;totalBillWeight=0;totalBillAmount=0;
     try {
       Utils.dismissKeyboard();
       BillReportModel? response = (await repository.getCustomerBillReportList(
           billNo.text.isEmpty || billNo.text == "" ? "0" :billNo.text,
           billDate=="" ? "0" : billDate,selectedFirmId!));
 
-      print(response.statusCode);
       if (response.statusCode==200) {
         billReportList.addAll(response.billReportListData!);
+        for (var element in billReportList) {
+          totalBillQty = totalBillQty + int.parse(element.qty!);
+        }
+        for (var element in billReportList) {
+          totalBillWeight = totalBillWeight + int.parse(element.weight!);
+        }
+        for (var element in billReportList) {
+          totalBillAmount = totalBillAmount + int.parse(element.amount!);
+        }
         isLoading = false;
         update();
       }
@@ -857,8 +852,6 @@ class HomeController extends GetxController {
         isLoading = false;
         update();
       }
-      print("billReportList.length");
-      print(billReportList.length);
       update();
     } on CustomException catch (e) {
       isLoading = false;
@@ -904,7 +897,7 @@ class HomeController extends GetxController {
   }
 
   onBackPressFromBillReport(){
-    billReportList.clear();
+    billReportList.clear();totalBillQty=0;totalBillWeight=0;totalBillAmount=0;
     billNo.clear(); billDate = ""; showBillReport = false;
     showBillNo= true; showBillDate = true;
     selectedDate = DateTime.now();
@@ -919,7 +912,7 @@ class HomeController extends GetxController {
   navigateFromMarkWiseToHome(){
     isViewSelected = false;
     selectedSummaryReportFromDateToShow = ""; selectedSummaryReportToDateToShow = "";
-    selectedBillDateToShow = "";
+    selectedBillDateForMarkWiseWeightList = "";
     customerByDateList.clear();
     addedCustomerIndex.clear(); showCustomerList = false; isViewSelected = false;
     selectedDate = DateTime.now();
@@ -936,7 +929,7 @@ class HomeController extends GetxController {
   navigateFromFarmerReceiptToHome(){
     farmerPattiList.clear();
     isViewSelected = false; showPattiDate = true; showPattiNo = true; isLoading = false;
-    selectedFromDateToShow=""; pattiNo.clear();
+    pattiNo.clear();
     selectedDate = DateTime.now();
     update();
     Get.toNamed(AppRoutes.home);
@@ -963,6 +956,7 @@ class HomeController extends GetxController {
   bool cbCustomer = false;
   bool cbMarkWiseCustomer = false;
 
+  String selectedFormattedDate = "";
   ///supplier common
   Future<void> selectSupplierDate(BuildContext context,String selection) async {
     final DateTime? picked = await showDatePicker(
@@ -973,33 +967,38 @@ class HomeController extends GetxController {
         lastDate: DateTime(2100, 1));
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
-    }
+      selectedFormattedDate = "${selectedDate.day.toString().length == 1
+          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
+          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
 
-    if(selection == "fromDate"){
-      selectedFromDateToShow = "${selectedDate.day.toString().length == 1
-          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
-          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
+      ///1. ledger report
+      if(selection == "ledgerSummaryFromDate"){
+        selectedLedgerSummaryFromDate = selectedFormattedDate;
+        update();
+      }
+      else if(selection == "ledgerSummaryToDate"){
+        selectedLedgerSummaryToDate = selectedFormattedDate;
+        update();
+      }
+      ///2. ledger summary report
+      if(selection == "ledgerReportFromDate"){
+        selectedSupplierLedgerFromDateToShow = selectedFormattedDate;
+        update();
+      }
+      else if(selection == "ledgerReportToDate"){
+        selectedSupplierLedgerToDate = selectedFormattedDate;
+        update();
+      }
+      Utils.dismissKeyboard();
+    }
+    else if(picked==null)
+    {
+      selectedLedgerSummaryFromDate="";
+      selectedLedgerSummaryToDate="";
+      selectedSupplierLedgerFromDateToShow="";
+      selectedSupplierLedgerToDate="";
       update();
     }
-    else if(selection == "toDate"){
-      selectedToDateToShow = "${selectedDate.day.toString().length == 1
-          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
-          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "summaryReportFromDate"){
-      selectedSummaryReportFromDateToShow = "${selectedDate.day.toString().length == 1
-          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
-          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "summaryReportToDate"){
-      selectedSummaryReportToDateToShow = "${selectedDate.day.toString().length == 1
-          ? "0${selectedDate.day.toString()}" : selectedDate.day}/${selectedDate.month.toString().length == 1
-          ? "0${selectedDate.month.toString()}" : selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    Utils.dismissKeyboard();
   }
 
   List<String> supplierNameList = [];
@@ -1088,10 +1087,13 @@ class HomeController extends GetxController {
   List<SupplierLedgerReportDetails> supplierLedgerReportList = [];
   int totalSupplierLedgerReportDebit = 0;
   int totalSupplierLedgerReportCredit = 0;
+  String selectedLedgerSummaryFromDate = "";
+  String selectedLedgerSummaryToDate = "";
 
   navigateFromReportToHomeScreen(){
     selectedSupplier = "";
-    selectedFromDateToShow = ""; selectedToDateToShow = "";
+    selectedSupplierLedgerFromDateToShow = ""; selectedSupplierLedgerToDate = "";
+    selectedDate = DateTime.now();
     Get.toNamed(AppRoutes.home);
     update();
   }
@@ -1104,11 +1106,11 @@ class HomeController extends GetxController {
       showToast("Please select supplier!");
       isLoading = false; update();
     }
-    else if(selectedFromDateToShow == ""){
+    else if(selectedSupplierLedgerFromDateToShow == ""){
       showToast("Please select from date!");
       isLoading = false; update();
     }
-    else if(selectedToDateToShow == ""){
+    else if(selectedSupplierLedgerToDate == ""){
       showToast("Please select to date!");
       isLoading = false; update();
     }
@@ -1123,7 +1125,7 @@ class HomeController extends GetxController {
     try {
       Utils.dismissKeyboard();
       SupplierLedgerReportModel? response = (await repository.getSupplierLedgerReportList(selectedSupplier,
-          selectedToDateToShow,selectedFromDateToShow,selectedFirmId!));
+          selectedSupplierLedgerToDate,selectedSupplierLedgerFromDateToShow,selectedFirmId!));
 
       if (response.statusCode==200) {
         supplierLedgerReportList.addAll(response.supplierLedgerReportDetails!);
@@ -1163,7 +1165,7 @@ class HomeController extends GetxController {
     Get.toNamed(screen);
   }
   navigateFromSummaryToHomeScreen(){
-    selectedFromDateToShow = ""; selectedToDateToShow = "";
+    selectedLedgerSummaryFromDate = ""; selectedLedgerSummaryToDate = "";
     isViewSelected = false; supplierLedgerSummaryReportList.clear();
     totalSupplierLedgerSummaryReportDebit = 0;
     totalSupplierLedgerSummaryReportCredit = 0;
@@ -1172,11 +1174,11 @@ class HomeController extends GetxController {
   }
   showSupplierLedgerSummaryReport(){
     isLoading = true; update();
-    if(selectedFromDateToShow == ""){
+    if(selectedLedgerSummaryFromDate == ""){
       showToast("Please select from date!");
       isLoading = false; update();
     }
-    else if(selectedToDateToShow == ""){
+    else if(selectedLedgerSummaryToDate == ""){
       showToast("Please select to date!");
       isLoading = false; update();
     }
@@ -1196,7 +1198,7 @@ class HomeController extends GetxController {
     try {
       Utils.dismissKeyboard();
       SupplierLedgerSummaryReportModel? response = (await repository.getSupplierLedgerSummaryReportList(
-          selectedToDateToShow,selectedFromDateToShow,selectedFirmId!));
+          selectedLedgerSummaryToDate,selectedLedgerSummaryFromDate,selectedFirmId!));
 
       if (response.statusCode==200) {
         supplierLedgerSummaryReportList.addAll(response.supplierLedgerSummaryReportDetails!);
@@ -1205,7 +1207,6 @@ class HomeController extends GetxController {
           String debitAmt  = supplierLedgerSummaryReportList[i].debitAmount == "-" || supplierLedgerSummaryReportList[i].debitAmount == "" || supplierLedgerSummaryReportList[i].debitAmount == "0"
               ? "0" : supplierLedgerSummaryReportList[i].debitAmount!;
           totalSupplierLedgerSummaryReportDebit = totalSupplierLedgerSummaryReportDebit + int.parse(debitAmt);
-          print("${i}" " : " "${supplierLedgerSummaryReportList[i].debitAmount}"  " : " "${totalSupplierLedgerSummaryReportDebit}");
         }
         for (int i =0;i<supplierLedgerSummaryReportList.length; i++) {
           String creditAmt  = supplierLedgerSummaryReportList[i].creditAmount == "-" || supplierLedgerSummaryReportList[i].creditAmount == "" || supplierLedgerSummaryReportList[i].creditAmount == "0"
@@ -1218,19 +1219,14 @@ class HomeController extends GetxController {
         update();
       }
       else {
-        print("else");
         isLoading = false;
         update();
       }
       update();
     } on CustomException catch (e) {
-      print("e.exceptionMessage");
-      print(e.exceptionMessage);
       isLoading = false;
       update();
     } catch (error) {
-      print("error");
-      print(error);
       isLoading = false;
       update();
     }
@@ -1270,6 +1266,7 @@ class HomeController extends GetxController {
 ///farmer common
   List<String> farmerTypeList = ["Regular","Paid","Reprint"];
   String selectedFarmerType = "";
+  String selectedFarmerPattiToShow = "";
 
   Future<void> selectFarmerDate(BuildContext context,String selection) async {
     final DateTime? picked = await showDatePicker(
@@ -1279,24 +1276,20 @@ class HomeController extends GetxController {
         lastDate: DateTime(2100, 1));
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
+      if(selection == "farmerPattiDate"){
+        selectedFarmerPattiToShow = "${selectedDate.day.toString().length==1 ? "0${selectedDate.day}":selectedDate.day}/"
+            "${selectedDate.month.toString().length==1?"0${selectedDate.month}":selectedDate.month}/${selectedDate.year}";
+        update();
+      }
+      else if(picked == null){
+        selectedFarmerPattiToShow="";
+        update();
+      }
     }
+    print("picked");
+    print(picked);
+    ///patti
 
-    if(selection == "fromDate"){
-      selectedFromDateToShow = "${selectedDate.day.toString().length==1 ? "0${selectedDate.day}":selectedDate.day}/"
-          "${selectedDate.month.toString().length==1?"0${selectedDate.month}":selectedDate.month}/${selectedDate.year}";
-      update();
-    }
-    else if(selection == "toDate"){
-      selectedToDateToShow = "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}";
-      update();
-    }
-
-    if(selectedFromDateToShow == "" || pattiNo.text == ""){
-
-    }
-    else{
-      showCustomerList = true; update();
-    }
   }
 
 
@@ -1306,18 +1299,6 @@ class HomeController extends GetxController {
   updateSelectedFarmerType(String value){
     selectedFarmerType = value;
     update();
-  }
-  updatePattiNo(){
-    if(selectedFromDateToShow == "" ){
-      Utils.showErrorSnackBar("Please select date!"); update();
-    }
-    if(pattiNo.text == ""){
-      Utils.showErrorSnackBar("Please enter patti no!"); update();
-    }
-    else{
-      //showPattiDate = false;
-      showCustomerList = true; update();
-    }
   }
   updateCustomerCheckBoxFromFarmer(bool selectCustomer,int customerIndex){
     cbCustomer = selectCustomer;
@@ -1336,13 +1317,20 @@ class HomeController extends GetxController {
 
   void onPattiDateSelectionChange(BuildContext context){
     showPattiDate = true; showPattiNo = false; Utils.dismissKeyboard();
-    selectFarmerDate(context,"fromDate");
+    selectFarmerDate(context,"farmerPattiDate");
     pattiNo.clear();
     update();
   }
-  void onPattiNoSelectionChange(){
+  void onPattiNoSelectionTap(){
     showPattiDate = false; showPattiNo = true;
-    selectedFromDateToShow="";
+    selectedFarmerPattiToShow="";
+    update();
+  }
+
+  onPattiNoSelectionChange(){
+    if(pattiNo.text.isEmpty && selectedFarmerPattiToShow==""){
+      farmerPattiList.clear();showPattiNo = false;update();
+    }
     update();
   }
 
@@ -1378,7 +1366,7 @@ class HomeController extends GetxController {
       Utils.dismissKeyboard();
       FarmerPattiDetailsModel? response = (await repository.getFarmerPattiList(
           pattiNo.text.isEmpty ? 0 : int.parse(pattiNo.text),
-          selectedFromDateToShow == "" ? "0" : selectedFromDateToShow,selectedFirmId!));
+          selectedFarmerPattiToShow == "" ? "0" : selectedFarmerPattiToShow,selectedFirmId!));
       if (response.statusCode==200) {
         farmerPattiList.addAll(response.farmerPattiDetailsList!);
         isLoading = false;

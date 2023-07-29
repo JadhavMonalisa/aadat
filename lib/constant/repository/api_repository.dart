@@ -31,9 +31,20 @@ class ApiRepository {
   Future<LoginResponse> doLogin(String? username,String? password,) async {
     Map<String, String> headers = { "Content-Type": "application/json"};
     var params = {"Name":username,"Password":password,};
-    final response = await apiClient.post(
+    Map<String,dynamic> response = await apiClient.post(
       ApiEndpoint.loginUrl,body: params, headers: headers,
     );
+
+    print("login response");
+    print(response["statusCode"]);
+    print("response");
+    print(response);
+
+    // return LoginResponse(statusCode: response["statusCode"],
+    //     clientID: response["result"][0]["clientID"],
+    //     token: response["result"][0]["token"],
+    //   message: response["result"][0]["message"],
+    // );
     return LoginResponse.fromJson(response);
   }
   ///firm list api
@@ -186,7 +197,6 @@ class ApiRepository {
     var params = {"BillNo":int.parse(billNo),"BillDate":billDate,"ClientID": clientId,"FirmID":firmId};
     request.body = jsonEncode(params);
 
-    print("params");
     print(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
@@ -240,8 +250,6 @@ class ApiRepository {
 
     var params = {"FromDate":fromDate,"ToDate":toDate,"ClientID": clientId,"FirmID":firmId};
     request.body = jsonEncode(params);
-    print("params");
-    print(params);
     http.StreamedResponse response = await request.send();
     final responsebody = await response.stream.bytesToString();
 

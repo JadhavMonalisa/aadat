@@ -102,7 +102,7 @@ class _CustomerLedgerReportState extends State<CustomerLedgerReport> {
                             Flexible(
                               child: GestureDetector(
                                 onTap: (){
-                                  cont.selectCustomerDate(context,"fromDate");
+                                  cont.selectCustomerDate(context,"ledgerReportFromDate");
                                 },
                                 child: Container(
                                   height: 40.0,
@@ -112,7 +112,7 @@ class _CustomerLedgerReportState extends State<CustomerLedgerReport> {
                                   child: Row(
                                     children: [
                                       const SizedBox(width: 10.0,),
-                                      buildTextRegularWidget(cont.selectedFromDateToShow==""?"From Date":cont.selectedFromDateToShow, primaryColor, context, 15.0),
+                                      buildTextRegularWidget(cont.selectedLedgerReportFromDate==""?"From Date":cont.selectedLedgerReportFromDate, primaryColor, context, 15.0),
                                       const Spacer(),
                                       const Icon(Icons.calendar_month,color: primaryColor,),
                                       const SizedBox(width: 10.0,)
@@ -125,7 +125,7 @@ class _CustomerLedgerReportState extends State<CustomerLedgerReport> {
                             Flexible(
                               child: GestureDetector(
                                 onTap: (){
-                                  cont.selectCustomerDate(context,"toDate");
+                                  cont.selectCustomerDate(context,"ledgerReportToDate");
                                 },
                                 child: Container(
                                     height: 40.0,
@@ -135,7 +135,7 @@ class _CustomerLedgerReportState extends State<CustomerLedgerReport> {
                                     child: Row(
                                       children: [
                                         const SizedBox(width: 10.0,),
-                                        buildTextRegularWidget(cont.selectedToDateToShow==""?"To Date":cont.selectedToDateToShow, primaryColor, context, 15.0),
+                                        buildTextRegularWidget(cont.selectedLedgerReportToDate==""?"To Date":cont.selectedLedgerReportToDate, primaryColor, context, 15.0),
                                         const Spacer(),
                                         const Icon(Icons.calendar_month,color: primaryColor,),
                                         const SizedBox(width: 10.0,)

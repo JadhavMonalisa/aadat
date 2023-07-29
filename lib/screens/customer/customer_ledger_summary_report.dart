@@ -1,6 +1,6 @@
 import 'package:adat/common_widget/widget.dart';
 import 'package:adat/screens/customer/pdf/ledger_summary_report_pdf.dart';
-import 'package:adat/screens/customer/pdf_api.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
@@ -130,16 +130,18 @@ class _CustomerLedgerSummaryReportState extends State<CustomerLedgerSummaryRepor
                                 const SizedBox(width: 10.0,),
                                 Flexible(child: GestureDetector(
                                   onTap: () async{
-                                    // if(cont.isViewSelected==false)
-                                    // {
-                                    //   Utils.showErrorSnackBar("Please first get report!");
-                                    // }
-                                    // else{
-                                    //   final pdfFile = await LedgerSummaryReportExportScreen.generate(cont.ledgerSummaryReportList,cont);
-                                    //   PdfApi.openFile(pdfFile);
-                                    // }
+                                    if(cont.ledgerSummaryReportList.isEmpty)
+                                    {
+                                      Utils.showErrorSnackBar("Please first get report!");
+                                    }
+                                    else{
+                                      final pdfFile = await LedgerSummaryReportExportScreen.generate(cont.ledgerSummaryReportList,cont);
+                                      PdfApi.openFile(pdfFile);
+                                    }
                                   },
-                                  child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
+                                  child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor:
+                                  cont.ledgerSummaryReportList.isEmpty ? grey :
+                                  orangeColor),
                                 )),
                               ],
                             )

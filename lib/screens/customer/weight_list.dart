@@ -1,8 +1,12 @@
 
 import 'package:adat/common_widget/widget.dart';
+import 'package:adat/screens/customer/pdf/weight_list_report_pdf.dart';
+import 'package:adat/screens/common/pdf_api.dart';
+import 'package:adat/screens/customer/test_pdf.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:adat/theme/app_colors.dart';
 import 'package:adat/theme/app_text_theme.dart';
+import 'package:adat/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/src/painting/box_border.dart' as border;
@@ -65,7 +69,7 @@ class _WeightListScreenState extends State<WeightListScreen> {
                             child: Row(
                               children: [
                                 const SizedBox(width: 10.0,),
-                                buildTextRegularWidget(cont.selectedDateForWeightList==""?"Select Bill Date":cont.selectedDateForWeightList, primaryColor, context, 15.0),
+                                buildTextRegularWidget(cont.selectedBillDateForWeightList==""?"Bill Date":cont.selectedBillDateForWeightList, primaryColor, context, 15.0),
                                 const Spacer(),
                                 const Icon(Icons.calendar_month,color: primaryColor,),
                                 const SizedBox(width: 10.0,)
@@ -102,85 +106,33 @@ class _WeightListScreenState extends State<WeightListScreen> {
                         )
                         : const Opacity(opacity: 0.0),
 
-                        //
-                        // Padding(
-                        //   padding: const EdgeInsets.only(bottom: 20.0,left: 50.0,right: 50.0),
-                        //   child: SizedBox(
-                        //       height: 40.0,
-                        //       child: Center(
-                        //           child: Container(
-                        //             width: 230.0,height: 40.0,
-                        //             decoration: BoxDecoration(
-                        //               borderRadius: const BorderRadius.all(Radius.circular(5)),
-                        //               border: Border.all(color:primaryColor),),
-                        //             child: Padding(
-                        //               padding: const EdgeInsets.only(left: 15.0,right: 15.0),
-                        //               child: DropdownButton<String>(
-                        //                 hint: buildTextBoldWidget(cont.selectedCustomer==""?"Select Customer":cont.selectedCustomer,
-                        //                     primaryColor, context, 15.0),
-                        //                 isExpanded: true,
-                        //                 underline: Container(),
-                        //                 icon: const Icon(Icons.arrow_drop_down,color: primaryColor,size: 30.0,),
-                        //                 items:
-                        //                 cont.customerList.isEmpty
-                        //                     ?
-                        //                 cont.noDataList.map((value) {
-                        //                   return DropdownMenuItem<String>(
-                        //                     value: value,
-                        //                     child: buildTextBoldWidget(value, primaryColor, context, 15.0),
-                        //                   );
-                        //                 }).toList()
-                        //                     :
-                        //                 cont.customerList.map((CustomerListDetails value) {
-                        //                   return DropdownMenuItem<String>(
-                        //                     value: value.custAccountName,
-                        //                     child: buildTextBoldWidget(value.custAccountName!, primaryColor, context, 15.0,align: TextAlign.left),
-                        //                     onTap: (){
-                        //                       cont.updateSelectedCustomer(value.custAccountName!);
-                        //                     },
-                        //                   );
-                        //                 }).toList(),
-                        //                 onChanged: (val) {
-                        //                   cont.updateSelectedCustomer(val!);
-                        //                 },
-                        //               ),
-                        //             ),
-                        //           )
-                        //       )
-                        //   ),
-                        // ),
                         Padding(
-                            padding: const EdgeInsets.only(left: 100.0,right: 100.0,bottom: 20.0,top:20.0),
-                            child:GestureDetector(
-                              onTap: (){
-                                cont.getWeightList();
-                              },
-                              child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
-                            )
+                          padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 20.0,top:20.0),
+                          child: Row(
+                            children: [
+                              Flexible(child: GestureDetector(
+                                onTap: (){
+                                  cont.getWeightList();
+                                },
+                                child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
+                              )),
+                              const SizedBox(width: 10.0,),
+                              Flexible(child: GestureDetector(
+                                onTap: () async{
+                                  if(cont.weightList.isEmpty){
+                                    Utils.showErrorSnackBar("Please get report first!");
+                                  }
+                                  else{
+                                    final pdfFile = await WeightListReportExportScreen.generate(cont.weightList,cont);
+                                    PdfApi.openFile(pdfFile);
+                                  }
+                                },
+                                child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor:
+                                cont.weightList.isEmpty?grey:orangeColor),
+                              )),
+                            ],
+                          ),
                         ),
-
-                        // Padding(
-                        //   padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 20.0,top:20.0),
-                        //   child: Row(
-                        //     children: [
-                        //       Flexible(child: GestureDetector(
-                        //         onTap: (){
-                        //           cont.getWeightList();
-                        //         },
-                        //         child:  buildButtonWidget(context, "GET REPORT", buttonColor: orangeColor),
-                        //       )),
-                        //       const SizedBox(width: 10.0,),
-                        //       Flexible(child: GestureDetector(
-                        //         onTap: () async{
-                        //           //cont.getWeightList();
-                        //           final pdfFile = await PdfSubscriptionHistoryApi.generate(cont.weightList,0);
-                        //           PdfApi.openFile(pdfFile);
-                        //         },
-                        //         child:  buildButtonWidget(context, "EXPORT TO PDF", buttonColor: orangeColor),
-                        //       )),
-                        //     ],
-                        //   ),
-                        // ),
 
                         cont.isViewSelected?
                         Align(

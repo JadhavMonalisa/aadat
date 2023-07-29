@@ -1,13 +1,11 @@
 
 import 'package:adat/screens/common/splash_screen.dart';
-import 'package:adat/screens/customer/pdf/bill_report_pdf.dart';
 import 'package:adat/screens/customer/customer_bill_report.dart';
 import 'package:adat/screens/customer/customer_ledger_short_report.dart';
 import 'package:adat/screens/customer/customer_ledger_summary_report.dart';
 import 'package:adat/screens/customer/customer_ledger_report.dart';
 import 'package:adat/screens/customer/customer_weight_list_pdf.dart';
 import 'package:adat/screens/customer/ledger_short_report_result_screen.dart';
-import 'package:adat/screens/customer/mark_wise_result_screen.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report.dart';
 import 'package:adat/screens/customer/mark_wise_weight_list_report_result.dart';
 import 'package:adat/screens/customer/receipt.dart';
@@ -23,7 +21,6 @@ import 'package:adat/screens/supplier/supplier_ledger_report.dart';
 import 'package:adat/screens/supplier/supplier_ledger_summary_report.dart';
 import 'package:adat/screens/supplier/supplier_result_screen.dart';
 import 'package:get/get.dart';
-
 part 'app_routes.dart';
 
 class AppPages {
@@ -107,11 +104,6 @@ class AppPages {
     GetPage(
       name: AppRoutes.customerMarkWiseWeightListReportScreen,
       page: () => const MarkWiseWeightListReportScreen(),
-      binding: HomeBinding(),
-    ),
-    GetPage(
-      name: AppRoutes.markWiseResultScreen,
-      page: () => const MarkWiseResultScreen(),
       binding: HomeBinding(),
     ),
     GetPage(

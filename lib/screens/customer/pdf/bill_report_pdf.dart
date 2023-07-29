@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:adat/screens/customer/customer_model.dart';
-import 'package:adat/screens/customer/pdf_api.dart';
+import 'package:adat/screens/common/pdf_api.dart';
 import 'package:adat/screens/home/home_controller.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
@@ -63,7 +63,7 @@ class BillReportExportScreen {
                   buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totQty!),
                   buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totWeight!),
                   buildTitleForTable(billListPdf.isEmpty ? "" : ""),
-                  buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totAmount!),
+                  buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totAmount.toString()),
                 ],
               ),
             ],
@@ -205,7 +205,7 @@ class BillReportExportScreen {
                   buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totQty!),
                   buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totWeight!),
                   buildTitleForTable(billListPdf.isEmpty ? "" : ""),
-                  buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totAmount!),
+                  buildTitleForTable(billListPdf.isEmpty ? "" : billListPdf[0].totAmount.toString()),
                 ],
               ),
             ],
@@ -352,118 +352,6 @@ class BillReportExportScreen {
           font: ttf
       ),textAlign: TextAlign.center,
       ),
-    );
-  }
-
-  ///build GST container
-  static Widget buildGstContainer(String gstTitle, String gstAmount,double space, MemoryImage iconRupees){
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        border: Border.all(width: 0.0,color: PdfColor.fromHex("#9E9E9E")),
-      ),
-      child: buildGSTText(gstTitle,gstAmount,space,iconRupees),
-    );
-  }
-
-  /// Build widget to design GST row text
-  static Widget buildGSTText(String gstTitle,String gstAmnt,double space, MemoryImage iconRupees,) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 3.0),
-      child: Row(
-        children: [
-          Text(gstTitle, style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),textAlign: TextAlign.center,),
-          SizedBox(width: space),
-          pw.Image(iconRupees,height: 12,),
-          Text(gstAmnt,style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),textAlign: TextAlign.center,),
-        ],
-      ),
-    );
-  }
-
-  ///Build widget to design for Payment row text
-  static Widget buildRowTextPayment(String firstText, String firstText1,String secondText,String secondText1,){
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        buildRowText(firstText,firstText1,1,),
-        Spacer(),
-        buildRowText(secondText,secondText1,1,),
-      ],
-    );
-  }
-
-  ///pdf footer
-  static Widget buildFooter(WeightListDetails invoice) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 15,),
-      buildSimpleFooterText(title: 'file:///C:/Users/91966/Downloads/subscription_invoice.html',),
-    ],
-  );
-
-  ///text widget for footer
-  static buildSimpleFooterText({String? title,}) {
-    final style = TextStyle(fontWeight: FontWeight.bold);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
-      children: [
-        Text(title!, style: style),
-      ],
-    );
-  }
-
-  ///Build widget to design for last row text
-  static Widget buildRowTextLast(String firstText, String firstText1,String secondText,String secondText1,double space){
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        buildRowText(firstText,firstText1,1,),
-        SizedBox(width: space),
-        buildRowText(secondText,secondText1,1,),
-      ],
-    );
-  }
-
-  ///Build widget to design for all normal row text
-  static buildRowText(String firstText, String secondText,double space,){
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(firstText,style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal, ),),
-        SizedBox(width: space),
-        Text(secondText,style: TextStyle(fontSize: 13.5,fontWeight: FontWeight.normal,color: PdfColor.fromHex("#546cb1")),textAlign: TextAlign.justify,),
-      ],
-    );
-  }
-  ///Build widget to design for all normal row text
-  static buildRowTextForNet(String firstText, String secondText,double space,){
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(firstText,style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: PdfColor.fromHex("#ed6950")),),
-        SizedBox(width: space),
-        Text(secondText,style: TextStyle(fontSize: 13.5,fontWeight: FontWeight.normal,color: PdfColor.fromHex("#ed6950")),textAlign: TextAlign.justify,),
-      ],
-    );
-  }
-
-  static buildSimpleText({String? title, String? value,}) {
-    final style = TextStyle(fontWeight: FontWeight.bold);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
-      children: [
-        Text(title!, style: style),
-        SizedBox(width: 2 * PdfPageFormat.mm),
-        Text(value!),
-      ],
     );
   }
 }

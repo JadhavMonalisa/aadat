@@ -49,15 +49,14 @@ class LoginController extends GetxController {
       ));
 
       if (response.statusCode==200) {
-
-        if(response.loginResponseResult![0].message=="Login Successsfully" ||
-            response.loginResponseResult![0].message=="Login Successfully"){
-          GetStorage().erase();
+        print("login response.statusCode");
+        print(response.statusCode);
+        if(response.loginResponseResult![0].message.toString().contains("Login Successsfully") ||
+            response.loginResponseResult![0].message.toString().contains("Login Successfully")){
           GetStorage().write('clientId', response.loginResponseResult![0].clientID);
           GetStorage().write('clientToken', response.loginResponseResult![0].token);
           loginNameController.clear();loginPasswordController.clear();
           Utils.showSuccessSnackBar(response.loginResponseResult![0].message);
-
           isLoading = false;
           Get.toNamed(AppRoutes.home);
         }
@@ -76,9 +75,13 @@ class LoginController extends GetxController {
       }
     } on CustomException catch (e) {
       isLoading = false;
+      print("e.exceptionMessage");
+      print(e.exceptionMessage);
       Utils.showErrorSnackBar("Something went wrong. Please try again later!");update();
     } catch (error) {
       isLoading = false;
+      print("error");
+      print(error);
       Utils.showErrorSnackBar("Invalid username or password"); update();
     }
   }
