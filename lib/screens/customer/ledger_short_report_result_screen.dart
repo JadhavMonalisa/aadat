@@ -67,13 +67,13 @@ class _CustomerLedgerShortReportResultScreenState extends State<CustomerLedgerSh
                             padding: const EdgeInsets.only(bottom: 20.0),
                             child: GestureDetector(
                               onTap: () async {
-                                if(cont.ledgerShortReportList.isEmpty){
-                                  Utils.showErrorSnackBar("Please get report first!");
-                                }
-                                else{
-                                  final pdfFile = await LedgerShortReportExportScreen.generate(cont.ledgerShortReportList,cont);
-                                  PdfApi.openFile(pdfFile);
-                                }
+                                // if(cont.ledgerShortReportList.isEmpty){
+                                //   Utils.showErrorSnackBar("Please get report first!");
+                                // }
+                                // else{
+                                //   final pdfFile = await LedgerShortReportExportScreen.generate(cont.ledgerShortReportList,cont);
+                                //   PdfApi.openFile(pdfFile);
+                                // }
                               },
                               child: buildButtonWidget(context, "EXPORT TO PDF",
                                   width: 170.0,
